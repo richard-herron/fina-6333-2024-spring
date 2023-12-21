@@ -1,0 +1,19 @@
+/Archive
+/Assessment
+/Canvas
+/DataCamp
+/Grades
+# /Notebooks
+/Notebooks/.quarto/
+/Notebooks/_site/
+/Office\ Hours
+/OSCCR
+/Participation
+/Projects
+/Syllabus
+/Teammates
+*.csv
+*.txt
+*.zip
+*.xlsx
+*.sqlite

@@ -1,0 +1,17 @@
+# Introduction
+
+Welcome to FINA 6333 for Spring 2024!
+
+# Website
+
+I will maintain our notebooks on this website because Canvas does not render notebooks.
+This website renders our notebooks and offers several ways to interact with them:
+
+1. Open and run them on an *ad hoc* JupyterLab server by clicking the rocket in the upper-right corner of each page (this page is not a notebook, so you cannot open and run it)
+1. Download them by clicking the down arrow in the upper-right corner of each page
+1. Visit their GitHub repository by clicking the cat in the upper-right corner of each page
+
+# Notebooks
+
+Each course topic has one notebook for its lecture and another for its practice exercises.
+I will maintain these notebooks on here but everything else on Canvas.
