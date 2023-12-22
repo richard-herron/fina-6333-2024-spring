@@ -1,7 +1,3 @@
----
-title: Welcome!
----
-
 Welcome to FINA 6333 for Spring 2024 at the D'Amore-McKim School of Business at Northeastern University!
 
 For each course topic, we will have one notebook for its lecture and one for its in-class practice exercises.

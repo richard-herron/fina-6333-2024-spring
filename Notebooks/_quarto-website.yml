@@ -18,48 +18,48 @@ website:
         url: https://colab.research.google.com/github/richard-herron/fina-6333-2024-spring
     collapse-level: 1
     contents:
-        - index.qmd
-        - section: Week 1
-          contents: "mckinney_02*.ipynb"
-        - section: Week 2
-          contents: 
-            - auto: "mckinney_03*.ipynb"
-        - section: Week 3
-          contents: 
-            - auto: "mckinney_04*.ipynb"
-        - section: Week 4
-          contents: 
-            - auto: "mckinney_05*.ipynb"
-        - section: Week 5
-          contents: 
-            - auto: "herron_01*.ipynb"
-        - section: Week 6
-          contents: 
-            - auto: "mckinney_08*.ipynb"
-        - section: Week 7
-          contents:
-            - project_01.qmd
-        - section: Week 8
-          contents: 
-            - auto: "mckinney_10*.ipynb"
-        - section: Week 9
-          contents: 
-            - auto: "mckinney_11*.ipynb"
-        - section: Week 10
-          contents: 
-            - auto: "herron_02*.ipynb"
-        - section: Week 11
-          contents: 
-            - project_02.qmd
-        - section: Week 12
-          contents: 
-            - auto: "herron_03*.ipynb"
-        - section: Week 13
-          contents: 
-            - auto: "herron_04*.ipynb"
-        - section: Week 14
-          contents: 
-            - auto: "herron_05*.ipynb"
-        - section: Week 15
-          contents: 
-            - project_03.qmd
+      - index.qmd
+      - section: Week 1
+        contents: "mckinney_02*.ipynb"
+      - section: Week 2
+        contents: 
+          - auto: "mckinney_03*.ipynb"
+      - section: Week 3
+        contents: 
+          - auto: "mckinney_04*.ipynb"
+      - section: Week 4
+        contents: 
+          - auto: "mckinney_05*.ipynb"
+      - section: Week 5
+        contents: 
+          - auto: "herron_01*.ipynb"
+      - section: Week 6
+        contents: 
+          - auto: "mckinney_08*.ipynb"
+      - section: Week 7
+        contents:
+          - project_01.qmd
+      - section: Week 8
+        contents: 
+          - auto: "mckinney_10*.ipynb"
+      - section: Week 9
+        contents: 
+          - auto: "mckinney_11*.ipynb"
+      - section: Week 10
+        contents: 
+          - auto: "herron_02*.ipynb"
+      - section: Week 11
+        contents: 
+          - project_02.qmd
+      - section: Week 12
+        contents: 
+          - auto: "herron_03*.ipynb"
+      - section: Week 13
+        contents: 
+          - auto: "herron_04*.ipynb"
+      - section: Week 14
+        contents: 
+          - auto: "herron_05*.ipynb"
+      - section: Week 15
+        contents: 
+          - project_03.qmd
