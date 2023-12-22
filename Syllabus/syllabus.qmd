@@ -1,0 +1,270 @@
+---
+title: Data Analytics in Finance
+subtitle: FINA 6333 for 2024 Spring
+author: Richard Herron
+format:
+  pdf:
+    number-sections: true
+    bibliography: references.bib
+    cite-method: biblatex
+    biblio-style: authoryear
+    biblio-title: References
+---
+
+
+# Instructor Information
+
+| **Email:** <r.herron@northeastern.edu>
+| **Office Location:** Hayden Hall 409C
+| **Office Hours:** Tuesday, Thursday, and Friday from 5 to 6 PM in my office and on Zoom at <https://northeastern.zoom.us/my/herron>
+
+
+# Course Description
+
+> FINA 6333. Data Analytics in Finance. (3 Hours)
+> 
+> Introduces Python and its use as a financial data analytics tool. Python
+> has become one of the most widely used open-source, cross-platform
+> programming languages. Covers the basics of programming in Python and
+> key libraries (NumPy, Pandas, Matplotlib, etc.) used in data analytics,
+> then focuses on implementing various financial models in Python. Topics
+> include single and multifactor portfolio models, portfolio theory and
+> the efficient frontier, algorithmic trading, options and futures, and
+> value at risk.
+
+You can read all The finance course descriptions here: <https://catalog.northeastern.edu/course-descriptions/fina>
+
+
+# Course Materials
+
+## Textbooks
+
+We will use @mckinney2022python as our main textbook.
+You can read this free textbook here: <https://wesmckinney.com/book/>
+
+I suggest you use @welch2022corporate for refreshers on finance topics.
+You can read this free textbook here: <https://book.ivo-welch.info/home/>
+
+
+## Laptop
+
+You must bring your laptop to every class.
+
+
+## Software
+
+We will use JupyterLab to write and run Python code in Jupyter Notebooks.
+I suggest running Python on your laptop, and I will record a video showing you how to install the Miniconda distribution of Python.
+You can download Miniconda here:
+<https://www.anaconda.com/download/>
+
+You can run Python on DataCamp Workspaces, which is convenient but less flexible than your laptop:
+<https://app.datacamp.com/workspace/overview>
+
+You can use Quarto to generate high-quality reports for our projects:
+<https://quarto.org/docs/download/index.html>
+
+
+## Jupyter Notebooks
+
+I will maintain a website of our Jupyter Notebooks here:
+<https://richard-herron.quarto.pub/fina-6333-2024-spring/>
+
+
+## Business News
+
+I suggest you read *The Wall Street Journal* daily to be familiar with current business topics.
+I will share *WSJ* articles with interesting data and visualizations to discuss in class.
+You can read the *WSJ* for free via the Northeastern University library here:
+<https://subjectguides.lib.neu.edu/currentnews>
+
+
+# Course Grades
+
+I will assign course grades according to the weights in @tbl-grades.
+
+<!-- https://www.tablesgenerator.com/markdown_tables -->
+| Component                         	| Weight 	|
+|-----------------------------------	|--------	|
+| Team Projects                     	| 75%    	|
+| Team Reviews                      	| 15%    	|
+| Participation and Professionalism 	| 5%     	|
+| Pre-Class Quizzes                 	| 1%     	|
+| DataCamp                          	| 2%     	|
+| MSFQ Assessment Exam              	| 2%     	|
+| Total                             	| 100%   	|
+
+: Course Grade Weights {#tbl-grades}
+
+I will assign letter grades according to the following schedule:
+    93.00 and above is an A,
+    90.00 to 92.99 is an A-,
+    87.00 to 89.99 is a B+,
+    83.00 to 86.99 is a B,
+    and so on.
+I will curve course grades up to meet DMSB guidelines.
+These guidelines are:
+    for graduate courses, no more than 50% of students receive an A or A-;
+    for undergraduate courses, course grade point averages (GPAs) fall between 3.2 and 3.4.
+The DMSB forbids extra credit.
+
+I will accept late projects but deduct 0.5% percentage points per hour late.
+I will deduct these points at the end of the semester because I can only use this Canvas grade book tool once.
+I will not accept late non-projects because they are low-stakes assignments.
+
+
+## Team Projects
+
+You will complete three projects in self-selected teams of up to five students.
+You will keep the same teams all semester, and I will not allow group changes.
+I will provide project assignments at least one week before each due date.
+
+
+## Team Reviews
+
+After each project, you will review your teammates on Teammates.
+You will receive your median peer-review score.
+You can learn more about Teammates here:
+<https://Teammatesv4.appspot.com/web/front/home>
+
+
+## Participation and Professionalism
+
+Class participation and professionalism help you and your peers learn.
+I will grade class participation and professionalism to help you think long-term.
+I will randomly take attendance, but attendance is only a floor on participation and professionalism.
+Here are my minimum expectations:
+
+1. Participation
+    a. Preparedness: Read assigned materials and be ready to discuss them in class
+    a. Engagement: Contribute to class discussions
+    a. Group Work: Collaborate with peers during group activities
+1. Professionalism
+    a. Timeliness: Arrive to class on time and stay engaged until the end
+    a. Respect: Actively listen when others speak and do not interrupt
+    a. Communication: Use professional language in class discussions and course communications
+
+Also, I will encourage you to complete small, *ad hoc* assignments by assigning them low-point values under participation and professionalism.
+
+
+## Pre-Class Quizzes
+
+I will encourage you to prepare for class with pre-class quizzes.
+You will take these short, multiple-choice quizzes before our first meeting of the week for weeks with lecture recordings except for the first week.
+I will drop your two lowest quizzes.
+
+
+## DataCamp
+
+You will complete four courses and earn 10,000 experience points (XP) on DataCamp.
+Our free DataCamp plan does not tabulate course XP, so courses are pass-fail.
+These courses will easily earn 10,000 XP, which I will convert to a percent.
+You will upload completion certificates to Canvas before each due date.
+I will send a free six-month DataCamp subscription to your University email address.
+
+
+## MSFQ Assessment Exam
+
+MSFQ students will take the MSFQ assessment exam in this course, which is necessary for the MSFQ program to maintain accreditation.
+Non-MSFQ students will not take this exam, which will not be part of their course grades.
+
+
+# Flipped Classroom, Remote Attendance, and Class Recordings
+
+I will "flip the classroom" this semester, which means each week:
+
+1. Before class, I will record a short, focused lecture
+2. Before class, you will:
+    a. Read the textbook
+    a. Watch the lecture
+    a. Take a quiz
+3. During class, we will:
+    a. Quickly review the lecture
+    a. Work practice exercises together
+4. After class, you will:
+    a. Review your notes
+    a. Complete courses and earn XP on DataCamp
+    a. Complete projects
+
+I do not plan to allow remote attendance.
+Instead, I will record lectures and practice exercises.
+Watching these recordings is not a substitute for participation and professionalism.
+
+
+# My Expectations and Recommendations
+
+1. Follow the flipped-classroom guidance above
+1. Use DataCamp to practice and test your knowledge
+1. The regular-semester guidance is to spend about eight to ten hours per week studying outside of class
+1. Seek my help early and often!
+    a. I will respond to email questions as best I can. 
+    However, hard questions require discussions, so I may ask you to visit me during office hours to discuss them.
+    a. I prefer you ask questions on Canvas Discussions if your questions are not personal.
+    My answers often interest other students.
+    Also, other students may answer your question before I do.
+1. The DMSB forbids me from offering extra credit, so I will not respond to emails asking for extra credit.
+
+
+# Academic Honesty
+
+Northeastern University is committed to the principles of intellectual honesty and integrity.
+I expect you will not copy the work of others, have others do work for you, or use unauthorized aids beyond what is allowed on assignments, projects, quizzes, and exams.
+This expectation includes using artificial intelligence (AI) programs, such as ChatGPT and in-person or electronic collaboration with students inside and outside the classroom.
+This expectation also includes using calculators not specifically approved by the professor.
+If in doubt, ask me for guidance.
+
+Any student caught cheating on any assignment, project, quiz, or exam will receive zero points and fail this course.
+Any student caught cheating will also be reported to the Office of Student Conduct and Conflict Resolution (OSCCR).
+This report will result in an information-only meeting or a full administrative hearing at the discretion of OSCCR.
+Additional penalties as prescribed by the University also may apply.
+
+If you have any doubts about academic honesty and integrity, please refer to the University's Academic Integrity Policy:
+<https://osccr.sites.northeastern.edu/academic-integrity-policy/>
+
+You can also refer to the Code of Student Conduct:
+<https://osccr.sites.northeastern.edu/code-of-student-conduct/>
+
+
+# Students with Disabilities
+
+Students needing disability accommodations should visit the Northeastern University Disability Resource Center (DRC).
+
+
+# Title IX
+
+Title IX of the Education Amendments of 1972 protects individuals from sex or gender-based discrimination, including discrimination based on gender identity, in educational programs and activities that receive federal financial assistance.
+Faculty members are "responsible employees" at Northeastern University, meaning they must report all sex or gender-based discrimination allegations to the Title IX Coordinator.
+More on Title IX here: <http://www.northeastern.edu/ouec/>
+
+
+# Schedule
+
+@tbl-schedule provides our tentative schedule.
+
+| Week | Date | Topic | DataCamp | Project | Note |
+|---|---|---|---|---|---|
+| 1 | 1/8 | McKinney Ch. 2 -- Python   Language Basics, IPython, and Jupyter Notebooks |  |  |  |
+| 2 | 1/15 | McKinney Ch. 3 -- Built-in Data   Structures, Functions, and Files | Introduction to Python |  | 1, 2 |
+| 3 | 1/22 | McKinney Ch. 4 -- NumPy Basics | Intermediate Python |  | 2 |
+| 4 | 1/29 | McKinney Ch. 5 -- Getting   Started with pandas |  |  |  |
+| 5 | 2/5 | Herron -- Web Data, Log and   Simple Returns, and Portfolio Math | Data Manipulation with Pandas |  | 2 |
+| 6 | 2/12 | McKinney Ch. 8 -- Data   Wrangling: Join, Combine, and Reshape | Joining Data with Pandas |  | 2 |
+| 7 | 2/19 | Project Work |  | 1 | 1, 3 |
+| 8 | 2/26 | McKinney Ch. 10 -- Data   Aggregation and Group Operations |  |  |  |
+|  | 3/4 | Holiday |  |  | 4 |
+| 9 | 3/11 | McKinney Ch. 11 -- Time Series | Earn 10,000 XP |  | 2 |
+| 10 | 3/18 | Herron -- Trading Strategies |  |  |  |
+| 11 | 3/25 | Project Work |  | 2 | 3 |
+| 12 | 4/1 | Herron -- Multi-Factor Models |  |  |  |
+| 13 | 4/8 | Herron -- Portfolio Optimization |  |  | 5 |
+| 14 | 4/15 | Herron -- Simulations |  |  | 1 |
+| 15 | 4/22 | Project Work |  | 3 | 6 |
+
+: Tentative Schedule {#tbl-schedule} {tbl-colwidths="[5, 5, 50, 25, 10, 10]"}
+
+| Note 1: Monday holiday
+| Note 2: DataCamp courses and XP are due on Fridays at 11:59 PM
+| Note 3: Midterm projects and reviews are due on Fridays at 11:59 PM
+| Note 4: Full-week holiday
+| Note 5: MSFQ assessment exam in class during the second meeting of the week
+| Note 6: Final project and review are due on Tuesday at 11:59 PM

@@ -1,12 +1,21 @@
 project:
   type: website
 
+theme:
+  light: flatly
+  dark: darkly
+
 website:
-  search:
-    location: sidebar
   sidebar:
-    repo-url: https://github.com/richard-herron/fina-6333-2024-spring
-    repo-actions: source
+    logo: NU_DMSB_Seal_RGB_186+K.png
+    search: true
+    tools:
+      - icon: cloud
+        href: https://northeastern-my.sharepoint.com/:f:/g/personal/r_herron_northeastern_edu/Ekn1N5nzwXFDpezlTLQqLd8BBQcfvgDCkE9OgdIffHR8Cw?e=t8Dqa3
+      - icon: github
+        href: https://github.com/richard-herron/fina-6333-2024-spring
+      - icon: google
+        url: https://colab.research.google.com/github/richard-herron/fina-6333-2024-spring
     collapse-level: 1
     contents:
         - index.qmd
@@ -54,8 +63,3 @@ website:
         - section: Week 15
           contents: 
             - project_03.qmd
-
-
-
-
-

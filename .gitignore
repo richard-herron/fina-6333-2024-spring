@@ -10,7 +10,7 @@
 /OSCCR
 /Participation
 /Projects
-/Syllabus
+# /Syllabus
 /Teammates
 *.csv
 *.txt
