@@ -5,6 +5,7 @@
 /Grades
 # /Notebooks
 /Notebooks/.quarto/
+/Notebooks/.ipynb_checkpoints/
 /Notebooks/_site/
 /Office\ Hours
 /OSCCR
@@ -17,3 +18,4 @@
 *.zip
 *.xlsx
 *.sqlite
+*checkpoint.ipynb

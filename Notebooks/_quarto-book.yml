@@ -11,57 +11,93 @@ book:
     - part: Week 1
       chapters: 
         - mckinney_02_lecture.ipynb
+        - mckinney_02_practice_02.ipynb
+        - mckinney_02_practice_03.ipynb
         - mckinney_02_practice_04.ipynb
+        - mckinney_02_practice_05.ipynb
     - part: Week 2
       chapters:
         - mckinney_03_lecture.ipynb
+        - mckinney_03_practice_02.ipynb
+        - mckinney_03_practice_03.ipynb
         - mckinney_03_practice_04.ipynb
+        - mckinney_03_practice_05.ipynb
     - part: Week 3
       chapters:
         - mckinney_04_lecture.ipynb
+        - mckinney_04_practice_02.ipynb
+        - mckinney_04_practice_03.ipynb
         - mckinney_04_practice_04.ipynb
+        - mckinney_04_practice_05.ipynb
     - part: Week 4
       chapters:
         - mckinney_05_lecture.ipynb
+        - mckinney_05_practice_02.ipynb
+        - mckinney_05_practice_03.ipynb
         - mckinney_05_practice_04.ipynb
+        - mckinney_05_practice_05.ipynb
     - part: Week 5
       chapters:
         - herron_01_lecture.ipynb
+        - herron_01_practice_02.ipynb
+        - herron_01_practice_03.ipynb
         - herron_01_practice_04.ipynb
+        - herron_01_practice_05.ipynb
     - part: Week 6
       chapters:
         - mckinney_08_lecture.ipynb
+        - mckinney_08_practice_02.ipynb
+        - mckinney_08_practice_03.ipynb
         - mckinney_08_practice_04.ipynb
+        - mckinney_08_practice_05.ipynb
     - part: Week 7
       chapters:
         - project_01.qmd
     - part: Week 8
       chapters:
         - mckinney_10_lecture.ipynb
+        - mckinney_10_practice_02.ipynb
+        - mckinney_10_practice_03.ipynb
         - mckinney_10_practice_04.ipynb
+        - mckinney_10_practice_05.ipynb
     - part: Week 9
       chapters:
         - mckinney_11_lecture.ipynb
+        - mckinney_11_practice_02.ipynb
+        - mckinney_11_practice_03.ipynb
         - mckinney_11_practice_04.ipynb
+        - mckinney_11_practice_05.ipynb
     - part: Week 10
       chapters:
         - herron_02_lecture.ipynb
+        - herron_02_practice_02.ipynb
+        - herron_02_practice_03.ipynb
         - herron_02_practice_04.ipynb
+        - herron_02_practice_05.ipynb
     - part: Week 11
       chapters:
         - project_02.qmd
     - part: Week 12
       chapters:
         - herron_03_lecture.ipynb
+        - herron_03_practice_02.ipynb
+        - herron_03_practice_03.ipynb
         - herron_03_practice_04.ipynb
+        - herron_03_practice_05.ipynb
     - part: Week 13
       chapters:
         - herron_04_lecture.ipynb
+        - herron_04_practice_02.ipynb
+        - herron_04_practice_03.ipynb
         - herron_04_practice_04.ipynb
+        - herron_04_practice_05.ipynb
     - part: Week 14
       chapters:
         - herron_05_lecture.ipynb
+        - herron_05_practice_02.ipynb
+        - herron_05_practice_03.ipynb
         - herron_05_practice_04.ipynb
+        - herron_05_practice_05.ipynb
     - part: Week 15
       chapters:
         - project_03.qmd
