@@ -4,6 +4,7 @@ project:
 format:
   pdf:
     toc-depth: 2
+    keep-tex: true
 
 book:
   chapters:
