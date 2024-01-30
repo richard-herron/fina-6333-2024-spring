@@ -203,7 +203,7 @@
 
 \begin{document}
 \maketitle
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[boxrule=0pt, frame hidden, sharp corners, breakable, interior hidden, borderline west={3pt}{0pt}{shadecolor}, enhanced]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[sharp corners, enhanced, interior hidden, boxrule=0pt, borderline west={3pt}{0pt}{shadecolor}, breakable, frame hidden]}{\end{tcolorbox}}\fi
 
 \renewcommand*\contentsname{Table of contents}
 {
@@ -11649,7 +11649,7 @@ mean computation time.
 \end{Shaded}
 
 \begin{verbatim}
-59.6 µs ± 13 µs per loop (mean ± std. dev. of 7 runs, 10,000 loops each)
+32.5 µs ± 3.41 µs per loop (mean ± std. dev. of 7 runs, 10,000 loops each)
 \end{verbatim}
 
 \begin{Shaded}
@@ -11659,7 +11659,7 @@ mean computation time.
 \end{Shaded}
 
 \begin{verbatim}
-18.3 ms ± 1.28 ms per loop (mean ± std. dev. of 7 runs, 100 loops each)
+13.1 ms ± 700 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
 \end{verbatim}
 
 The NumPy version is about 1,000 times faster!
@@ -11681,7 +11681,7 @@ Present value of a lump sum \texttt{fv}:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{def}\NormalTok{ pv(rate, nper, pmt}\OperatorTok{=}\VariableTok{None}\NormalTok{, fv}\OperatorTok{=}\VariableTok{None}\NormalTok{, }\BuiltInTok{type}\OperatorTok{=}\VariableTok{None}\NormalTok{):}
+\KeywordTok{def}\NormalTok{ calc\_pv(rate, nper, pmt}\OperatorTok{=}\VariableTok{None}\NormalTok{, fv}\OperatorTok{=}\VariableTok{None}\NormalTok{, }\BuiltInTok{type}\OperatorTok{=}\VariableTok{None}\NormalTok{):}
     \ControlFlowTok{if}\NormalTok{ pmt }\KeywordTok{is} \VariableTok{None}\NormalTok{:}
 \NormalTok{        pmt }\OperatorTok{=} \DecValTok{0}
     \ControlFlowTok{if}\NormalTok{ fv }\KeywordTok{is} \VariableTok{None}\NormalTok{:}
@@ -11702,7 +11702,17 @@ Present value of a lump sum \texttt{fv}:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{pv(rate }\OperatorTok{=} \FloatTok{0.05}\NormalTok{, nper }\OperatorTok{=} \DecValTok{14}\NormalTok{, fv }\OperatorTok{=} \DecValTok{1\_000}\NormalTok{, }\BuiltInTok{type} \OperatorTok{=} \StringTok{\textquotesingle{}END\textquotesingle{}}\NormalTok{)}
+\NormalTok{calc\_pv(rate}\OperatorTok{=}\FloatTok{0.05}\NormalTok{, nper}\OperatorTok{=}\DecValTok{14}\NormalTok{, pmt}\OperatorTok{=}\DecValTok{50}\NormalTok{, fv}\OperatorTok{=}\DecValTok{1\_000}\NormalTok{, }\BuiltInTok{type}\OperatorTok{=}\StringTok{\textquotesingle{}END\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+-1000.0000
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{calc\_pv(rate}\OperatorTok{=}\FloatTok{0.05}\NormalTok{, nper}\OperatorTok{=}\DecValTok{14}\NormalTok{, fv}\OperatorTok{=}\DecValTok{1\_000}\NormalTok{, }\BuiltInTok{type}\OperatorTok{=}\StringTok{\textquotesingle{}END\textquotesingle{}}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -11728,6 +11738,47 @@ Present value of a lump sum \texttt{fv}:
 \texttt{fv}
 function.}{Write a function that mimic Excel's fv function.}}\label{write-a-function-that-mimic-excels-fv-function.}}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ calc\_fv(rate, nper, pmt}\OperatorTok{=}\VariableTok{None}\NormalTok{, pv}\OperatorTok{=}\VariableTok{None}\NormalTok{, }\BuiltInTok{type}\OperatorTok{=}\VariableTok{None}\NormalTok{):}
+    \ControlFlowTok{if}\NormalTok{ pmt }\KeywordTok{is} \VariableTok{None}\NormalTok{:}
+\NormalTok{        pmt }\OperatorTok{=} \DecValTok{0}
+    \ControlFlowTok{if}\NormalTok{ pv }\KeywordTok{is} \VariableTok{None}\NormalTok{:}
+\NormalTok{        pv }\OperatorTok{=} \DecValTok{0}
+    \ControlFlowTok{if} \BuiltInTok{type} \KeywordTok{is} \VariableTok{None}\NormalTok{:}
+        \BuiltInTok{type} \OperatorTok{=} \StringTok{\textquotesingle{}END\textquotesingle{}}
+    
+\NormalTok{    fv\_pmt }\OperatorTok{=}\NormalTok{ (pmt }\OperatorTok{/}\NormalTok{ rate) }\OperatorTok{*}\NormalTok{ ((}\DecValTok{1} \OperatorTok{+}\NormalTok{ rate)}\OperatorTok{**}\NormalTok{nper }\OperatorTok{{-}} \DecValTok{1}\NormalTok{)}
+\NormalTok{    fv\_pv }\OperatorTok{=}\NormalTok{ pv }\OperatorTok{*}\NormalTok{ (}\DecValTok{1} \OperatorTok{+}\NormalTok{ rate)}\OperatorTok{**}\NormalTok{nper}
+\NormalTok{    fv }\OperatorTok{=}\NormalTok{ fv\_pmt }\OperatorTok{+}\NormalTok{ fv\_pv}
+
+    \ControlFlowTok{if} \BuiltInTok{type} \OperatorTok{==} \StringTok{\textquotesingle{}BGN\textquotesingle{}}\NormalTok{:}
+\NormalTok{        fv }\OperatorTok{*=}\NormalTok{ (}\DecValTok{1} \OperatorTok{+}\NormalTok{ rate) }\CommentTok{\# same as pv = pv*(1 + rate)}
+    
+    \ControlFlowTok{return} \OperatorTok{{-}}\DecValTok{1} \OperatorTok{*}\NormalTok{ fv}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{calc\_fv(rate}\OperatorTok{=}\FloatTok{0.072}\NormalTok{, nper}\OperatorTok{=}\DecValTok{10}\NormalTok{, pv}\OperatorTok{={-}}\DecValTok{1000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+2004.2314
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{calc\_fv(rate}\OperatorTok{=}\FloatTok{0.072}\NormalTok{, nper}\OperatorTok{=}\DecValTok{10}\NormalTok{, pmt}\OperatorTok{=}\DecValTok{72}\NormalTok{, pv}\OperatorTok{={-}}\DecValTok{1000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+1000.0000
+\end{verbatim}
+
 \hypertarget{replace-the-negative-values-in-data-with--1-and-positive-values-with-1.}{%
 \subsection{\texorpdfstring{Replace the negative values in \texttt{data}
 with -1 and positive values with
@@ -11736,19 +11787,114 @@ with -1 and positive values with
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{np.random.seed(}\DecValTok{42}\NormalTok{)}
-\NormalTok{data }\OperatorTok{=}\NormalTok{ np.random.randn(}\DecValTok{7}\NormalTok{, }\DecValTok{7}\NormalTok{)}
+\NormalTok{data }\OperatorTok{=}\NormalTok{ np.random.randn(}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{)}
 \NormalTok{data}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-array([[ 0.4967, -0.1383,  0.6477,  1.523 , -0.2342, -0.2341,  1.5792],
-       [ 0.7674, -0.4695,  0.5426, -0.4634, -0.4657,  0.242 , -1.9133],
-       [-1.7249, -0.5623, -1.0128,  0.3142, -0.908 , -1.4123,  1.4656],
-       [-0.2258,  0.0675, -1.4247, -0.5444,  0.1109, -1.151 ,  0.3757],
-       [-0.6006, -0.2917, -0.6017,  1.8523, -0.0135, -1.0577,  0.8225],
-       [-1.2208,  0.2089, -1.9597, -1.3282,  0.1969,  0.7385,  0.1714],
-       [-0.1156, -0.3011, -1.4785, -0.7198, -0.4606,  1.0571,  0.3436]])
+array([[ 0.4967, -0.1383,  0.6477],
+       [ 1.523 , -0.2342, -0.2341],
+       [ 1.5792,  0.7674, -0.4695]])
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data[data }\OperatorTok{\textless{}} \DecValTok{0}\NormalTok{] }\OperatorTok{=} \OperatorTok{{-}}\DecValTok{1}
+\NormalTok{data[data }\OperatorTok{\textgreater{}} \DecValTok{0}\NormalTok{] }\OperatorTok{=} \OperatorTok{+}\DecValTok{1}
+\NormalTok{data}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([[ 1., -1.,  1.],
+       [ 1., -1., -1.],
+       [ 1.,  1., -1.]])
+\end{verbatim}
+
+\textbf{\emph{Here is a second option!}} NumPy's \texttt{np.where()}
+function has the same logic as Excel's \texttt{if()} function! I will
+recreate \texttt{data} so we start from the same point.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.random.seed(}\DecValTok{42}\NormalTok{)}
+\NormalTok{data }\OperatorTok{=}\NormalTok{ np.random.randn(}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{)}
+\NormalTok{data\_where }\OperatorTok{=}\NormalTok{ np.where(data }\OperatorTok{\textless{}} \DecValTok{0}\NormalTok{, }\OperatorTok{{-}}\DecValTok{1}\NormalTok{, np.where(data }\OperatorTok{\textgreater{}} \DecValTok{0}\NormalTok{, }\OperatorTok{+}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{))}
+\NormalTok{data\_where}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([[ 1, -1,  1],
+       [ 1, -1, -1],
+       [ 1,  1, -1]])
+\end{verbatim}
+
+\textbf{\emph{Here is a third option!}} NumPy's \texttt{np.select()}
+function lets us test \emph{many} conditions! I will recreate
+\texttt{data} so we start from the same point.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.random.seed(}\DecValTok{42}\NormalTok{)}
+\NormalTok{data }\OperatorTok{=}\NormalTok{ np.random.randn(}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{)}
+\NormalTok{data\_select }\OperatorTok{=}\NormalTok{ np.select(}
+\NormalTok{    condlist}\OperatorTok{=}\NormalTok{[data}\OperatorTok{\textless{}}\DecValTok{0}\NormalTok{, data}\OperatorTok{\textgreater{}}\DecValTok{0}\NormalTok{],}
+\NormalTok{    choicelist}\OperatorTok{=}\NormalTok{[}\OperatorTok{{-}}\DecValTok{1}\NormalTok{, }\OperatorTok{+}\DecValTok{1}\NormalTok{],}
+\NormalTok{    default}\OperatorTok{=}\DecValTok{0}
+\NormalTok{)}
+\NormalTok{data\_select}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([[ 1, -1,  1],
+       [ 1, -1, -1],
+       [ 1,  1, -1]])
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(data\_where }\OperatorTok{==}\NormalTok{ data\_select).}\BuiltInTok{all}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
+
+Here is a more complex application of \texttt{np.select()} Say, we want
+to truncate values to be between -0.5 and +0.5.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.random.seed(}\DecValTok{42}\NormalTok{)}
+\NormalTok{data }\OperatorTok{=}\NormalTok{ np.random.randn(}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{)}
+\NormalTok{data}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([[ 0.4967, -0.1383,  0.6477],
+       [ 1.523 , -0.2342, -0.2341],
+       [ 1.5792,  0.7674, -0.4695]])
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.select(}
+\NormalTok{    condlist}\OperatorTok{=}\NormalTok{[data}\OperatorTok{\textless{}{-}}\FloatTok{0.5}\NormalTok{, data}\OperatorTok{\textgreater{}+}\FloatTok{0.5}\NormalTok{],}
+\NormalTok{    choicelist}\OperatorTok{=}\NormalTok{[}\OperatorTok{{-}}\FloatTok{0.5}\NormalTok{, }\OperatorTok{+}\FloatTok{0.5}\NormalTok{],}
+\NormalTok{    default}\OperatorTok{=}\NormalTok{data}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([[ 0.4967, -0.1383,  0.5   ],
+       [ 0.5   , -0.2342, -0.2341],
+       [ 0.5   ,  0.5   , -0.4695]])
 \end{verbatim}
 
 \hypertarget{write-a-function-npmts-that-calculates-the-number-of-payments-that-generate-x-of-the-present-value-of-a-perpetuity.}{%
@@ -11763,10 +11909,103 @@ value of a growing perpetuity is \(PV = \frac{C_1}{r - g}\), and the
 present value of a growing annuity is
 \(PV = \frac{C_1}{r - g}\left[ 1 - \left( \frac{1 + g}{1 + r} \right)^t \right]\).
 
+We can use the growing annuity and perpetuity formulas to show:
+\(x = \left[ 1 - \left( \frac{1 + g}{1 + r} \right)^t \right]\).
+
+Then: \(1 - x = \left( \frac{1 + g}{1 + r} \right)^t\).
+
+Finally: \(t = \frac{\log(1-x)}{\log\left(\frac{1 + g}{1 + r}\right)}\)
+
+\textbf{\emph{We do not need to accept an argument \texttt{c1} because
+\(C_1\) cancels out!}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ npmts(x, r, g):}
+    \ControlFlowTok{return}\NormalTok{ np.log(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{x) }\OperatorTok{/}\NormalTok{ np.log((}\DecValTok{1} \OperatorTok{+}\NormalTok{ g) }\OperatorTok{/}\NormalTok{ (}\DecValTok{1} \OperatorTok{+}\NormalTok{ r))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{npmts(}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.1}\NormalTok{, }\FloatTok{0.05}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+14.9000
+\end{verbatim}
+
 \hypertarget{write-a-function-that-calculates-the-internal-rate-of-return-given-a-numpy-array-of-cash-flows.}{%
 \subsection{Write a function that calculates the internal rate of return
 given a NumPy array of cash
 flows.}\label{write-a-function-that-calculates-the-internal-rate-of-return-given-a-numpy-array-of-cash-flows.}}
+
+Here are some data where the \(IRR\) is obvious!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{c }\OperatorTok{=}\NormalTok{ np.array([}\OperatorTok{{-}}\DecValTok{100}\NormalTok{, }\OperatorTok{+}\DecValTok{110}\NormalTok{])}
+\NormalTok{r }\OperatorTok{=} \FloatTok{0.1}
+\end{Highlighting}
+\end{Shaded}
+
+First, write a function that calculates net present value (NPV) given
+cash flows in a NumpPy array \texttt{c} and a discount rate in a scalar
+\texttt{r}. The \texttt{npv()} function below uses NumPy arrays to
+calculate NPV as: \[NPV = \sum_{t=0}^T \frac{c_t}{(1+r)^t}\]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ calc\_npv(r, c):}
+\NormalTok{    t }\OperatorTok{=}\NormalTok{ np.arange(}\BuiltInTok{len}\NormalTok{(c))}
+    \ControlFlowTok{return}\NormalTok{ (c }\OperatorTok{/}\NormalTok{ (}\DecValTok{1} \OperatorTok{+}\NormalTok{ r)}\OperatorTok{**}\NormalTok{t).}\BuiltInTok{sum}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{calc\_npv(r}\OperatorTok{=}\NormalTok{r, c}\OperatorTok{=}\NormalTok{c)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+-0.0000
+\end{verbatim}
+
+We can use a \texttt{while} loop to guess IRR values until we find an
+NPV close to zero. We can use the
+\href{https://en.wikipedia.org/wiki/Newton\%27s_method}{Newton-Rapshon
+method} to make smarter guesses. If we have function \(f(x)\) and guess
+\(x_t\), our next guess should be
+\(x_{t+1} = x_t - \frac{f(x_t)}{f'(x_t)}\). Here our \(f(x)\) is
+\(NPV(r)\), and we can approximate \(f'(x_t)\) as
+\(\frac{NPV(r+0.000001) - NPV(r)}{0.000001}\). We will make guess until
+\(|NPV| < 0.000001\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ calc\_irr(c, guess}\OperatorTok{=}\DecValTok{0}\NormalTok{, tol}\OperatorTok{=}\FloatTok{1e{-}6}\NormalTok{, step}\OperatorTok{=}\FloatTok{1e{-}6}\NormalTok{):}
+\NormalTok{    irr }\OperatorTok{=}\NormalTok{ guess}
+\NormalTok{    npv }\OperatorTok{=}\NormalTok{ calc\_npv(r}\OperatorTok{=}\NormalTok{irr, c}\OperatorTok{=}\NormalTok{c) }\CommentTok{\# I made this change after class to possibly save us an iteration}
+    \ControlFlowTok{while}\NormalTok{ np.}\BuiltInTok{abs}\NormalTok{(npv) }\OperatorTok{\textgreater{}}\NormalTok{ tol:}
+\NormalTok{        npv }\OperatorTok{=}\NormalTok{ calc\_npv(r}\OperatorTok{=}\NormalTok{irr, c}\OperatorTok{=}\NormalTok{c)}
+\NormalTok{        deriv }\OperatorTok{=}\NormalTok{ (calc\_npv(r}\OperatorTok{=}\NormalTok{irr}\OperatorTok{+}\NormalTok{step, c}\OperatorTok{=}\NormalTok{c) }\OperatorTok{{-}}\NormalTok{ npv) }\OperatorTok{/}\NormalTok{ step}
+\NormalTok{        irr }\OperatorTok{=}\NormalTok{ irr }\OperatorTok{{-}}\NormalTok{ npv }\OperatorTok{/}\NormalTok{ deriv}
+        \CommentTok{\# print(f\textquotesingle{}IRR is \{irr\}, and NPV is \{npv\}\textquotesingle{})}
+    \ControlFlowTok{return}\NormalTok{ irr}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{calc\_irr(c)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.1000
+\end{verbatim}
 
 \hypertarget{write-a-function-returns-that-accepts-numpy-arrays-of-prices-and-dividends-and-returns-a-numpy-array-of-returns.}{%
 \subsection{\texorpdfstring{Write a function \texttt{returns()} that
@@ -11781,11 +12020,64 @@ returns.}{Write a function returns() that accepts NumPy arrays of prices and div
 \end{Highlighting}
 \end{Shaded}
 
+We want to slice our arrays to ``lag'' or ``shift'' them! For example,
+we slice the \texttt{prices} array to calculate capital gains as
+follows.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{prices[}\DecValTok{1}\NormalTok{:] }\OperatorTok{{-}}\NormalTok{ prices[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([ 50, -50, -50,  50,  50, -50,  50])
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ returns(p, d):}
+    \ControlFlowTok{return}\NormalTok{ (p[}\DecValTok{1}\NormalTok{:] }\OperatorTok{{-}}\NormalTok{ p[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{] }\OperatorTok{+}\NormalTok{ d[}\DecValTok{1}\NormalTok{:]) }\OperatorTok{/}\NormalTok{ p[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns(p}\OperatorTok{=}\NormalTok{prices, d}\OperatorTok{=}\NormalTok{dividends)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([ 0.51  , -0.3267, -0.49  ,  1.04  ,  0.52  , -0.32  ,  0.52  ])
+\end{verbatim}
+
 \hypertarget{rewrite-the-function-returns-so-it-returns-numpy-arrays-of-returns-capital-gains-yields-and-dividend-yields.}{%
 \subsection{\texorpdfstring{Rewrite the function \texttt{returns()} so
 it returns \emph{NumPy arrays} of returns, capital gains yields, and
 dividend
 yields.}{Rewrite the function returns() so it returns NumPy arrays of returns, capital gains yields, and dividend yields.}}\label{rewrite-the-function-returns-so-it-returns-numpy-arrays-of-returns-capital-gains-yields-and-dividend-yields.}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ returns\_2(p, d):}
+\NormalTok{    r }\OperatorTok{=}\NormalTok{ (p[}\DecValTok{1}\NormalTok{:] }\OperatorTok{{-}}\NormalTok{ p[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{] }\OperatorTok{+}\NormalTok{ d[}\DecValTok{1}\NormalTok{:]) }\OperatorTok{/}\NormalTok{ p[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{]}
+\NormalTok{    dp }\OperatorTok{=}\NormalTok{ d[}\DecValTok{1}\NormalTok{:] }\OperatorTok{/}\NormalTok{ p[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{]}
+\NormalTok{    cgp }\OperatorTok{=}\NormalTok{ r }\OperatorTok{{-}}\NormalTok{ dp}
+    \ControlFlowTok{return}\NormalTok{ \{}\StringTok{\textquotesingle{}r\textquotesingle{}}\NormalTok{:r, }\StringTok{\textquotesingle{}dp\textquotesingle{}}\NormalTok{:dp, }\StringTok{\textquotesingle{}cgp\textquotesingle{}}\NormalTok{:cgp\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns\_2(p}\OperatorTok{=}\NormalTok{prices, d}\OperatorTok{=}\NormalTok{dividends)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+{'r': array([ 0.51  , -0.3267, -0.49  ,  1.04  ,  0.52  , -0.32  ,  0.52  ]),
+ 'dp': array([0.01  , 0.0067, 0.01  , 0.04  , 0.02  , 0.0133, 0.02  ]),
+ 'cgp': array([ 0.5   , -0.3333, -0.5   ,  1.    ,  0.5   , -0.3333,  0.5   ])}
+\end{verbatim}
 
 \hypertarget{rescale-and-shift-numbers-so-that-they-cover-the-range-0-1}{%
 \subsection{Rescale and shift numbers so that they cover the range {[}0,
@@ -11799,6 +12091,16 @@ Output: \texttt{np.array({[}0.75,\ 0.0,\ 0.5,\ 1.0,\ 0.5{]})}
 \NormalTok{numbers }\OperatorTok{=}\NormalTok{ np.array([}\FloatTok{18.5}\NormalTok{, }\FloatTok{17.0}\NormalTok{, }\FloatTok{18.0}\NormalTok{, }\FloatTok{19.0}\NormalTok{, }\FloatTok{18.0}\NormalTok{])}
 \end{Highlighting}
 \end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(numbers }\OperatorTok{{-}}\NormalTok{ numbers.}\BuiltInTok{min}\NormalTok{()) }\OperatorTok{/}\NormalTok{ (numbers.}\BuiltInTok{max}\NormalTok{() }\OperatorTok{{-}}\NormalTok{ numbers.}\BuiltInTok{min}\NormalTok{())}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([0.75, 0.  , 0.5 , 1.  , 0.5 ])
+\end{verbatim}
 
 \hypertarget{write-functions-var-and-std-that-calculate-variance-and-standard-deviation.}{%
 \subsection{\texorpdfstring{Write functions \texttt{var()} and
@@ -11815,8 +12117,123 @@ Both function should have an argument \texttt{sample} that is
 \texttt{True} by default so both functions return sample statistics by
 default.
 
-Use the output of \texttt{returns()} to compare your functions with
-NumPy's \texttt{.var()} and \texttt{.std()} methods.
+Use \texttt{numbers} to compare your functions with NumPy's
+\texttt{.var()} and \texttt{.std()} methods.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{((numbers }\OperatorTok{{-}}\NormalTok{ numbers.mean())}\OperatorTok{**}\DecValTok{2}\NormalTok{).mean()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.4400
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{numbers.var()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.4400
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ var(x, sample}\OperatorTok{=}\VariableTok{True}\NormalTok{):}
+\NormalTok{    mu\_x }\OperatorTok{=}\NormalTok{ x.mean()}
+    \ControlFlowTok{return}\NormalTok{ ((x }\OperatorTok{{-}}\NormalTok{ mu\_x)}\OperatorTok{**}\DecValTok{2}\NormalTok{).}\BuiltInTok{sum}\NormalTok{() }\OperatorTok{/}\NormalTok{ (}\BuiltInTok{len}\NormalTok{(x) }\OperatorTok{{-}}\NormalTok{ sample)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{var(numbers)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.5500
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{var(numbers) }\OperatorTok{==}\NormalTok{ numbers.var(ddof}\OperatorTok{=}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{var(numbers, sample}\OperatorTok{=}\VariableTok{False}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.4400
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{var(numbers, sample}\OperatorTok{=}\VariableTok{False}\NormalTok{) }\OperatorTok{==}\NormalTok{ numbers.var()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ std(x, sample}\OperatorTok{=}\VariableTok{True}\NormalTok{):}
+    \ControlFlowTok{return}\NormalTok{ np.sqrt(var(x}\OperatorTok{=}\NormalTok{x, sample}\OperatorTok{=}\NormalTok{sample))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{std(numbers, sample}\OperatorTok{=}\VariableTok{False}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.6633
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{std(numbers, sample}\OperatorTok{=}\VariableTok{False}\NormalTok{) }\OperatorTok{==}\NormalTok{ numbers.std()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{std(numbers)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.7416
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{std(numbers) }\OperatorTok{==}\NormalTok{ numbers.std(ddof}\OperatorTok{=}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
 
 \hypertarget{mckinney-chapter-4---practice-for-section-03}{%
 \chapter{McKinney Chapter 4 - Practice for Section
@@ -12289,7 +12706,7 @@ mean computation time.
 \end{Shaded}
 
 \begin{verbatim}
-56.8 µs ± 5.99 µs per loop (mean ± std. dev. of 7 runs, 10,000 loops each)
+43.8 µs ± 5.15 µs per loop (mean ± std. dev. of 7 runs, 10,000 loops each)
 \end{verbatim}
 
 \begin{Shaded}
@@ -12299,7 +12716,7 @@ mean computation time.
 \end{Shaded}
 
 \begin{verbatim}
-17.4 ms ± 1.43 ms per loop (mean ± std. dev. of 7 runs, 100 loops each)
+13.4 ms ± 918 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
 \end{verbatim}
 
 The NumPy version is about 1,000 times faster!
@@ -12368,6 +12785,47 @@ Present value of a lump sum \texttt{fv}:
 \texttt{fv}
 function.}{Write a function that mimic Excel's fv function.}}\label{write-a-function-that-mimic-excels-fv-function.-1}}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ calc\_fv(rate, nper, pmt}\OperatorTok{=}\VariableTok{None}\NormalTok{, pv}\OperatorTok{=}\VariableTok{None}\NormalTok{, }\BuiltInTok{type}\OperatorTok{=}\VariableTok{None}\NormalTok{):}
+    \ControlFlowTok{if}\NormalTok{ pmt }\KeywordTok{is} \VariableTok{None}\NormalTok{:}
+\NormalTok{        pmt }\OperatorTok{=} \DecValTok{0}
+    \ControlFlowTok{if}\NormalTok{ pv }\KeywordTok{is} \VariableTok{None}\NormalTok{:}
+\NormalTok{        pv }\OperatorTok{=} \DecValTok{0}
+    \ControlFlowTok{if} \BuiltInTok{type} \KeywordTok{is} \VariableTok{None}\NormalTok{:}
+        \BuiltInTok{type} \OperatorTok{=} \StringTok{\textquotesingle{}END\textquotesingle{}}
+    
+\NormalTok{    fv\_pmt }\OperatorTok{=}\NormalTok{ (pmt }\OperatorTok{/}\NormalTok{ rate) }\OperatorTok{*}\NormalTok{ ((}\DecValTok{1} \OperatorTok{+}\NormalTok{ rate)}\OperatorTok{**}\NormalTok{nper }\OperatorTok{{-}} \DecValTok{1}\NormalTok{)}
+\NormalTok{    fv\_pv }\OperatorTok{=}\NormalTok{ pv }\OperatorTok{*}\NormalTok{ (}\DecValTok{1} \OperatorTok{+}\NormalTok{ rate)}\OperatorTok{**}\NormalTok{nper}
+\NormalTok{    fv }\OperatorTok{=}\NormalTok{ fv\_pmt }\OperatorTok{+}\NormalTok{ fv\_pv}
+
+    \ControlFlowTok{if} \BuiltInTok{type} \OperatorTok{==} \StringTok{\textquotesingle{}BGN\textquotesingle{}}\NormalTok{:}
+\NormalTok{        fv }\OperatorTok{*=}\NormalTok{ (}\DecValTok{1} \OperatorTok{+}\NormalTok{ rate) }\CommentTok{\# same as pv = pv*(1 + rate)}
+    
+    \ControlFlowTok{return} \OperatorTok{{-}}\DecValTok{1} \OperatorTok{*}\NormalTok{ fv}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{calc\_fv(rate}\OperatorTok{=}\FloatTok{0.072}\NormalTok{, nper}\OperatorTok{=}\DecValTok{10}\NormalTok{, pv}\OperatorTok{={-}}\DecValTok{1000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+2004.2314
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{calc\_fv(rate}\OperatorTok{=}\FloatTok{0.072}\NormalTok{, nper}\OperatorTok{=}\DecValTok{10}\NormalTok{, pmt}\OperatorTok{=}\DecValTok{72}\NormalTok{, pv}\OperatorTok{={-}}\DecValTok{1000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+1000.0000
+\end{verbatim}
+
 \hypertarget{replace-the-negative-values-in-data-with--1-and-positive-values-with-1.-1}{%
 \subsection{\texorpdfstring{Replace the negative values in \texttt{data}
 with -1 and positive values with
@@ -12376,19 +12834,79 @@ with -1 and positive values with
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{np.random.seed(}\DecValTok{42}\NormalTok{)}
-\NormalTok{data }\OperatorTok{=}\NormalTok{ np.random.randn(}\DecValTok{7}\NormalTok{, }\DecValTok{7}\NormalTok{)}
+\NormalTok{data }\OperatorTok{=}\NormalTok{ np.random.randn(}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{)}
 \NormalTok{data}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-array([[ 0.4967, -0.1383,  0.6477,  1.523 , -0.2342, -0.2341,  1.5792],
-       [ 0.7674, -0.4695,  0.5426, -0.4634, -0.4657,  0.242 , -1.9133],
-       [-1.7249, -0.5623, -1.0128,  0.3142, -0.908 , -1.4123,  1.4656],
-       [-0.2258,  0.0675, -1.4247, -0.5444,  0.1109, -1.151 ,  0.3757],
-       [-0.6006, -0.2917, -0.6017,  1.8523, -0.0135, -1.0577,  0.8225],
-       [-1.2208,  0.2089, -1.9597, -1.3282,  0.1969,  0.7385,  0.1714],
-       [-0.1156, -0.3011, -1.4785, -0.7198, -0.4606,  1.0571,  0.3436]])
+array([[ 0.4967, -0.1383,  0.6477,  1.523 ],
+       [-0.2342, -0.2341,  1.5792,  0.7674],
+       [-0.4695,  0.5426, -0.4634, -0.4657],
+       [ 0.242 , -1.9133, -1.7249, -0.5623]])
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data[data }\OperatorTok{\textless{}} \DecValTok{0}\NormalTok{] }\OperatorTok{=} \OperatorTok{{-}}\DecValTok{1}
+\NormalTok{data[data }\OperatorTok{\textgreater{}} \DecValTok{0}\NormalTok{] }\OperatorTok{=} \OperatorTok{+}\DecValTok{1}
+
+\NormalTok{data}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([[ 1., -1.,  1.,  1.],
+       [-1., -1.,  1.,  1.],
+       [-1.,  1., -1., -1.],
+       [ 1., -1., -1., -1.]])
+\end{verbatim}
+
+\textbf{\emph{We have a second option in NumPy!}} NumPy's
+\texttt{np.where()} function works the same as Excel's \texttt{if()}
+function.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.random.seed(}\DecValTok{42}\NormalTok{)}
+\NormalTok{data }\OperatorTok{=}\NormalTok{ np.random.randn(}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{)}
+
+\NormalTok{np.where( }\CommentTok{\# we can add whitespace inside parentheses ()!}
+\NormalTok{    data }\OperatorTok{\textless{}} \DecValTok{0}\NormalTok{, }\CommentTok{\# condition to test}
+    \OperatorTok{{-}}\DecValTok{1}\NormalTok{, }\CommentTok{\# result if true}
+\NormalTok{    np.where(data }\OperatorTok{\textgreater{}} \DecValTok{0}\NormalTok{, }\OperatorTok{+}\DecValTok{1}\NormalTok{, data) }\CommentTok{\# result if false}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([[ 1., -1.,  1.,  1.],
+       [-1., -1.,  1.,  1.],
+       [-1.,  1., -1., -1.],
+       [ 1., -1., -1., -1.]])
+\end{verbatim}
+
+\textbf{\emph{We also have a third option in NumPy!}} NumPy's
+\texttt{np.select()} function lets test multiple conditions!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.random.seed(}\DecValTok{42}\NormalTok{)}
+\NormalTok{data }\OperatorTok{=}\NormalTok{ np.random.randn(}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{)}
+
+\NormalTok{np.select( }\CommentTok{\# we can add whitespace inside parentheses ()!}
+\NormalTok{    condlist}\OperatorTok{=}\NormalTok{[data}\OperatorTok{\textless{}}\DecValTok{0}\NormalTok{, data}\OperatorTok{\textgreater{}}\DecValTok{0}\NormalTok{],}
+\NormalTok{    choicelist}\OperatorTok{=}\NormalTok{[}\OperatorTok{{-}}\DecValTok{1}\NormalTok{, }\OperatorTok{+}\DecValTok{1}\NormalTok{],}
+\NormalTok{    default}\OperatorTok{=}\NormalTok{data}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([[ 1., -1.,  1.,  1.],
+       [-1., -1.,  1.,  1.],
+       [-1.,  1., -1., -1.],
+       [ 1., -1., -1., -1.]])
 \end{verbatim}
 
 \hypertarget{write-a-function-npmts-that-calculates-the-number-of-payments-that-generate-x-of-the-present-value-of-a-perpetuity.-1}{%
@@ -12403,10 +12921,104 @@ value of a growing perpetuity is \(PV = \frac{C_1}{r - g}\), and the
 present value of a growing annuity is
 \(PV = \frac{C_1}{r - g}\left[ 1 - \left( \frac{1 + g}{1 + r} \right)^t \right]\).
 
+We can use the growing annuity and perpetuity formulas to show:
+\(x = \left[ 1 - \left( \frac{1 + g}{1 + r} \right)^t \right]\).
+
+Then: \(1 - x = \left( \frac{1 + g}{1 + r} \right)^t\).
+
+Finally: \(t = \frac{\log(1-x)}{\log\left(\frac{1 + g}{1 + r}\right)}\)
+
+\textbf{\emph{We do not need to accept an argument \texttt{c1} because
+\(C_1\) cancels out!}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ npmts(x, r, g):}
+    \ControlFlowTok{return}\NormalTok{ np.log(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{x) }\OperatorTok{/}\NormalTok{ np.log((}\DecValTok{1} \OperatorTok{+}\NormalTok{ g) }\OperatorTok{/}\NormalTok{ (}\DecValTok{1} \OperatorTok{+}\NormalTok{ r))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{npmts(}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.1}\NormalTok{, }\FloatTok{0.05}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+14.9000
+\end{verbatim}
+
 \hypertarget{write-a-function-that-calculates-the-internal-rate-of-return-given-a-numpy-array-of-cash-flows.-1}{%
 \subsection{Write a function that calculates the internal rate of return
 given a NumPy array of cash
 flows.}\label{write-a-function-that-calculates-the-internal-rate-of-return-given-a-numpy-array-of-cash-flows.-1}}
+
+Here are some data where the \(IRR\) is obvious!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{c }\OperatorTok{=}\NormalTok{ np.array([}\OperatorTok{{-}}\DecValTok{100}\NormalTok{, }\DecValTok{110}\NormalTok{])}
+\NormalTok{r }\OperatorTok{=} \FloatTok{0.10}
+\end{Highlighting}
+\end{Shaded}
+
+First, write a function that calculates net present value (NPV) given
+cash flows in a NumpPy array \texttt{c} and a discount rate in a scalar
+\texttt{r}. The \texttt{npv()} function below uses NumPy arrays to
+calculate NPV as: \[NPV = \sum_{t=0}^T \frac{c_t}{(1+r)^t}\]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ calc\_npv(r, c):}
+\NormalTok{    t }\OperatorTok{=}\NormalTok{ np.arange(}\BuiltInTok{len}\NormalTok{(c))}
+    \ControlFlowTok{return}\NormalTok{ (c }\OperatorTok{/}\NormalTok{ (}\DecValTok{1} \OperatorTok{+}\NormalTok{ r)}\OperatorTok{**}\NormalTok{t).}\BuiltInTok{sum}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{calc\_npv(r}\OperatorTok{=}\NormalTok{r, c}\OperatorTok{=}\NormalTok{c)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+-0.0000
+\end{verbatim}
+
+We can use a \texttt{while} loop to guess IRR values until we find an
+NPV close to zero. We can use the
+\href{https://en.wikipedia.org/wiki/Newton\%27s_method}{Newton-Rapshon
+method} to make smarter guesses. If we have function \(f(x)\) and guess
+\(x_t\), our next guess should be
+\(x_{t+1} = x_t - \frac{f(x_t)}{f'(x_t)}\). Here our \(f(x)\) is
+\(NPV(r)\), and we can approximate \(f'(x_t)\) as
+\(\frac{NPV(r+0.000001) - NPV(r)}{0.000001}\). We will make guess until
+\(|NPV| < 0.000001\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ calc\_irr(c, guess}\OperatorTok{=}\DecValTok{0}\NormalTok{):}
+\NormalTok{    irr }\OperatorTok{=}\NormalTok{ guess}
+\NormalTok{    npv }\OperatorTok{=}\NormalTok{ calc\_npv(r}\OperatorTok{=}\NormalTok{irr, c}\OperatorTok{=}\NormalTok{c)}
+    \ControlFlowTok{while}\NormalTok{ np.}\BuiltInTok{abs}\NormalTok{(npv) }\OperatorTok{\textgreater{}} \FloatTok{1e{-}6}\NormalTok{:}
+\NormalTok{        slope }\OperatorTok{=}\NormalTok{ (calc\_npv(r}\OperatorTok{=}\NormalTok{irr}\OperatorTok{+}\FloatTok{1e{-}6}\NormalTok{, c}\OperatorTok{=}\NormalTok{c) }\OperatorTok{{-}}\NormalTok{ npv) }\OperatorTok{/} \FloatTok{1e{-}6} \CommentTok{\# Delta NPV / Delta r}
+\NormalTok{        irr }\OperatorTok{=}\NormalTok{ irr }\OperatorTok{{-}}\NormalTok{ npv }\OperatorTok{/}\NormalTok{ slope}
+\NormalTok{        npv }\OperatorTok{=}\NormalTok{ calc\_npv(r}\OperatorTok{=}\NormalTok{irr, c}\OperatorTok{=}\NormalTok{c)}
+        \CommentTok{\# print(f\textquotesingle{}NPV is \{npv\}, IRR is \{irr\}\textquotesingle{})}
+
+    \ControlFlowTok{return}\NormalTok{ irr}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{calc\_irr(c}\OperatorTok{=}\NormalTok{c) }\CommentTok{\# c is the first positional argument, so we can omit "c=" }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.1000
+\end{verbatim}
 
 \hypertarget{write-a-function-returns-that-accepts-numpy-arrays-of-prices-and-dividends-and-returns-a-numpy-array-of-returns.-1}{%
 \subsection{\texorpdfstring{Write a function \texttt{returns()} that
@@ -12421,11 +13033,84 @@ returns.}{Write a function returns() that accepts NumPy arrays of prices and div
 \end{Highlighting}
 \end{Shaded}
 
+Here is the return for the first period.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(prices[}\DecValTok{1}\NormalTok{] }\OperatorTok{{-}}\NormalTok{ prices[}\DecValTok{0}\NormalTok{] }\OperatorTok{+}\NormalTok{ dividends[}\DecValTok{1}\NormalTok{]) }\OperatorTok{/}\NormalTok{ prices[}\DecValTok{0}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.5100
+\end{verbatim}
+
+Here are the capital gains for every period.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{prices[}\DecValTok{1}\NormalTok{:] }\OperatorTok{{-}}\NormalTok{ prices[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([ 50, -50, -50,  50,  50, -50,  50])
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(prices[}\DecValTok{1}\NormalTok{:] }\OperatorTok{{-}}\NormalTok{ prices[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{] }\OperatorTok{+}\NormalTok{ dividends[}\DecValTok{1}\NormalTok{:]) }\OperatorTok{/}\NormalTok{ prices[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([ 0.51  , -0.3267, -0.49  ,  1.04  ,  0.52  , -0.32  ,  0.52  ])
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ returns(p, d):}
+    \ControlFlowTok{return}\NormalTok{ (p[}\DecValTok{1}\NormalTok{:] }\OperatorTok{{-}}\NormalTok{ p[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{] }\OperatorTok{+}\NormalTok{ d[}\DecValTok{1}\NormalTok{:]) }\OperatorTok{/}\NormalTok{ p[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns(p}\OperatorTok{=}\NormalTok{prices, d}\OperatorTok{=}\NormalTok{dividends)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([ 0.51  , -0.3267, -0.49  ,  1.04  ,  0.52  , -0.32  ,  0.52  ])
+\end{verbatim}
+
 \hypertarget{rewrite-the-function-returns-so-it-returns-numpy-arrays-of-returns-capital-gains-yields-and-dividend-yields.-1}{%
 \subsection{\texorpdfstring{Rewrite the function \texttt{returns()} so
 it returns \emph{NumPy arrays} of returns, capital gains yields, and
 dividend
 yields.}{Rewrite the function returns() so it returns NumPy arrays of returns, capital gains yields, and dividend yields.}}\label{rewrite-the-function-returns-so-it-returns-numpy-arrays-of-returns-capital-gains-yields-and-dividend-yields.-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ returns\_2(p, d):}
+\NormalTok{    r }\OperatorTok{=}\NormalTok{ (p[}\DecValTok{1}\NormalTok{:] }\OperatorTok{{-}}\NormalTok{ p[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{] }\OperatorTok{+}\NormalTok{ d[}\DecValTok{1}\NormalTok{:]) }\OperatorTok{/}\NormalTok{ p[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{]}
+\NormalTok{    dp }\OperatorTok{=}\NormalTok{ d[}\DecValTok{1}\NormalTok{:] }\OperatorTok{/}\NormalTok{ p[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{]}
+\NormalTok{    cgp }\OperatorTok{=}\NormalTok{ r }\OperatorTok{{-}}\NormalTok{ dp}
+    \ControlFlowTok{return}\NormalTok{ \{}\StringTok{\textquotesingle{}r\textquotesingle{}}\NormalTok{:r, }\StringTok{\textquotesingle{}dp\textquotesingle{}}\NormalTok{:dp, }\StringTok{\textquotesingle{}cgp\textquotesingle{}}\NormalTok{:cgp\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns\_2(p}\OperatorTok{=}\NormalTok{prices, d}\OperatorTok{=}\NormalTok{dividends)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+{'r': array([ 0.51  , -0.3267, -0.49  ,  1.04  ,  0.52  , -0.32  ,  0.52  ]),
+ 'dp': array([0.01  , 0.0067, 0.01  , 0.04  , 0.02  , 0.0133, 0.02  ]),
+ 'cgp': array([ 0.5   , -0.3333, -0.5   ,  1.    ,  0.5   , -0.3333,  0.5   ])}
+\end{verbatim}
 
 \hypertarget{rescale-and-shift-numbers-so-that-they-cover-the-range-0-1-1}{%
 \subsection{Rescale and shift numbers so that they cover the range {[}0,
@@ -12439,6 +13124,16 @@ Output: \texttt{np.array({[}0.75,\ 0.0,\ 0.5,\ 1.0,\ 0.5{]})}
 \NormalTok{numbers }\OperatorTok{=}\NormalTok{ np.array([}\FloatTok{18.5}\NormalTok{, }\FloatTok{17.0}\NormalTok{, }\FloatTok{18.0}\NormalTok{, }\FloatTok{19.0}\NormalTok{, }\FloatTok{18.0}\NormalTok{])}
 \end{Highlighting}
 \end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(numbers }\OperatorTok{{-}}\NormalTok{ numbers.}\BuiltInTok{min}\NormalTok{()) }\OperatorTok{/}\NormalTok{ (numbers.}\BuiltInTok{max}\NormalTok{() }\OperatorTok{{-}}\NormalTok{ numbers.}\BuiltInTok{min}\NormalTok{())}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([0.75, 0.  , 0.5 , 1.  , 0.5 ])
+\end{verbatim}
 
 \hypertarget{write-functions-var-and-std-that-calculate-variance-and-standard-deviation.-1}{%
 \subsection{\texorpdfstring{Write functions \texttt{var()} and
@@ -12455,8 +13150,126 @@ Both function should have an argument \texttt{sample} that is
 \texttt{True} by default so both functions return sample statistics by
 default.
 
-Use the output of \texttt{returns()} to compare your functions with
-NumPy's \texttt{.var()} and \texttt{.std()} methods.
+Use \texttt{numbers} to compare your functions with NumPy's
+\texttt{.var()} and \texttt{.std()} methods.
+
+The population variance is ``the average squared distance from the
+average.''
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{((numbers }\OperatorTok{{-}}\NormalTok{ numbers.mean())}\OperatorTok{**}\DecValTok{2}\NormalTok{).mean()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.4400
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{numbers.var()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.4400
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ var(x, sample}\OperatorTok{=}\VariableTok{True}\NormalTok{):}
+\NormalTok{    mu\_x }\OperatorTok{=}\NormalTok{ x.mean()}
+    \ControlFlowTok{return}\NormalTok{ ((x }\OperatorTok{{-}}\NormalTok{ mu\_x)}\OperatorTok{**}\DecValTok{2}\NormalTok{).}\BuiltInTok{sum}\NormalTok{() }\OperatorTok{/}\NormalTok{ (}\BuiltInTok{len}\NormalTok{(x) }\OperatorTok{{-}}\NormalTok{ sample)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{var(numbers)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.5500
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{var(numbers) }\OperatorTok{==}\NormalTok{ numbers.var(ddof}\OperatorTok{=}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{var(numbers, sample}\OperatorTok{=}\VariableTok{False}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.4400
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{var(numbers, sample}\OperatorTok{=}\VariableTok{False}\NormalTok{) }\OperatorTok{==}\NormalTok{ numbers.var()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ std(x, sample}\OperatorTok{=}\VariableTok{True}\NormalTok{):}
+    \ControlFlowTok{return}\NormalTok{ np.sqrt(var(x}\OperatorTok{=}\NormalTok{x, sample}\OperatorTok{=}\NormalTok{sample))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{std(numbers, sample}\OperatorTok{=}\VariableTok{False}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.6633
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{std(numbers, sample}\OperatorTok{=}\VariableTok{False}\NormalTok{) }\OperatorTok{==}\NormalTok{ numbers.std()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{std(numbers)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.7416
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{std(numbers) }\OperatorTok{==}\NormalTok{ numbers.std(ddof}\OperatorTok{=}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
 
 \hypertarget{mckinney-chapter-4---practice-for-section-04}{%
 \chapter{McKinney Chapter 4 - Practice for Section
@@ -12915,7 +13728,7 @@ mean computation time.
 \end{Shaded}
 
 \begin{verbatim}
-61.1 µs ± 2.04 µs per loop (mean ± std. dev. of 7 runs, 10,000 loops each)
+41.6 µs ± 3.42 µs per loop (mean ± std. dev. of 7 runs, 10,000 loops each)
 \end{verbatim}
 
 \begin{Shaded}
@@ -12925,7 +13738,7 @@ mean computation time.
 \end{Shaded}
 
 \begin{verbatim}
-19.2 ms ± 2.05 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+12 ms ± 2.06 ms per loop (mean ± std. dev. of 7 runs, 100 loops each)
 \end{verbatim}
 
 The NumPy version is about 1,000 times faster!
@@ -12944,11 +13757,6 @@ Present value of an annuity payment \texttt{pmt}:
 
 Present value of a lump sum \texttt{fv}:
 \(PV_{fv} = \frac{fv}{(1+rate)^{nper}}\)
-
-\hypertarget{write-a-function-that-mimic-excels-fv-function.-2}{%
-\subsection{\texorpdfstring{Write a function that mimic Excel's
-\texttt{fv}
-function.}{Write a function that mimic Excel's fv function.}}\label{write-a-function-that-mimic-excels-fv-function.-2}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -12994,6 +13802,52 @@ function.}{Write a function that mimic Excel's fv function.}}\label{write-a-func
 125
 \end{verbatim}
 
+\hypertarget{write-a-function-that-mimic-excels-fv-function.-2}{%
+\subsection{\texorpdfstring{Write a function that mimic Excel's
+\texttt{fv}
+function.}{Write a function that mimic Excel's fv function.}}\label{write-a-function-that-mimic-excels-fv-function.-2}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ calc\_fv(rate, nper, pmt}\OperatorTok{=}\VariableTok{None}\NormalTok{, pv}\OperatorTok{=}\VariableTok{None}\NormalTok{, }\BuiltInTok{type}\OperatorTok{=}\VariableTok{None}\NormalTok{):}
+    \ControlFlowTok{if}\NormalTok{ pmt }\KeywordTok{is} \VariableTok{None}\NormalTok{:}
+\NormalTok{        pmt }\OperatorTok{=} \DecValTok{0}
+    \ControlFlowTok{if}\NormalTok{ pv }\KeywordTok{is} \VariableTok{None}\NormalTok{:}
+\NormalTok{        pv }\OperatorTok{=} \DecValTok{0}
+    \ControlFlowTok{if} \BuiltInTok{type} \KeywordTok{is} \VariableTok{None}\NormalTok{:}
+        \BuiltInTok{type} \OperatorTok{=} \StringTok{\textquotesingle{}END\textquotesingle{}}
+    
+\NormalTok{    fv\_pmt }\OperatorTok{=}\NormalTok{ (pmt }\OperatorTok{/}\NormalTok{ rate) }\OperatorTok{*}\NormalTok{ ((}\DecValTok{1} \OperatorTok{+}\NormalTok{ rate)}\OperatorTok{**}\NormalTok{nper }\OperatorTok{{-}} \DecValTok{1}\NormalTok{)}
+\NormalTok{    fv\_pv }\OperatorTok{=}\NormalTok{ pv }\OperatorTok{*}\NormalTok{ (}\DecValTok{1} \OperatorTok{+}\NormalTok{ rate)}\OperatorTok{**}\NormalTok{nper}
+\NormalTok{    fv }\OperatorTok{=}\NormalTok{ fv\_pmt }\OperatorTok{+}\NormalTok{ fv\_pv}
+
+    \ControlFlowTok{if} \BuiltInTok{type} \OperatorTok{==} \StringTok{\textquotesingle{}BGN\textquotesingle{}}\NormalTok{:}
+\NormalTok{        fv }\OperatorTok{*=}\NormalTok{ (}\DecValTok{1} \OperatorTok{+}\NormalTok{ rate) }\CommentTok{\# same as pv = pv*(1 + rate)}
+    
+    \ControlFlowTok{return} \OperatorTok{{-}}\DecValTok{1} \OperatorTok{*}\NormalTok{ fv}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{calc\_fv(rate}\OperatorTok{=}\FloatTok{0.072}\NormalTok{, nper}\OperatorTok{=}\DecValTok{10}\NormalTok{, pv}\OperatorTok{={-}}\DecValTok{1000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+2004.2314
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{calc\_fv(rate}\OperatorTok{=}\FloatTok{0.072}\NormalTok{, nper}\OperatorTok{=}\DecValTok{10}\NormalTok{, pmt}\OperatorTok{=}\DecValTok{72}\NormalTok{, pv}\OperatorTok{={-}}\DecValTok{1000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+1000.0000
+\end{verbatim}
+
 \hypertarget{replace-the-negative-values-in-data-with--1-and-positive-values-with-1.-2}{%
 \subsection{\texorpdfstring{Replace the negative values in \texttt{data}
 with -1 and positive values with
@@ -13002,19 +13856,81 @@ with -1 and positive values with
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{np.random.seed(}\DecValTok{42}\NormalTok{)}
-\NormalTok{data }\OperatorTok{=}\NormalTok{ np.random.randn(}\DecValTok{7}\NormalTok{, }\DecValTok{7}\NormalTok{)}
+\NormalTok{data }\OperatorTok{=}\NormalTok{ np.random.randn(}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{)}
 \NormalTok{data}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-array([[ 0.4967, -0.1383,  0.6477,  1.523 , -0.2342, -0.2341,  1.5792],
-       [ 0.7674, -0.4695,  0.5426, -0.4634, -0.4657,  0.242 , -1.9133],
-       [-1.7249, -0.5623, -1.0128,  0.3142, -0.908 , -1.4123,  1.4656],
-       [-0.2258,  0.0675, -1.4247, -0.5444,  0.1109, -1.151 ,  0.3757],
-       [-0.6006, -0.2917, -0.6017,  1.8523, -0.0135, -1.0577,  0.8225],
-       [-1.2208,  0.2089, -1.9597, -1.3282,  0.1969,  0.7385,  0.1714],
-       [-0.1156, -0.3011, -1.4785, -0.7198, -0.4606,  1.0571,  0.3436]])
+array([[ 0.4967, -0.1383,  0.6477,  1.523 ],
+       [-0.2342, -0.2341,  1.5792,  0.7674],
+       [-0.4695,  0.5426, -0.4634, -0.4657],
+       [ 0.242 , -1.9133, -1.7249, -0.5623]])
+\end{verbatim}
+
+One approach, is to slice \texttt{data} with a Boolean array, just like
+we did above for the multiples of 3 and 5 exercise.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data[data }\OperatorTok{\textless{}} \DecValTok{0}\NormalTok{] }\OperatorTok{=} \OperatorTok{{-}}\DecValTok{1}
+\NormalTok{data[data }\OperatorTok{\textgreater{}} \DecValTok{0}\NormalTok{] }\OperatorTok{=} \OperatorTok{+}\DecValTok{1}
+
+\NormalTok{data}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([[ 1., -1.,  1.,  1.],
+       [-1., -1.,  1.,  1.],
+       [-1.,  1., -1., -1.],
+       [ 1., -1., -1., -1.]])
+\end{verbatim}
+
+\textbf{\emph{A second approach, is to use NumPy's \texttt{np.where()}
+function.}} \texttt{np.where()} is similar to Excel's \texttt{if()}, but
+vectorized!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.random.seed(}\DecValTok{42}\NormalTok{)}
+\NormalTok{data }\OperatorTok{=}\NormalTok{ np.random.randn(}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{)}
+\NormalTok{np.where( }\CommentTok{\# Python ignores whitespace inside parentheses ()!}
+\NormalTok{    data }\OperatorTok{\textless{}} \DecValTok{0}\NormalTok{, }\CommentTok{\# condition to test}
+    \OperatorTok{{-}}\DecValTok{1}\NormalTok{, }\CommentTok{\# result if true}
+\NormalTok{    np.where(data }\OperatorTok{\textgreater{}} \DecValTok{0}\NormalTok{, }\OperatorTok{+}\DecValTok{1}\NormalTok{, data) }\CommentTok{\# result if false}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([[ 1., -1.,  1.,  1.],
+       [-1., -1.,  1.,  1.],
+       [-1.,  1., -1., -1.],
+       [ 1., -1., -1., -1.]])
+\end{verbatim}
+
+\textbf{\emph{A THIRD approach, is to use NumPy's \texttt{np.select()}
+function.}} \texttt{np.select()} is similar to Excel's \texttt{if()},
+but vectorized and allows many conditions!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.random.seed(}\DecValTok{42}\NormalTok{)}
+\NormalTok{data }\OperatorTok{=}\NormalTok{ np.random.randn(}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{)}
+\NormalTok{np.select( }\CommentTok{\# Python ignores whitespace inside parentheses ()!}
+\NormalTok{    condlist}\OperatorTok{=}\NormalTok{[data}\OperatorTok{\textless{}}\DecValTok{0}\NormalTok{, data}\OperatorTok{\textgreater{}}\DecValTok{0}\NormalTok{],}
+\NormalTok{    choicelist}\OperatorTok{=}\NormalTok{[}\OperatorTok{{-}}\DecValTok{1}\NormalTok{, }\OperatorTok{+}\DecValTok{1}\NormalTok{],}
+\NormalTok{    default}\OperatorTok{=}\NormalTok{data}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([[ 1., -1.,  1.,  1.],
+       [-1., -1.,  1.,  1.],
+       [-1.,  1., -1., -1.],
+       [ 1., -1., -1., -1.]])
 \end{verbatim}
 
 \hypertarget{write-a-function-npmts-that-calculates-the-number-of-payments-that-generate-x-of-the-present-value-of-a-perpetuity.-2}{%
@@ -13029,10 +13945,104 @@ value of a growing perpetuity is \(PV = \frac{C_1}{r - g}\), and the
 present value of a growing annuity is
 \(PV = \frac{C_1}{r - g}\left[ 1 - \left( \frac{1 + g}{1 + r} \right)^t \right]\).
 
+We can use the growing annuity and perpetuity formulas to show:
+\(x = \left[ 1 - \left( \frac{1 + g}{1 + r} \right)^t \right]\).
+
+Then: \(1 - x = \left( \frac{1 + g}{1 + r} \right)^t\).
+
+Finally: \(t = \frac{\log(1-x)}{\log\left(\frac{1 + g}{1 + r}\right)}\)
+
+\textbf{\emph{We do not need to accept an argument \texttt{c1} because
+\(C_1\) cancels out!}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ npmts(x, r, g):}
+    \ControlFlowTok{return}\NormalTok{ np.log(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{x) }\OperatorTok{/}\NormalTok{ np.log((}\DecValTok{1} \OperatorTok{+}\NormalTok{ g) }\OperatorTok{/}\NormalTok{ (}\DecValTok{1} \OperatorTok{+}\NormalTok{ r))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{npmts(}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.1}\NormalTok{, }\FloatTok{0.05}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+14.9000
+\end{verbatim}
+
 \hypertarget{write-a-function-that-calculates-the-internal-rate-of-return-given-a-numpy-array-of-cash-flows.-2}{%
 \subsection{Write a function that calculates the internal rate of return
 given a NumPy array of cash
 flows.}\label{write-a-function-that-calculates-the-internal-rate-of-return-given-a-numpy-array-of-cash-flows.-2}}
+
+Here are some data where the \(IRR\) is obvious!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{c }\OperatorTok{=}\NormalTok{ np.array([}\OperatorTok{{-}}\DecValTok{100}\NormalTok{, }\OperatorTok{+}\DecValTok{110}\NormalTok{])}
+\NormalTok{r }\OperatorTok{=} \FloatTok{0.1}
+\end{Highlighting}
+\end{Shaded}
+
+First, write a function that calculates net present value (NPV) given
+cash flows in a NumpPy array \texttt{c} and a discount rate in a scalar
+\texttt{r}. The \texttt{npv()} function below uses NumPy arrays to
+calculate NPV as: \[NPV = \sum_{t=0}^T \frac{c_t}{(1+r)^t}\]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ calc\_npv(r, c):}
+\NormalTok{    t }\OperatorTok{=}\NormalTok{ np.arange(}\BuiltInTok{len}\NormalTok{(c))}
+    \ControlFlowTok{return}\NormalTok{ (c }\OperatorTok{/}\NormalTok{ (}\DecValTok{1} \OperatorTok{+}\NormalTok{ r)}\OperatorTok{**}\NormalTok{t).}\BuiltInTok{sum}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{calc\_npv(r}\OperatorTok{=}\NormalTok{r, c}\OperatorTok{=}\NormalTok{c)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+-0.0000
+\end{verbatim}
+
+We can use a \texttt{while} loop to guess IRR values until we find an
+NPV close to zero. We can use the
+\href{https://en.wikipedia.org/wiki/Newton\%27s_method}{Newton-Rapshon
+method} to make smarter guesses. If we have function \(f(x)\) and guess
+\(x_t\), our next guess should be
+\(x_{t+1} = x_t - \frac{f(x_t)}{f'(x_t)}\). Here our \(f(x)\) is
+\(NPV(r)\), and we can approximate \(f'(x_t)\) as
+\(\frac{NPV(r+0.000001) - NPV(r)}{0.000001}\). We will make guess until
+\(|NPV| < 0.000001\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ calc\_irr(c, guess}\OperatorTok{=}\DecValTok{0}\NormalTok{):}
+\NormalTok{    irr }\OperatorTok{=}\NormalTok{ guess}
+\NormalTok{    npv }\OperatorTok{=}\NormalTok{ calc\_npv(r}\OperatorTok{=}\NormalTok{irr, c}\OperatorTok{=}\NormalTok{c)}
+    \ControlFlowTok{while}\NormalTok{ np.}\BuiltInTok{abs}\NormalTok{(npv) }\OperatorTok{\textgreater{}} \FloatTok{1e{-}6}\NormalTok{:}
+\NormalTok{        slope }\OperatorTok{=}\NormalTok{ (calc\_npv(r}\OperatorTok{=}\NormalTok{irr}\OperatorTok{+}\FloatTok{1e{-}6}\NormalTok{, c}\OperatorTok{=}\NormalTok{c) }\OperatorTok{{-}}\NormalTok{ npv) }\OperatorTok{/} \FloatTok{1e{-}6}
+\NormalTok{        irr }\OperatorTok{=}\NormalTok{ irr }\OperatorTok{{-}}\NormalTok{ npv }\OperatorTok{/}\NormalTok{ slope }\CommentTok{\# N}
+\NormalTok{        npv }\OperatorTok{=}\NormalTok{ calc\_npv(r}\OperatorTok{=}\NormalTok{irr, c}\OperatorTok{=}\NormalTok{c)}
+        \CommentTok{\# print(f\textquotesingle{}NPV is \{npv\}, and IRR is \{irr\}\textquotesingle{})}
+
+    \ControlFlowTok{return}\NormalTok{ irr}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{calc\_irr(c}\OperatorTok{=}\NormalTok{c)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.1000
+\end{verbatim}
 
 \hypertarget{write-a-function-returns-that-accepts-numpy-arrays-of-prices-and-dividends-and-returns-a-numpy-array-of-returns.-2}{%
 \subsection{\texorpdfstring{Write a function \texttt{returns()} that
@@ -13046,6 +14056,46 @@ returns.}{Write a function returns() that accepts NumPy arrays of prices and div
 \NormalTok{dividends }\OperatorTok{=}\NormalTok{ np.array([}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{])}
 \end{Highlighting}
 \end{Shaded}
+
+We can slice \texttt{prices} to calculate capital gains without a for
+loop!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{prices[}\DecValTok{1}\NormalTok{:] }\OperatorTok{{-}}\NormalTok{ prices[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([ 50, -50, -50,  50,  50, -50,  50])
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(prices[}\DecValTok{1}\NormalTok{:] }\OperatorTok{{-}}\NormalTok{ prices[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{] }\OperatorTok{+}\NormalTok{ dividends[}\DecValTok{1}\NormalTok{:]) }\OperatorTok{/}\NormalTok{ prices[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([ 0.51  , -0.3267, -0.49  ,  1.04  ,  0.52  , -0.32  ,  0.52  ])
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ returns(p, d):}
+    \ControlFlowTok{return}\NormalTok{ (p[}\DecValTok{1}\NormalTok{:] }\OperatorTok{{-}}\NormalTok{ p[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{] }\OperatorTok{+}\NormalTok{ d[}\DecValTok{1}\NormalTok{:]) }\OperatorTok{/}\NormalTok{ p[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns(p}\OperatorTok{=}\NormalTok{prices, d}\OperatorTok{=}\NormalTok{dividends)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([ 0.51  , -0.3267, -0.49  ,  1.04  ,  0.52  , -0.32  ,  0.52  ])
+\end{verbatim}
 
 \hypertarget{rewrite-the-function-returns-so-it-returns-numpy-arrays-of-returns-capital-gains-yields-and-dividend-yields.-2}{%
 \subsection{\texorpdfstring{Rewrite the function \texttt{returns()} so
@@ -13066,6 +14116,16 @@ Output: \texttt{np.array({[}0.75,\ 0.0,\ 0.5,\ 1.0,\ 0.5{]})}
 \end{Highlighting}
 \end{Shaded}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(numbers }\OperatorTok{{-}}\NormalTok{ numbers.}\BuiltInTok{min}\NormalTok{()) }\OperatorTok{/}\NormalTok{ (numbers.}\BuiltInTok{max}\NormalTok{() }\OperatorTok{{-}}\NormalTok{ numbers.}\BuiltInTok{min}\NormalTok{())}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([0.75, 0.  , 0.5 , 1.  , 0.5 ])
+\end{verbatim}
+
 \hypertarget{write-functions-var-and-std-that-calculate-variance-and-standard-deviation.-2}{%
 \subsection{\texorpdfstring{Write functions \texttt{var()} and
 \texttt{std()} that calculate variance and standard
@@ -13081,8 +14141,123 @@ Both function should have an argument \texttt{sample} that is
 \texttt{True} by default so both functions return sample statistics by
 default.
 
-Use the output of \texttt{returns()} to compare your functions with
-NumPy's \texttt{.var()} and \texttt{.std()} methods.
+Use \texttt{numbers} to compare your functions with NumPy's
+\texttt{.var()} and \texttt{.std()} methods.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{((numbers }\OperatorTok{{-}}\NormalTok{ numbers.mean())}\OperatorTok{**}\DecValTok{2}\NormalTok{).mean()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.4400
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{numbers.var()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.4400
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ var(x, sample}\OperatorTok{=}\VariableTok{True}\NormalTok{):}
+\NormalTok{    mu\_x }\OperatorTok{=}\NormalTok{ x.mean()}
+    \ControlFlowTok{return}\NormalTok{ ((x }\OperatorTok{{-}}\NormalTok{ mu\_x)}\OperatorTok{**}\DecValTok{2}\NormalTok{).}\BuiltInTok{sum}\NormalTok{() }\OperatorTok{/}\NormalTok{ (}\BuiltInTok{len}\NormalTok{(x) }\OperatorTok{{-}}\NormalTok{ sample)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{var(numbers)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.5500
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{var(numbers) }\OperatorTok{==}\NormalTok{ numbers.var(ddof}\OperatorTok{=}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{var(numbers, sample}\OperatorTok{=}\VariableTok{False}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.4400
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{var(numbers, sample}\OperatorTok{=}\VariableTok{False}\NormalTok{) }\OperatorTok{==}\NormalTok{ numbers.var()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ std(x, sample}\OperatorTok{=}\VariableTok{True}\NormalTok{):}
+    \ControlFlowTok{return}\NormalTok{ np.sqrt(var(x}\OperatorTok{=}\NormalTok{x, sample}\OperatorTok{=}\NormalTok{sample))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{std(numbers, sample}\OperatorTok{=}\VariableTok{False}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.6633
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{std(numbers, sample}\OperatorTok{=}\VariableTok{False}\NormalTok{) }\OperatorTok{==}\NormalTok{ numbers.std()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{std(numbers)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.7416
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{std(numbers) }\OperatorTok{==}\NormalTok{ numbers.std(ddof}\OperatorTok{=}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
 
 \hypertarget{mckinney-chapter-4---practice-for-section-05}{%
 \chapter{McKinney Chapter 4 - Practice for Section
@@ -13554,7 +14729,7 @@ mean computation time.
 \end{Shaded}
 
 \begin{verbatim}
-56.3 µs ± 11.6 µs per loop (mean ± std. dev. of 7 runs, 10,000 loops each)
+47.8 µs ± 4.61 µs per loop (mean ± std. dev. of 7 runs, 10,000 loops each)
 \end{verbatim}
 
 \begin{Shaded}
@@ -13564,7 +14739,7 @@ mean computation time.
 \end{Shaded}
 
 \begin{verbatim}
-17.6 ms ± 1.82 ms per loop (mean ± std. dev. of 7 runs, 10 loops each)
+13.6 ms ± 761 µs per loop (mean ± std. dev. of 7 runs, 100 loops each)
 \end{verbatim}
 
 The NumPy version is about 1,000 times faster!
@@ -13633,6 +14808,47 @@ Present value of a lump sum \texttt{fv}:
 \texttt{fv}
 function.}{Write a function that mimic Excel's fv function.}}\label{write-a-function-that-mimic-excels-fv-function.-3}}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ calc\_fv(rate, nper, pmt}\OperatorTok{=}\VariableTok{None}\NormalTok{, pv}\OperatorTok{=}\VariableTok{None}\NormalTok{, }\BuiltInTok{type}\OperatorTok{=}\VariableTok{None}\NormalTok{):}
+    \ControlFlowTok{if}\NormalTok{ pmt }\KeywordTok{is} \VariableTok{None}\NormalTok{:}
+\NormalTok{        pmt }\OperatorTok{=} \DecValTok{0}
+    \ControlFlowTok{if}\NormalTok{ pv }\KeywordTok{is} \VariableTok{None}\NormalTok{:}
+\NormalTok{        pv }\OperatorTok{=} \DecValTok{0}
+    \ControlFlowTok{if} \BuiltInTok{type} \KeywordTok{is} \VariableTok{None}\NormalTok{:}
+        \BuiltInTok{type} \OperatorTok{=} \StringTok{\textquotesingle{}END\textquotesingle{}}
+    
+\NormalTok{    fv\_pmt }\OperatorTok{=}\NormalTok{ (pmt }\OperatorTok{/}\NormalTok{ rate) }\OperatorTok{*}\NormalTok{ ((}\DecValTok{1} \OperatorTok{+}\NormalTok{ rate)}\OperatorTok{**}\NormalTok{nper }\OperatorTok{{-}} \DecValTok{1}\NormalTok{)}
+\NormalTok{    fv\_pv }\OperatorTok{=}\NormalTok{ pv }\OperatorTok{*}\NormalTok{ (}\DecValTok{1} \OperatorTok{+}\NormalTok{ rate)}\OperatorTok{**}\NormalTok{nper}
+\NormalTok{    fv }\OperatorTok{=}\NormalTok{ fv\_pmt }\OperatorTok{+}\NormalTok{ fv\_pv}
+
+    \ControlFlowTok{if} \BuiltInTok{type} \OperatorTok{==} \StringTok{\textquotesingle{}BGN\textquotesingle{}}\NormalTok{:}
+\NormalTok{        fv }\OperatorTok{*=}\NormalTok{ (}\DecValTok{1} \OperatorTok{+}\NormalTok{ rate) }\CommentTok{\# same as pv = pv*(1 + rate)}
+    
+    \ControlFlowTok{return} \OperatorTok{{-}}\DecValTok{1} \OperatorTok{*}\NormalTok{ fv}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{calc\_fv(rate}\OperatorTok{=}\FloatTok{0.072}\NormalTok{, nper}\OperatorTok{=}\DecValTok{10}\NormalTok{, pv}\OperatorTok{={-}}\DecValTok{1000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+2004.2314
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{calc\_fv(rate}\OperatorTok{=}\FloatTok{0.072}\NormalTok{, nper}\OperatorTok{=}\DecValTok{10}\NormalTok{, pmt}\OperatorTok{=}\DecValTok{72}\NormalTok{, pv}\OperatorTok{={-}}\DecValTok{1000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+1000.0000
+\end{verbatim}
+
 \hypertarget{replace-the-negative-values-in-data-with--1-and-positive-values-with-1.-3}{%
 \subsection{\texorpdfstring{Replace the negative values in \texttt{data}
 with -1 and positive values with
@@ -13641,19 +14857,99 @@ with -1 and positive values with
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{np.random.seed(}\DecValTok{42}\NormalTok{)}
-\NormalTok{data }\OperatorTok{=}\NormalTok{ np.random.randn(}\DecValTok{7}\NormalTok{, }\DecValTok{7}\NormalTok{)}
+\NormalTok{data }\OperatorTok{=}\NormalTok{ np.random.randn(}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{)}
 \NormalTok{data}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-array([[ 0.4967, -0.1383,  0.6477,  1.523 , -0.2342, -0.2341,  1.5792],
-       [ 0.7674, -0.4695,  0.5426, -0.4634, -0.4657,  0.242 , -1.9133],
-       [-1.7249, -0.5623, -1.0128,  0.3142, -0.908 , -1.4123,  1.4656],
-       [-0.2258,  0.0675, -1.4247, -0.5444,  0.1109, -1.151 ,  0.3757],
-       [-0.6006, -0.2917, -0.6017,  1.8523, -0.0135, -1.0577,  0.8225],
-       [-1.2208,  0.2089, -1.9597, -1.3282,  0.1969,  0.7385,  0.1714],
-       [-0.1156, -0.3011, -1.4785, -0.7198, -0.4606,  1.0571,  0.3436]])
+array([[ 0.4967, -0.1383,  0.6477,  1.523 ],
+       [-0.2342, -0.2341,  1.5792,  0.7674],
+       [-0.4695,  0.5426, -0.4634, -0.4657],
+       [ 0.242 , -1.9133, -1.7249, -0.5623]])
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data[data }\OperatorTok{\textless{}} \DecValTok{0}\NormalTok{] }\OperatorTok{=} \OperatorTok{{-}}\DecValTok{1}
+\NormalTok{data[data }\OperatorTok{\textgreater{}} \DecValTok{0}\NormalTok{] }\OperatorTok{=} \OperatorTok{+}\DecValTok{1}
+
+\NormalTok{data }\CommentTok{\# here "1." and "{-}1." indicate that these values are floats}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([[ 1., -1.,  1.,  1.],
+       [-1., -1.,  1.,  1.],
+       [-1.,  1., -1., -1.],
+       [ 1., -1., -1., -1.]])
+\end{verbatim}
+
+\textbf{\emph{Here is a second option!}} NumPy's \texttt{np.where()}
+function has the same logic as Excel's \texttt{if()} function! I will
+recreate \texttt{data} so we start from the same point.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.random.seed(}\DecValTok{42}\NormalTok{)}
+\NormalTok{data }\OperatorTok{=}\NormalTok{ np.random.randn(}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{)}
+
+\NormalTok{np.where(data }\OperatorTok{\textless{}} \DecValTok{0}\NormalTok{, }\OperatorTok{{-}}\DecValTok{1}\NormalTok{, np.where(data }\OperatorTok{\textgreater{}} \DecValTok{0}\NormalTok{, }\OperatorTok{+}\DecValTok{1}\NormalTok{, data))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([[ 1., -1.,  1.,  1.],
+       [-1., -1.,  1.,  1.],
+       [-1.,  1., -1., -1.],
+       [ 1., -1., -1., -1.]])
+\end{verbatim}
+
+The nested \texttt{np.where()} function calls can get confusing! An
+option is to insert white space!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.random.seed(}\DecValTok{42}\NormalTok{)}
+\NormalTok{data }\OperatorTok{=}\NormalTok{ np.random.randn(}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{)}
+
+\NormalTok{np.where(}
+\NormalTok{    data }\OperatorTok{\textless{}} \DecValTok{0}\NormalTok{, }\CommentTok{\# condition}
+    \OperatorTok{{-}}\DecValTok{1}\NormalTok{, }\CommentTok{\# result if True}
+\NormalTok{    np.where(data }\OperatorTok{\textgreater{}} \DecValTok{0}\NormalTok{, }\OperatorTok{+}\DecValTok{1}\NormalTok{, data) }\CommentTok{\# result if False}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([[ 1., -1.,  1.,  1.],
+       [-1., -1.,  1.,  1.],
+       [-1.,  1., -1., -1.],
+       [ 1., -1., -1., -1.]])
+\end{verbatim}
+
+\textbf{\emph{Here is a third option!}} NumPy's \texttt{np.select()}
+function lets us test \emph{many} conditions! I will recreate
+\texttt{data} so we start from the same point.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.random.seed(}\DecValTok{42}\NormalTok{)}
+\NormalTok{data }\OperatorTok{=}\NormalTok{ np.random.randn(}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{)}
+
+\NormalTok{np.select(}
+\NormalTok{    condlist}\OperatorTok{=}\NormalTok{[data}\OperatorTok{\textless{}}\DecValTok{0}\NormalTok{, data}\OperatorTok{\textgreater{}}\DecValTok{0}\NormalTok{],}
+\NormalTok{    choicelist}\OperatorTok{=}\NormalTok{[}\OperatorTok{{-}}\DecValTok{1}\NormalTok{, }\OperatorTok{+}\DecValTok{1}\NormalTok{],}
+\NormalTok{    default}\OperatorTok{=}\NormalTok{data}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([[ 1., -1.,  1.,  1.],
+       [-1., -1.,  1.,  1.],
+       [-1.,  1., -1., -1.],
+       [ 1., -1., -1., -1.]])
 \end{verbatim}
 
 \hypertarget{write-a-function-npmts-that-calculates-the-number-of-payments-that-generate-x-of-the-present-value-of-a-perpetuity.-3}{%
@@ -13668,10 +14964,103 @@ value of a growing perpetuity is \(PV = \frac{C_1}{r - g}\), and the
 present value of a growing annuity is
 \(PV = \frac{C_1}{r - g}\left[ 1 - \left( \frac{1 + g}{1 + r} \right)^t \right]\).
 
+We can use the growing annuity and perpetuity formulas to show:
+\(x = \left[ 1 - \left( \frac{1 + g}{1 + r} \right)^t \right]\).
+
+Then: \(1 - x = \left( \frac{1 + g}{1 + r} \right)^t\).
+
+Finally: \(t = \frac{\log(1-x)}{\log\left(\frac{1 + g}{1 + r}\right)}\)
+
+\textbf{\emph{We do not need to accept an argument \texttt{c1} because
+\(C_1\) cancels out!}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ npmts(x, r, g):}
+    \ControlFlowTok{return}\NormalTok{ np.log(}\DecValTok{1}\OperatorTok{{-}}\NormalTok{x) }\OperatorTok{/}\NormalTok{ np.log((}\DecValTok{1} \OperatorTok{+}\NormalTok{ g) }\OperatorTok{/}\NormalTok{ (}\DecValTok{1} \OperatorTok{+}\NormalTok{ r))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{npmts(}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.1}\NormalTok{, }\FloatTok{0.05}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+14.9000
+\end{verbatim}
+
 \hypertarget{write-a-function-that-calculates-the-internal-rate-of-return-given-a-numpy-array-of-cash-flows.-3}{%
 \subsection{Write a function that calculates the internal rate of return
 given a NumPy array of cash
 flows.}\label{write-a-function-that-calculates-the-internal-rate-of-return-given-a-numpy-array-of-cash-flows.-3}}
+
+Let us pick a set of cash flows \texttt{c} where we know the internal
+rate of return! For the following \texttt{c}, the IRR is 10\%.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{c }\OperatorTok{=}\NormalTok{ np.array([}\OperatorTok{{-}}\DecValTok{100}\NormalTok{, }\OperatorTok{+}\DecValTok{110}\NormalTok{])}
+\NormalTok{r }\OperatorTok{=} \FloatTok{0.1}
+\end{Highlighting}
+\end{Shaded}
+
+First we need an function to calculate net present value (NPV) from
+\texttt{c} and \texttt{r}! The \texttt{npv()} function below uses NumPy
+arrays to calculate NPV as: \[NPV = \sum_{t=0}^T \frac{c_t}{(1+r)^t}\]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ calc\_npv(r, c):}
+\NormalTok{    t }\OperatorTok{=}\NormalTok{ np.arange(}\BuiltInTok{len}\NormalTok{(c))}
+    \ControlFlowTok{return}\NormalTok{ (c }\OperatorTok{/}\NormalTok{ (}\DecValTok{1} \OperatorTok{+}\NormalTok{ r)}\OperatorTok{**}\NormalTok{t).}\BuiltInTok{sum}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{calc\_npv(r}\OperatorTok{=}\NormalTok{r, c}\OperatorTok{=}\NormalTok{c)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+-0.0000
+\end{verbatim}
+
+We can use a \texttt{while} loop to guess IRR values until we find an
+NPV close to zero. We can use the
+\href{https://en.wikipedia.org/wiki/Newton\%27s_method}{Newton-Rapshon
+method} to make smarter guesses. If we have function \(f(x)\) and guess
+\(x_t\), our next guess should be
+\(x_{t+1} = x_t - \frac{f(x_t)}{f'(x_t)}\). Here our \(f(x)\) is
+\(NPV(r)\), and we can approximate \(f'(x_t)\) as
+\(\frac{NPV(r+0.000001) - NPV(r)}{0.000001}\). We will make guess until
+\(|NPV| < 0.000001\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ calc\_irr(c, guess}\OperatorTok{=}\DecValTok{0}\NormalTok{, tol}\OperatorTok{=}\FloatTok{1e{-}6}\NormalTok{, step}\OperatorTok{=}\FloatTok{1e{-}6}\NormalTok{):}
+\NormalTok{    irr }\OperatorTok{=}\NormalTok{ guess}
+\NormalTok{    npv }\OperatorTok{=}\NormalTok{ calc\_npv(r}\OperatorTok{=}\NormalTok{irr, c}\OperatorTok{=}\NormalTok{c)}
+    \ControlFlowTok{while}\NormalTok{ np.}\BuiltInTok{abs}\NormalTok{(npv) }\OperatorTok{\textgreater{}}\NormalTok{ tol:}
+\NormalTok{        deriv }\OperatorTok{=}\NormalTok{ (calc\_npv(r}\OperatorTok{=}\NormalTok{irr}\OperatorTok{+}\NormalTok{step, c}\OperatorTok{=}\NormalTok{c) }\OperatorTok{{-}}\NormalTok{ npv) }\OperatorTok{/}\NormalTok{ step }\CommentTok{\# Delta NPV / Delta r}
+\NormalTok{        irr }\OperatorTok{=}\NormalTok{ irr }\OperatorTok{{-}}\NormalTok{ npv }\OperatorTok{/}\NormalTok{ deriv}
+\NormalTok{        npv }\OperatorTok{=}\NormalTok{ calc\_npv(r}\OperatorTok{=}\NormalTok{irr, c}\OperatorTok{=}\NormalTok{c)}
+        \CommentTok{\# print(f\textquotesingle{}IRR is \{irr\}, and NPV is \{npv\}\textquotesingle{})}
+    \ControlFlowTok{return}\NormalTok{ irr}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{calc\_irr(c}\OperatorTok{=}\NormalTok{c)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.1000
+\end{verbatim}
 
 \hypertarget{write-a-function-returns-that-accepts-numpy-arrays-of-prices-and-dividends-and-returns-a-numpy-array-of-returns.-3}{%
 \subsection{\texorpdfstring{Write a function \texttt{returns()} that
@@ -13685,6 +15074,37 @@ returns.}{Write a function returns() that accepts NumPy arrays of prices and div
 \NormalTok{dividends }\OperatorTok{=}\NormalTok{ np.array([}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{])}
 \end{Highlighting}
 \end{Shaded}
+
+We want to slice our arrays to ``lag'' or ``shift'' them! For example,
+we slice the \texttt{prices} array to calculate capital gains as
+follows.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{prices[}\DecValTok{1}\NormalTok{:] }\OperatorTok{{-}}\NormalTok{ prices[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([ 50, -50, -50,  50,  50, -50,  50])
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ returns(p, d):}
+    \ControlFlowTok{return}\NormalTok{ (p[}\DecValTok{1}\NormalTok{:] }\OperatorTok{{-}}\NormalTok{ p[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{] }\OperatorTok{+}\NormalTok{ d[}\DecValTok{1}\NormalTok{:]) }\OperatorTok{/}\NormalTok{ p[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns(p}\OperatorTok{=}\NormalTok{prices, d}\OperatorTok{=}\NormalTok{dividends)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+array([ 0.51  , -0.3267, -0.49  ,  1.04  ,  0.52  , -0.32  ,  0.52  ])
+\end{verbatim}
 
 \hypertarget{rewrite-the-function-returns-so-it-returns-numpy-arrays-of-returns-capital-gains-yields-and-dividend-yields.-3}{%
 \subsection{\texorpdfstring{Rewrite the function \texttt{returns()} so
@@ -13710,18 +15130,120 @@ Output: \texttt{np.array({[}0.75,\ 0.0,\ 0.5,\ 1.0,\ 0.5{]})}
 \texttt{std()} that calculate variance and standard
 deviation.}{Write functions var() and std() that calculate variance and standard deviation.}}\label{write-functions-var-and-std-that-calculate-variance-and-standard-deviation.-3}}
 
-NumPy's \texttt{.var()} and \texttt{.std()} methods return
-\emph{population} statistics (i.e., denominators of \(n\)). The pandas
-equivalents return \emph{sample} statistics (denominators of \(n-1\)),
-which are more appropriate for financial data analysis where we have a
-sample instead of a population.
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{((numbers }\OperatorTok{{-}}\NormalTok{ numbers.mean())}\OperatorTok{**}\DecValTok{2}\NormalTok{).mean()}
+\end{Highlighting}
+\end{Shaded}
 
-Both function should have an argument \texttt{sample} that is
-\texttt{True} by default so both functions return sample statistics by
-default.
+\begin{verbatim}
+0.4400
+\end{verbatim}
 
-Use the output of \texttt{returns()} to compare your functions with
-NumPy's \texttt{.var()} and \texttt{.std()} methods.
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{numbers.var()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.4400
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ var(x, sample}\OperatorTok{=}\VariableTok{True}\NormalTok{):}
+\NormalTok{    mu\_x }\OperatorTok{=}\NormalTok{ x.mean()}
+    \ControlFlowTok{return}\NormalTok{ ((x }\OperatorTok{{-}}\NormalTok{ mu\_x)}\OperatorTok{**}\DecValTok{2}\NormalTok{).}\BuiltInTok{sum}\NormalTok{() }\OperatorTok{/}\NormalTok{ (}\BuiltInTok{len}\NormalTok{(x) }\OperatorTok{{-}}\NormalTok{ sample)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{var(numbers)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.5500
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{var(numbers) }\OperatorTok{==}\NormalTok{ numbers.var(ddof}\OperatorTok{=}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{var(numbers, sample}\OperatorTok{=}\VariableTok{False}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.4400
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{var(numbers, sample}\OperatorTok{=}\VariableTok{False}\NormalTok{) }\OperatorTok{==}\NormalTok{ numbers.var()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ std(x, sample}\OperatorTok{=}\VariableTok{True}\NormalTok{):}
+    \ControlFlowTok{return}\NormalTok{ np.sqrt(var(x}\OperatorTok{=}\NormalTok{x, sample}\OperatorTok{=}\NormalTok{sample))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{std(numbers, sample}\OperatorTok{=}\VariableTok{False}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.6633
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{std(numbers, sample}\OperatorTok{=}\VariableTok{False}\NormalTok{) }\OperatorTok{==}\NormalTok{ numbers.std()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{std(numbers)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0.7416
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{std(numbers) }\OperatorTok{==}\NormalTok{ numbers.std(ddof}\OperatorTok{=}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
 
 \part{Week 4}
 
@@ -13735,7 +15257,7 @@ pandas}\label{mckinney-chapter-5---getting-started-with-pandas}}
 Chapter 5 of Wes McKinney's
 \href{https://wesmckinney.com/book/}{\emph{Python for Data Analysis}}
 discusses the fundamentals of pandas, which will be our main tool for
-the rest of the semester. pandas is an abbrviation for \emph{pan}el
+the rest of the semester. pandas is an abbreviation for \emph{pan}el
 \emph{da}ta, which provide time-stamped data for multiple individuals or
 firms.
 
@@ -14178,6 +15700,27 @@ Similarly, if we extract one row. via either
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\NormalTok{frame2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule\noalign{}
+& year & state & pop & debt \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+one & 2000 & Ohio & 1.5000 & NaN \\
+two & 2001 & Ohio & 1.7000 & NaN \\
+three & 2002 & Ohio & 3.6000 & NaN \\
+four & 2001 & Nevada & 2.4000 & NaN \\
+five & 2002 & Nevada & 2.9000 & NaN \\
+six & 2003 & Nevada & 3.2000 & NaN \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \NormalTok{frame2.loc[}\StringTok{\textquotesingle{}one\textquotesingle{}}\NormalTok{]}
 \end{Highlighting}
 \end{Shaded}
@@ -14405,17 +15948,12 @@ six & 2003 & Nevada & 3.2000 & NaN \\
 \begin{Highlighting}[]
 \NormalTok{obj }\OperatorTok{=}\NormalTok{ pd.Series(}\BuiltInTok{range}\NormalTok{(}\DecValTok{3}\NormalTok{), index}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}a\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}b\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}c\textquotesingle{}}\NormalTok{])}
 \NormalTok{index }\OperatorTok{=}\NormalTok{ obj.index}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{index[}\DecValTok{1}\NormalTok{:]}
+\NormalTok{index}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-Index(['b', 'c'], dtype='object')
+Index(['a', 'b', 'c'], dtype='object')
 \end{verbatim}
 
 Index objects are immutable!
@@ -14432,8 +15970,13 @@ are duplicate-free.
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{dup\_labels }\OperatorTok{=}\NormalTok{ pd.Index([}\StringTok{\textquotesingle{}foo\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}foo\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}bar\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}bar\textquotesingle{}}\NormalTok{])}
+\NormalTok{dup\_labels}
 \end{Highlighting}
 \end{Shaded}
+
+\begin{verbatim}
+Index(['foo', 'foo', 'bar', 'bar'], dtype='object')
+\end{verbatim}
 
 \hypertarget{essential-functionality}{%
 \section{Essential Functionality}\label{essential-functionality}}
@@ -14825,6 +16368,25 @@ New York & False & False & False & False \\
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\NormalTok{data}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule\noalign{}
+& one & two & three & four \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+Ohio & 0 & 1 & 2 & 3 \\
+Colorado & 4 & 5 & 6 & 7 \\
+Utah & 8 & 9 & 10 & 11 \\
+New York & 12 & 13 & 14 & 15 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \NormalTok{data[data }\OperatorTok{\textless{}} \DecValTok{5}\NormalTok{] }\OperatorTok{=} \DecValTok{0}
 \NormalTok{data}
 \end{Highlighting}
@@ -15098,6 +16660,8 @@ Utah & NaN & NaN & NaN & NaN \\
 0 & NaN & NaN \\
 1 & NaN & NaN \\
 \end{longtable}
+
+\textbf{\emph{Always check your output!}}
 
 \hypertarget{arithmetic-methods-with-fill-values}{%
 \subsubsection{Arithmetic methods with fill
@@ -15436,7 +17000,17 @@ Note that we can use anonymous (lambda) functions ``on the fly'':
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{frame.}\BuiltInTok{apply}\NormalTok{(}\KeywordTok{lambda}\NormalTok{ x: x.}\BuiltInTok{max}\NormalTok{() }\OperatorTok{{-}}\NormalTok{ x.}\BuiltInTok{min}\NormalTok{())}
+\FloatTok{1.5792} \OperatorTok{{-}} \FloatTok{0.4967}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+1.0825
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{frame.}\BuiltInTok{apply}\NormalTok{(}\KeywordTok{lambda}\NormalTok{ x: x.}\BuiltInTok{max}\NormalTok{() }\OperatorTok{{-}}\NormalTok{ x.}\BuiltInTok{min}\NormalTok{()) }\CommentTok{\# implied axis=0}
 \end{Highlighting}
 \end{Shaded}
 
@@ -15472,7 +17046,7 @@ is an example of the speed costs of \texttt{.apply()}:
 \end{Shaded}
 
 \begin{verbatim}
-11.5 µs ± 1.34 µs per loop (mean ± std. dev. of 7 runs, 100,000 loops each)
+15.2 µs ± 4.5 µs per loop (mean ± std. dev. of 7 runs, 10,000 loops each)
 \end{verbatim}
 
 \begin{Shaded}
@@ -15482,7 +17056,7 @@ is an example of the speed costs of \texttt{.apply()}:
 \end{Shaded}
 
 \begin{verbatim}
-17.1 µs ± 2.03 µs per loop (mean ± std. dev. of 7 runs, 100,000 loops each)
+32.6 µs ± 9.67 µs per loop (mean ± std. dev. of 7 runs, 10,000 loops each)
 \end{verbatim}
 
 \hypertarget{summarizing-and-computing-descriptive-statistics}{%
@@ -15516,7 +17090,7 @@ d & 0.7500 & -1.3000 \\
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{df.}\BuiltInTok{sum}\NormalTok{()}
+\NormalTok{df.}\BuiltInTok{sum}\NormalTok{() }\CommentTok{\# implied axis=0}
 \end{Highlighting}
 \end{Shaded}
 
@@ -15641,7 +17215,58 @@ Covariance}\label{correlation-and-covariance}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{prices[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{]}
+\NormalTok{prices.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllllllllllllllllllll@{}}
+\toprule\noalign{}
+&
+\multicolumn{4}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 6\tabcolsep}}{%
+Adj Close} &
+\multicolumn{4}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 6\tabcolsep}}{%
+Close} &
+\multicolumn{2}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 2\tabcolsep}}{%
+Dividends} & ... &
+\multicolumn{2}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 2\tabcolsep}}{%
+Open} &
+\multicolumn{4}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 6\tabcolsep}}{%
+Stock Splits} &
+\multicolumn{4}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 6\tabcolsep}@{}}{%
+Volume} \\
+& AAPL & GOOG & IBM & MSFT & AAPL & GOOG & IBM & MSFT & AAPL & GOOG &
+... & IBM & MSFT & AAPL & GOOG & IBM & MSFT & AAPL & GOOG & IBM &
+MSFT \\
+Date & & & & & & & & & & & & & & & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2024-01-19 & 191.5600 & 147.9700 & 171.4800 & 398.6700 & 191.5600 &
+147.9700 & 171.4800 & 398.6700 & 0.0000 & 0.0000 & ... & 170.5900 &
+395.7600 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 68741000.0000 &
+27170900.0000 & 6925800 & 29272000.0000 \\
+2024-01-22 & 193.8900 & 147.7100 & 172.8300 & 396.5100 & 193.8900 &
+147.7100 & 172.8300 & 396.5100 & 0.0000 & 0.0000 & ... & 172.8200 &
+400.0200 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 60133900.0000 &
+21829200.0000 & 4926000 & 27016900.0000 \\
+2024-01-23 & 195.1800 & 148.6800 & 173.9400 & 398.9000 & 195.1800 &
+148.6800 & 173.9400 & 398.9000 & 0.0000 & 0.0000 & ... & 172.9000 &
+395.7500 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 42355600.0000 &
+14113600.0000 & 3983500 & 20525900.0000 \\
+2024-01-24 & 194.5000 & 150.3500 & 173.9300 & 402.5600 & 194.5000 &
+150.3500 & 173.9300 & 402.5600 & 0.0000 & 0.0000 & ... & 174.7600 &
+401.5400 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 53631300.0000 &
+19245000.0000 & 9097800 & 24867000.0000 \\
+2024-01-25 & 194.1700 & 153.6400 & 190.4300 & 404.8700 & 194.1700 &
+153.6400 & 190.4300 & 404.8700 & 0.0000 & 0.0000 & ... & 184.9600 &
+404.3200 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 54460179.0000 &
+21334519.0000 & 28357994 & 20529365.0000 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{prices[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].tail()}
 \end{Highlighting}
 \end{Shaded}
 
@@ -15653,17 +17278,11 @@ Date & & & & \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-1962-01-02 & NaN & NaN & 1.5558 & NaN \\
-1962-01-03 & NaN & NaN & 1.5694 & NaN \\
-1962-01-04 & NaN & NaN & 1.5537 & NaN \\
-1962-01-05 & NaN & NaN & 1.5231 & NaN \\
-1962-01-08 & NaN & NaN & 1.4946 & NaN \\
-... & ... & ... & ... & ... \\
-2023-12-18 & 195.8900 & 137.1900 & 162.7400 & 372.6500 \\
-2023-12-19 & 196.9400 & 138.1000 & 161.5600 & 373.2600 \\
-2023-12-20 & 194.8300 & 139.6600 & 160.0500 & 370.6200 \\
-2023-12-21 & 194.6800 & 141.8000 & 160.7800 & 373.5400 \\
-2023-12-22 & 195.2550 & 143.1900 & 161.8766 & 374.1400 \\
+2024-01-19 & 191.5600 & 147.9700 & 171.4800 & 398.6700 \\
+2024-01-22 & 193.8900 & 147.7100 & 172.8300 & 396.5100 \\
+2024-01-23 & 195.1800 & 148.6800 & 173.9400 & 398.9000 \\
+2024-01-24 & 194.5000 & 150.3500 & 173.9300 & 402.5600 \\
+2024-01-25 & 194.1700 & 153.6400 & 190.4300 & 404.8700 \\
 \end{longtable}
 
 The \texttt{prices} data frames contains daily data for AAPL, IBM, MSFT,
@@ -15695,11 +17314,11 @@ Date & & & & \\
 2004-08-25 & 0.0344 & 0.0108 & 0.0042 & 0.0114 \\
 2004-08-26 & 0.0487 & 0.0180 & -0.0045 & -0.0040 \\
 ... & ... & ... & ... & ... \\
-2023-12-18 & -0.0085 & 0.0250 & 0.0031 & 0.0052 \\
-2023-12-19 & 0.0054 & 0.0066 & -0.0073 & 0.0016 \\
-2023-12-20 & -0.0107 & 0.0113 & -0.0093 & -0.0071 \\
-2023-12-21 & -0.0008 & 0.0153 & 0.0046 & 0.0079 \\
-2023-12-22 & 0.0030 & 0.0098 & 0.0068 & 0.0016 \\
+2024-01-19 & 0.0155 & 0.0206 & 0.0278 & 0.0122 \\
+2024-01-22 & 0.0122 & -0.0018 & 0.0079 & -0.0054 \\
+2024-01-23 & 0.0067 & 0.0066 & 0.0064 & 0.0060 \\
+2024-01-24 & -0.0035 & 0.0112 & -0.0001 & 0.0092 \\
+2024-01-25 & -0.0017 & 0.0219 & 0.0949 & 0.0057 \\
 \end{longtable}
 
 We multiply by 252 to annualize mean daily returns because means grow
@@ -15712,10 +17331,10 @@ linearly with time and there are (about) 252 trading days per year.
 \end{Shaded}
 
 \begin{verbatim}
-AAPL   0.3665
-GOOG   0.2565
-IBM    0.0908
-MSFT   0.1972
+AAPL   0.3648
+GOOG   0.2591
+IBM    0.0990
+MSFT   0.2005
 dtype: float64
 \end{verbatim}
 
@@ -15731,10 +17350,10 @@ square root of the variance.
 \end{Shaded}
 
 \begin{verbatim}
-AAPL   0.3281
-GOOG   0.3076
-IBM    0.2264
-MSFT   0.2727
+AAPL   0.3277
+GOOG   0.3071
+IBM    0.2272
+MSFT   0.2722
 dtype: float64
 \end{verbatim}
 
@@ -15753,7 +17372,7 @@ We can calculate pairwise correlations.
 \end{Shaded}
 
 \begin{verbatim}
-0.4943
+0.4926
 \end{verbatim}
 
 We can also calculate correlation matrices.
@@ -15771,10 +17390,10 @@ We can also calculate correlation matrices.
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-AAPL & 1.0000 & 0.5188 & 0.4295 & 0.5234 \\
-GOOG & 0.5188 & 1.0000 & 0.3956 & 0.5623 \\
-IBM & 0.4295 & 0.3956 & 1.0000 & 0.4943 \\
-MSFT & 0.5234 & 0.5623 & 0.4943 & 1.0000 \\
+AAPL & 1.0000 & 0.5189 & 0.4275 & 0.5235 \\
+GOOG & 0.5189 & 1.0000 & 0.3953 & 0.5626 \\
+IBM & 0.4275 & 0.3953 & 1.0000 & 0.4926 \\
+MSFT & 0.5235 & 0.5626 & 0.4926 & 1.0000 \\
 \end{longtable}
 
 \begin{Shaded}
@@ -15784,7 +17403,7 @@ MSFT & 0.5234 & 0.5623 & 0.4943 & 1.0000 \\
 \end{Shaded}
 
 \begin{verbatim}
-0.4943
+0.4926
 \end{verbatim}
 
 \hypertarget{mckinney-chapter-5---practice-for-section-02}{%
@@ -15794,8 +17413,17 @@ MSFT & 0.5234 & 0.5623 & 0.4943 & 1.0000 \\
 \hypertarget{announcements-12}{%
 \section{Announcements}\label{announcements-12}}
 
-\hypertarget{practice-12}{%
-\section{Practice}\label{practice-12}}
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  No DataCamp this week, but I suggest you keep working on it
+\item
+  Keep forming groups, and I will post our first project early next week
+\end{enumerate}
+
+\hypertarget{minute-recap-11}{%
+\section{10-Minute Recap}\label{minute-recap-11}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -15814,18 +17442,228 @@ MSFT & 0.5234 & 0.5623 & 0.4943 & 1.0000 \\
 \end{Highlighting}
 \end{Shaded}
 
+There are two pandas data structures:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Data frames are like worksheets in an Excel workbook (2-D, mixed data
+  type)
+\item
+  Series are like a column in a worksheet (1-D, only one data type)
+\end{enumerate}
+
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{tickers }\OperatorTok{=}\NormalTok{ yf.Tickers(}\StringTok{\textquotesingle{}AAPL IBM MSFT GOOG\textquotesingle{}}\NormalTok{)}
-\NormalTok{prices }\OperatorTok{=}\NormalTok{ tickers.history(period}\OperatorTok{=}\StringTok{\textquotesingle{}max\textquotesingle{}}\NormalTok{, auto\_adjust}\OperatorTok{=}\VariableTok{False}\NormalTok{)}
-\NormalTok{returns }\OperatorTok{=}\NormalTok{ prices[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].pct\_change().dropna()}
-\NormalTok{returns}
+\NormalTok{np.random.seed(}\DecValTok{42}\NormalTok{)}
+\NormalTok{df }\OperatorTok{=}\NormalTok{ pd.DataFrame(}
+\NormalTok{    data}\OperatorTok{=}\NormalTok{np.random.randn(}\DecValTok{3}\NormalTok{, }\DecValTok{5}\NormalTok{),}
+\NormalTok{    index}\OperatorTok{=}\BuiltInTok{list}\NormalTok{(}\StringTok{\textquotesingle{}ABC\textquotesingle{}}\NormalTok{),}
+\NormalTok{    columns}\OperatorTok{=}\BuiltInTok{list}\NormalTok{(}\StringTok{\textquotesingle{}abcde\textquotesingle{}}\NormalTok{)}
+\NormalTok{)}
+
+\NormalTok{df}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule\noalign{}
+& a & b & c & d & e \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A & 0.4967 & -0.1383 & 0.6477 & 1.5230 & -0.2342 \\
+B & -0.2341 & 1.5792 & 0.7674 & -0.4695 & 0.5426 \\
+C & -0.4634 & -0.4657 & 0.2420 & -1.9133 & -1.7249 \\
+\end{longtable}
+
+We can slice data frames two ways!
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  By integer locations with the \texttt{.iloc{[}{]}} method
+\item
+  By row and column names with the \texttt{.loc{[}{]}} method
+\end{enumerate}
+
+How can we grab the first 2 rows and 3 columns?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df.iloc[:}\DecValTok{2}\NormalTok{, :}\DecValTok{3}\NormalTok{] }\CommentTok{\# pandas .iloc[] uses j,k notation, like NumPy}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+& a & b & c \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A & 0.4967 & -0.1383 & 0.6477 \\
+B & -0.2341 & 1.5792 & 0.7674 \\
+\end{longtable}
+
+\textbf{\emph{When we slice by names or string, pandas includes both
+left and right edges!}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df.loc[}\StringTok{\textquotesingle{}A\textquotesingle{}}\NormalTok{:}\StringTok{\textquotesingle{}B\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}a\textquotesingle{}}\NormalTok{:}\StringTok{\textquotesingle{}c\textquotesingle{}}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+& a & b & c \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A & 0.4967 & -0.1383 & 0.6477 \\
+B & -0.2341 & 1.5792 & 0.7674 \\
+\end{longtable}
+
+How can we add a column?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df[}\StringTok{\textquotesingle{}f\textquotesingle{}}\NormalTok{] }\OperatorTok{=} \DecValTok{2\_001}
+
+\NormalTok{df}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllll@{}}
+\toprule\noalign{}
+& a & b & c & d & e & f \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A & 0.4967 & -0.1383 & 0.6477 & 1.5230 & -0.2342 & 2001 \\
+B & -0.2341 & 1.5792 & 0.7674 & -0.4695 & 0.5426 & 2001 \\
+C & -0.4634 & -0.4657 & 0.2420 & -1.9133 & -1.7249 & 2001 \\
+\end{longtable}
+
+What if we want to insert a column between ``b'' and ``c''? We can use
+the \texttt{.insert()} method! Note. I was surprised the
+\texttt{.insert()} operates ``in place'' without an option to override!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df.insert(}
+\NormalTok{    loc}\OperatorTok{=}\DecValTok{2}\NormalTok{,}
+\NormalTok{    column}\OperatorTok{=}\StringTok{\textquotesingle{}C\textquotesingle{}}\NormalTok{,}
+\NormalTok{    value}\OperatorTok{=}\DecValTok{5}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df.loc[:, }\StringTok{\textquotesingle{}a\textquotesingle{}}\NormalTok{:}\StringTok{\textquotesingle{}c\textquotesingle{}}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule\noalign{}
+& a & b & C & c \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A & 0.4967 & -0.1383 & 5 & 0.6477 \\
+B & -0.2341 & 1.5792 & 5 & 0.7674 \\
+C & -0.4634 & -0.4657 & 5 & 0.2420 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df[[}\StringTok{\textquotesingle{}a\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}b\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}C\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}c\textquotesingle{}}\NormalTok{]]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule\noalign{}
+& a & b & C & c \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A & 0.4967 & -0.1383 & 5 & 0.6477 \\
+B & -0.2341 & 1.5792 & 5 & 0.7674 \\
+C & -0.4634 & -0.4657 & 5 & 0.2420 \\
+\end{longtable}
+
+A series is the other data structure in pandas!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ser }\OperatorTok{=}\NormalTok{ pd.Series(data}\OperatorTok{=}\NormalTok{np.arange(}\FloatTok{2.}\NormalTok{), index}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}B\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}C\textquotesingle{}}\NormalTok{])}
+
+\NormalTok{ser}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+B   0.0000
+C   1.0000
+dtype: float64
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df[}\StringTok{\textquotesingle{}g\textquotesingle{}}\NormalTok{] }\OperatorTok{=}\NormalTok{ ser}
+
+\NormalTok{df}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllllll@{}}
+\toprule\noalign{}
+& a & b & C & c & d & e & f & g \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A & 0.4967 & -0.1383 & 5 & 0.6477 & 1.5230 & -0.2342 & 2001 & NaN \\
+B & -0.2341 & 1.5792 & 5 & 0.7674 & -0.4695 & 0.5426 & 2001 & 0.0000 \\
+C & -0.4634 & -0.4657 & 5 & 0.2420 & -1.9133 & -1.7249 & 2001 &
+1.0000 \\
+\end{longtable}
+
+\hypertarget{practice-12}{%
+\section{Practice}\label{practice-12}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tickers }\OperatorTok{=} \StringTok{\textquotesingle{}AAPL IBM MSFT GOOG\textquotesingle{}}
+\NormalTok{prices }\OperatorTok{=}\NormalTok{ yf.download(tickers}\OperatorTok{=}\NormalTok{tickers)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
 [*********************100%%**********************]  4 of 4 completed
 \end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    prices[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{] }\CommentTok{\# slice adj close column}
+\NormalTok{    .iloc[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{] }\CommentTok{\# drop last row with intra day prices, which are sometimes missing}
+\NormalTok{    .pct\_change() }\CommentTok{\# calculate returns}
+\NormalTok{    .dropna() }\CommentTok{\# drop leading rows with at least one missing value}
+\NormalTok{)}
+
+\NormalTok{returns}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{longtable}[]{@{}lllll@{}}
 \toprule\noalign{}
@@ -15841,26 +17679,142 @@ Date & & & & \\
 2004-08-25 & 0.0344 & 0.0108 & 0.0042 & 0.0114 \\
 2004-08-26 & 0.0487 & 0.0180 & -0.0045 & -0.0040 \\
 ... & ... & ... & ... & ... \\
-2023-12-18 & -0.0085 & 0.0250 & 0.0031 & 0.0052 \\
-2023-12-19 & 0.0054 & 0.0066 & -0.0073 & 0.0016 \\
-2023-12-20 & -0.0107 & 0.0113 & -0.0093 & -0.0071 \\
-2023-12-21 & -0.0008 & 0.0153 & 0.0046 & 0.0079 \\
-2023-12-22 & 0.0026 & 0.0076 & 0.0072 & 0.0012 \\
+2024-01-23 & 0.0067 & 0.0066 & 0.0064 & 0.0060 \\
+2024-01-24 & -0.0035 & 0.0112 & -0.0001 & 0.0092 \\
+2024-01-25 & -0.0017 & 0.0219 & 0.0949 & 0.0057 \\
+2024-01-26 & -0.0090 & 0.0010 & -0.0158 & -0.0023 \\
+2024-01-29 & -0.0036 & 0.0068 & -0.0015 & 0.0143 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns }\OperatorTok{=}\NormalTok{ prices[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].pct\_change().dropna()}
+\NormalTok{returns}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule\noalign{}
+& AAPL & GOOG & IBM & MSFT \\
+Date & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2004-08-20 & 0.0029 & 0.0794 & 0.0042 & 0.0029 \\
+2004-08-23 & 0.0091 & 0.0101 & -0.0070 & 0.0044 \\
+2004-08-24 & 0.0280 & -0.0414 & 0.0007 & 0.0000 \\
+2004-08-25 & 0.0344 & 0.0108 & 0.0042 & 0.0114 \\
+2004-08-26 & 0.0487 & 0.0180 & -0.0045 & -0.0040 \\
+... & ... & ... & ... & ... \\
+2024-01-24 & -0.0035 & 0.0112 & -0.0001 & 0.0092 \\
+2024-01-25 & -0.0017 & 0.0219 & 0.0949 & 0.0057 \\
+2024-01-26 & -0.0090 & 0.0010 & -0.0158 & -0.0023 \\
+2024-01-29 & -0.0036 & 0.0068 & -0.0015 & 0.0143 \\
+2024-01-30 & -0.0192 & -0.0116 & 0.0039 & -0.0028 \\
 \end{longtable}
 
 \hypertarget{what-are-the-mean-daily-returns-for-these-four-stocks}{%
 \subsection{What are the mean daily returns for these four
 stocks?}\label{what-are-the-mean-daily-returns-for-these-four-stocks}}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns.mean()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL   0.0014
+GOOG   0.0010
+IBM    0.0004
+MSFT   0.0008
+dtype: float64
+\end{verbatim}
+
+We if want an equally-weighted portfolio return? We could take the mean
+of each \emph{row} with \texttt{.mean(axis=1)}. The mean is the same as
+the sum of 0.25 times each of the 4 columns.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns.mean(axis}\OperatorTok{=}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Date
+2004-08-20    0.0224
+2004-08-23    0.0041
+2004-08-24   -0.0032
+2004-08-25    0.0152
+2004-08-26    0.0146
+               ...  
+2024-01-24    0.0042
+2024-01-25    0.0302
+2024-01-26   -0.0065
+2024-01-29    0.0040
+2024-01-30   -0.0074
+Length: 4894, dtype: float64
+\end{verbatim}
+
 \hypertarget{what-are-the-standard-deviations-of-daily-returns-for-these-four-stocks}{%
 \subsection{What are the standard deviations of daily returns for these
 four
 stocks?}\label{what-are-the-standard-deviations-of-daily-returns-for-these-four-stocks}}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns.std()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL   0.0206
+GOOG   0.0193
+IBM    0.0143
+MSFT   0.0171
+dtype: float64
+\end{verbatim}
+
 \hypertarget{what-are-the-annualized-means-and-standard-deviations-of-daily-returns-for-these-four-stocks}{%
 \subsection{\texorpdfstring{What are the \emph{annualized} means and
 standard deviations of daily returns for these four
 stocks?}{What are the annualized means and standard deviations of daily returns for these four stocks?}}\label{what-are-the-annualized-means-and-standard-deviations-of-daily-returns-for-these-four-stocks}}
+
+We multiply by \(T\) to annualize means, where \(T\) is the number of
+observations per year.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns.mean().mul(}\DecValTok{252}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL   0.3629
+GOOG   0.2588
+IBM    0.0983
+MSFT   0.2008
+dtype: float64
+\end{verbatim}
+
+We multiply by \(\sqrt{T}\) to annualize volatilities, where \(T\) is
+the number of observations per year.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns.std().mul(np.sqrt(}\DecValTok{252}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL   0.3276
+GOOG   0.3070
+IBM    0.2271
+MSFT   0.2721
+dtype: float64
+\end{verbatim}
 
 \hypertarget{plot-annualized-means-versus-standard-deviations-of-daily-returns-for-these-four-stocks}{%
 \subsection{\texorpdfstring{Plot \emph{annualized} means versus standard
@@ -15869,6 +17823,44 @@ stocks}{Plot annualized means versus standard deviations of daily returns for th
 
 Use \texttt{plt.scatter()}, which expects arguments as \texttt{x}
 (standard deviations) then \texttt{y} (means).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{vols }\OperatorTok{=}\NormalTok{ returns.std().mul(np.sqrt(}\DecValTok{252}\NormalTok{) }\OperatorTok{*} \DecValTok{100}\NormalTok{)}
+\NormalTok{means }\OperatorTok{=}\NormalTok{ returns.mean().mul(}\DecValTok{252} \OperatorTok{*} \DecValTok{100}\NormalTok{)}
+
+\NormalTok{plt.scatter(}
+\NormalTok{    x}\OperatorTok{=}\NormalTok{vols,}
+\NormalTok{    y}\OperatorTok{=}\NormalTok{means,}
+\NormalTok{    c}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}red\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}blue\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}green\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}purple\textquotesingle{}}\NormalTok{]}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Annualized Volatility of Daily Returns (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}Annualized Mean of Daily Returns (\%)\textquotesingle{}}\NormalTok{)}
+
+\CommentTok{\# plt.xlim((0, vols.max() + 5))}
+\CommentTok{\# plt.ylim((0, means.max() + 5))}
+
+\CommentTok{\# add tickers to each point}
+\ControlFlowTok{for}\NormalTok{ i }\KeywordTok{in}\NormalTok{ means.index: }\CommentTok{\# loop over ticker index}
+\NormalTok{    plt.text( }\CommentTok{\# plots string s at coordinates x and y}
+\NormalTok{        x}\OperatorTok{=}\NormalTok{vols[i], }\CommentTok{\# indexes volatility}
+\NormalTok{        y}\OperatorTok{=}\NormalTok{means[i], }\CommentTok{\# indexes mean return}
+\NormalTok{        s}\OperatorTok{=}\NormalTok{i }\CommentTok{\# ticker index}
+\NormalTok{    )}
+
+\NormalTok{plt.title(}\StringTok{\textquotesingle{}Returns versus Risk\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show() }\CommentTok{\# suppresses output of last function call}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_05_practice_02_files/figure-pdf/cell-21-output-1.png}
+
+}
+
+\end{figure}
 
 \hypertarget{repeat-the-previous-calculations-and-plot-for-the-stocks-in-the-dow-jones-industrial-index-djia}{%
 \subsection{Repeat the previous calculations and plot for the stocks in
@@ -15919,8 +17911,17 @@ returns}\label{repeat-the-plot-above-with-only-the-minimum-and-maximum-total-ret
 \hypertarget{announcements-13}{%
 \section{Announcements}\label{announcements-13}}
 
-\hypertarget{practice-13}{%
-\section{Practice}\label{practice-13}}
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  No DataCamp this week, but I suggest you keep working on it
+\item
+  Keep forming groups, and I will post our first project early next week
+\end{enumerate}
+
+\hypertarget{minute-recap-12}{%
+\section{10-Minute Recap}\label{minute-recap-12}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -15939,18 +17940,201 @@ returns}\label{repeat-the-plot-above-with-only-the-minimum-and-maximum-total-ret
 \end{Highlighting}
 \end{Shaded}
 
+pandas provides two \emph{very useful} data structures:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Data frames are like a worksheet in an Excel workbook (2-D, mixed data
+  type)
+\item
+  Series are like a column in a worksheet in an Excel workbook (1-D, one
+  data type)
+\end{enumerate}
+
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{tickers }\OperatorTok{=}\NormalTok{ yf.Tickers(}\StringTok{\textquotesingle{}AAPL IBM MSFT GOOG\textquotesingle{}}\NormalTok{)}
-\NormalTok{prices }\OperatorTok{=}\NormalTok{ tickers.history(period}\OperatorTok{=}\StringTok{\textquotesingle{}max\textquotesingle{}}\NormalTok{, auto\_adjust}\OperatorTok{=}\VariableTok{False}\NormalTok{)}
-\NormalTok{returns }\OperatorTok{=}\NormalTok{ prices[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].pct\_change().dropna()}
-\NormalTok{returns}
+\NormalTok{np.random.seed(}\DecValTok{42}\NormalTok{)}
+\NormalTok{df }\OperatorTok{=}\NormalTok{ pd.DataFrame(}
+\NormalTok{    data}\OperatorTok{=}\NormalTok{np.random.randn(}\DecValTok{4}\NormalTok{, }\DecValTok{4}\NormalTok{),}
+\NormalTok{    index}\OperatorTok{=}\BuiltInTok{list}\NormalTok{(}\StringTok{\textquotesingle{}ABCD\textquotesingle{}}\NormalTok{),}
+\NormalTok{    columns}\OperatorTok{=}\BuiltInTok{list}\NormalTok{(}\StringTok{\textquotesingle{}abcd\textquotesingle{}}\NormalTok{)}
+\NormalTok{)}
+
+\NormalTok{df}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule\noalign{}
+& a & b & c & d \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A & 0.4967 & -0.1383 & 0.6477 & 1.5230 \\
+B & -0.2342 & -0.2341 & 1.5792 & 0.7674 \\
+C & -0.4695 & 0.5426 & -0.4634 & -0.4657 \\
+D & 0.2420 & -1.9133 & -1.7249 & -0.5623 \\
+\end{longtable}
+
+How can we slice the first two rows and three columns? We can slice data
+frames two ways:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Using integer locations and the \texttt{.iloc{[}{]}} method
+\item
+  Using row and column names with the \texttt{.loc{[}{]}} method
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df.iloc[:}\DecValTok{2}\NormalTok{, :}\DecValTok{3}\NormalTok{] }\CommentTok{\# slice with j,k notation, like NumPy}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+& a & b & c \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A & 0.4967 & -0.1383 & 0.6477 \\
+B & -0.2342 & -0.2341 & 1.5792 \\
+\end{longtable}
+
+\textbf{\emph{When we slice by names or labels, we get both left and
+right edges included!}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df.loc[}\StringTok{\textquotesingle{}A\textquotesingle{}}\NormalTok{:}\StringTok{\textquotesingle{}B\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}a\textquotesingle{}}\NormalTok{:}\StringTok{\textquotesingle{}c\textquotesingle{}}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+& a & b & c \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A & 0.4967 & -0.1383 & 0.6477 \\
+B & -0.2342 & -0.2341 & 1.5792 \\
+\end{longtable}
+
+We can easily add columns!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df[}\StringTok{\textquotesingle{}e\textquotesingle{}}\NormalTok{] }\OperatorTok{=} \DecValTok{5} \CommentTok{\# broadcasts to every row in df}
+
+\NormalTok{df}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule\noalign{}
+& a & b & c & d & e \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A & 0.4967 & -0.1383 & 0.6477 & 1.5230 & 5 \\
+B & -0.2342 & -0.2341 & 1.5792 & 0.7674 & 5 \\
+C & -0.4695 & 0.5426 & -0.4634 & -0.4657 & 5 \\
+D & 0.2420 & -1.9133 & -1.7249 & -0.5623 & 5 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df[}\StringTok{\textquotesingle{}e\textquotesingle{}}\NormalTok{] }\OperatorTok{=}\NormalTok{ np.random.randn(}\DecValTok{4}\NormalTok{)}
+
+\NormalTok{df}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule\noalign{}
+& a & b & c & d & e \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A & 0.4967 & -0.1383 & 0.6477 & 1.5230 & -1.0128 \\
+B & -0.2342 & -0.2341 & 1.5792 & 0.7674 & 0.3142 \\
+C & -0.4695 & 0.5426 & -0.4634 & -0.4657 & -0.9080 \\
+D & 0.2420 & -1.9133 & -1.7249 & -0.5623 & -1.4123 \\
+\end{longtable}
+
+A series is the other, 1-D data structure in pandas!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ser }\OperatorTok{=}\NormalTok{ pd.Series(data}\OperatorTok{=}\NormalTok{np.arange(}\FloatTok{2.}\NormalTok{), index}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}C\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}D\textquotesingle{}}\NormalTok{]) }\CommentTok{\# the . in np.arange() makes the array floats}
+
+\NormalTok{ser}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+C   0.0000
+D   1.0000
+dtype: float64
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df[}\StringTok{\textquotesingle{}f\textquotesingle{}}\NormalTok{] }\OperatorTok{=}\NormalTok{ ser}
+
+\NormalTok{df}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllll@{}}
+\toprule\noalign{}
+& a & b & c & d & e & f \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A & 0.4967 & -0.1383 & 0.6477 & 1.5230 & -1.0128 & NaN \\
+B & -0.2342 & -0.2341 & 1.5792 & 0.7674 & 0.3142 & NaN \\
+C & -0.4695 & 0.5426 & -0.4634 & -0.4657 & -0.9080 & 0.0000 \\
+D & 0.2420 & -1.9133 & -1.7249 & -0.5623 & -1.4123 & 1.0000 \\
+\end{longtable}
+
+\hypertarget{practice-13}{%
+\section{Practice}\label{practice-13}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tickers }\OperatorTok{=} \StringTok{\textquotesingle{}AAPL IBM MSFT GOOG\textquotesingle{}}
+\NormalTok{prices }\OperatorTok{=}\NormalTok{ yf.download(tickers}\OperatorTok{=}\NormalTok{tickers)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
 [*********************100%%**********************]  4 of 4 completed
 \end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    prices[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{] }\CommentTok{\# slice adj close column}
+\NormalTok{    .iloc[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{] }\CommentTok{\# drop last row with intra day prices, which are sometimes missing}
+\NormalTok{    .pct\_change() }\CommentTok{\# calculate returns}
+\NormalTok{    .dropna() }\CommentTok{\# drop leading rows with at least one missing value}
+\NormalTok{)}
+
+\NormalTok{returns}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{longtable}[]{@{}lllll@{}}
 \toprule\noalign{}
@@ -15963,29 +18147,117 @@ Date & & & & \\
 2004-08-20 & 0.0029 & 0.0794 & 0.0042 & 0.0029 \\
 2004-08-23 & 0.0091 & 0.0101 & -0.0070 & 0.0044 \\
 2004-08-24 & 0.0280 & -0.0414 & 0.0007 & 0.0000 \\
-2004-08-25 & 0.0344 & 0.0108 & 0.0042 & 0.0114 \\
+2004-08-25 & 0.0344 & 0.0108 & 0.0043 & 0.0114 \\
 2004-08-26 & 0.0487 & 0.0180 & -0.0045 & -0.0040 \\
 ... & ... & ... & ... & ... \\
-2023-12-18 & -0.0085 & 0.0250 & 0.0031 & 0.0052 \\
-2023-12-19 & 0.0054 & 0.0066 & -0.0073 & 0.0016 \\
-2023-12-20 & -0.0107 & 0.0113 & -0.0093 & -0.0071 \\
-2023-12-21 & -0.0008 & 0.0153 & 0.0046 & 0.0079 \\
-2023-12-22 & 0.0026 & 0.0076 & 0.0072 & 0.0012 \\
+2024-01-23 & 0.0067 & 0.0066 & 0.0064 & 0.0060 \\
+2024-01-24 & -0.0035 & 0.0112 & -0.0001 & 0.0092 \\
+2024-01-25 & -0.0017 & 0.0219 & 0.0949 & 0.0057 \\
+2024-01-26 & -0.0090 & 0.0010 & -0.0158 & -0.0023 \\
+2024-01-29 & -0.0036 & 0.0068 & -0.0015 & 0.0143 \\
 \end{longtable}
 
 \hypertarget{what-are-the-mean-daily-returns-for-these-four-stocks-1}{%
 \subsection{What are the mean daily returns for these four
 stocks?}\label{what-are-the-mean-daily-returns-for-these-four-stocks-1}}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns.mean() }\CommentTok{\# default axis=0 takes the mean of each column}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL   0.0014
+GOOG   0.0010
+IBM    0.0004
+MSFT   0.0008
+dtype: float64
+\end{verbatim}
+
+If we pass \texttt{axis=1}, we get the mean return on each day. We can
+this an ``equally-weighted portfolio return.''
+\[r_{p,t} = \sum_{i=0}^4 \frac{1}{4} r_{i, t}\]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns.mean(axis}\OperatorTok{=}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Date
+2004-08-20    0.0224
+2004-08-23    0.0041
+2004-08-24   -0.0032
+2004-08-25    0.0152
+2004-08-26    0.0146
+               ...  
+2024-01-23    0.0064
+2024-01-24    0.0042
+2024-01-25    0.0302
+2024-01-26   -0.0065
+2024-01-29    0.0040
+Length: 4893, dtype: float64
+\end{verbatim}
+
 \hypertarget{what-are-the-standard-deviations-of-daily-returns-for-these-four-stocks-1}{%
 \subsection{What are the standard deviations of daily returns for these
 four
 stocks?}\label{what-are-the-standard-deviations-of-daily-returns-for-these-four-stocks-1}}
 
+pandas calcualates sample statistics by default.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns.std()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL   0.0206
+GOOG   0.0193
+IBM    0.0143
+MSFT   0.0171
+dtype: float64
+\end{verbatim}
+
 \hypertarget{what-are-the-annualized-means-and-standard-deviations-of-daily-returns-for-these-four-stocks-1}{%
 \subsection{\texorpdfstring{What are the \emph{annualized} means and
 standard deviations of daily returns for these four
 stocks?}{What are the annualized means and standard deviations of daily returns for these four stocks?}}\label{what-are-the-annualized-means-and-standard-deviations-of-daily-returns-for-these-four-stocks-1}}
+
+We annualize mean returns by multiplying by \(T\) (\(T=252\) for daily
+returns, \(T=12\) for month returns, and so on). We annualize standard
+deviations by multiplying by \(\sqrt(T)\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns.mean().mul(}\DecValTok{252}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL   0.3640
+GOOG   0.2594
+IBM    0.0981
+MSFT   0.2010
+dtype: float64
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns.std().mul(np.sqrt(}\DecValTok{252}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL   0.3276
+GOOG   0.3070
+IBM    0.2271
+MSFT   0.2722
+dtype: float64
+\end{verbatim}
 
 \hypertarget{plot-annualized-means-versus-standard-deviations-of-daily-returns-for-these-four-stocks-1}{%
 \subsection{\texorpdfstring{Plot \emph{annualized} means versus standard
@@ -15994,6 +18266,40 @@ stocks}{Plot annualized means versus standard deviations of daily returns for th
 
 Use \texttt{plt.scatter()}, which expects arguments as \texttt{x}
 (standard deviations) then \texttt{y} (means).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{vols }\OperatorTok{=}\NormalTok{ returns.std().mul(np.sqrt(}\DecValTok{252}\NormalTok{) }\OperatorTok{*} \DecValTok{100}\NormalTok{)}
+\NormalTok{means }\OperatorTok{=}\NormalTok{ returns.mean().mul(}\DecValTok{252} \OperatorTok{*} \DecValTok{100}\NormalTok{)}
+
+\NormalTok{plt.scatter(}
+\NormalTok{    x}\OperatorTok{=}\NormalTok{vols,}
+\NormalTok{    y}\OperatorTok{=}\NormalTok{means}
+\NormalTok{)}
+
+\CommentTok{\# add tickers to each point}
+\ControlFlowTok{for}\NormalTok{ i }\KeywordTok{in}\NormalTok{ means.index: }\CommentTok{\# loop over ticker index}
+\NormalTok{    plt.text( }\CommentTok{\# plots string s at coordinates x and y}
+\NormalTok{        x}\OperatorTok{=}\NormalTok{vols[i], }\CommentTok{\# indexes volatility}
+\NormalTok{        y}\OperatorTok{=}\NormalTok{means[i], }\CommentTok{\# indexes mean return}
+\NormalTok{        s}\OperatorTok{=}\NormalTok{i }\CommentTok{\# ticker index}
+\NormalTok{    )}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Annualized Volatility of Daily Returns (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}Annualized Mean of Daily Returns (\%)\textquotesingle{}}\NormalTok{)}
+
+\NormalTok{plt.title(}\StringTok{\textquotesingle{}Returns versus Risk\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_05_practice_03_files/figure-pdf/cell-18-output-1.png}
+
+}
+
+\end{figure}
 
 \hypertarget{repeat-the-previous-calculations-and-plot-for-the-stocks-in-the-dow-jones-industrial-index-djia-1}{%
 \subsection{Repeat the previous calculations and plot for the stocks in
@@ -16044,8 +18350,17 @@ returns}\label{repeat-the-plot-above-with-only-the-minimum-and-maximum-total-ret
 \hypertarget{announcements-14}{%
 \section{Announcements}\label{announcements-14}}
 
-\hypertarget{practice-14}{%
-\section{Practice}\label{practice-14}}
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  No DataCamp this week, but I suggest you keep working on it
+\item
+  Keep forming groups, and I will post our first project early next week
+\end{enumerate}
+
+\hypertarget{minute-recap-13}{%
+\section{10-Minute Recap}\label{minute-recap-13}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -16064,18 +18379,195 @@ returns}\label{repeat-the-plot-above-with-only-the-minimum-and-maximum-total-ret
 \end{Highlighting}
 \end{Shaded}
 
+pandas provides two data structures:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Data frame is a 2-D, mixed data type structure, like a worksheet in an
+  Excel workbook
+\item
+  Series is a 1-D, one data type structure, like a column in a worksheet
+  (or data frame)
+\end{enumerate}
+
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{tickers }\OperatorTok{=}\NormalTok{ yf.Tickers(}\StringTok{\textquotesingle{}AAPL IBM MSFT GOOG\textquotesingle{}}\NormalTok{)}
-\NormalTok{prices }\OperatorTok{=}\NormalTok{ tickers.history(period}\OperatorTok{=}\StringTok{\textquotesingle{}max\textquotesingle{}}\NormalTok{, auto\_adjust}\OperatorTok{=}\VariableTok{False}\NormalTok{)}
-\NormalTok{returns }\OperatorTok{=}\NormalTok{ prices[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].pct\_change().dropna()}
-\NormalTok{returns}
+\NormalTok{np.random.seed(}\DecValTok{42}\NormalTok{)}
+\NormalTok{df }\OperatorTok{=}\NormalTok{ pd.DataFrame(}
+\NormalTok{    data}\OperatorTok{=}\NormalTok{np.random.randn(}\DecValTok{3}\NormalTok{, }\DecValTok{4}\NormalTok{), }\CommentTok{\# 12 random numbers}
+\NormalTok{    index}\OperatorTok{=}\BuiltInTok{list}\NormalTok{(}\StringTok{\textquotesingle{}ABC\textquotesingle{}}\NormalTok{), }\CommentTok{\# labels the rows for easy indexing and slicing}
+\NormalTok{    columns}\OperatorTok{=}\BuiltInTok{list}\NormalTok{(}\StringTok{\textquotesingle{}abcd\textquotesingle{}}\NormalTok{) }\CommentTok{\# labels the columns for easy indexing and slicing}
+\NormalTok{)}
+
+\NormalTok{df}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule\noalign{}
+& a & b & c & d \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A & 0.4967 & -0.1383 & 0.6477 & 1.5230 \\
+B & -0.2342 & -0.2341 & 1.5792 & 0.7674 \\
+C & -0.4695 & 0.5426 & -0.4634 & -0.4657 \\
+\end{longtable}
+
+How do we index or slice data frames?
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  With integer locations and the \texttt{.iloc{[}{]}} method
+\item
+  With row and column names and the \texttt{.loc{[}{]}} method
+\end{enumerate}
+
+Say we want the first two rows and first three columns.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df.iloc[:}\DecValTok{2}\NormalTok{, :}\DecValTok{3}\NormalTok{] }\CommentTok{\# j,k slicing, as in NumPy}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+& a & b & c \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A & 0.4967 & -0.1383 & 0.6477 \\
+B & -0.2342 & -0.2341 & 1.5792 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df.loc[[}\StringTok{\textquotesingle{}A\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}B\textquotesingle{}}\NormalTok{], [}\StringTok{\textquotesingle{}a\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}b\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}c\textquotesingle{}}\NormalTok{]]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+& a & b & c \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A & 0.4967 & -0.1383 & 0.6477 \\
+B & -0.2342 & -0.2341 & 1.5792 \\
+\end{longtable}
+
+\textbf{\emph{Both left and right edges of named slices are included in
+pandas!}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df.loc[}\StringTok{\textquotesingle{}A\textquotesingle{}}\NormalTok{:}\StringTok{\textquotesingle{}B\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}a\textquotesingle{}}\NormalTok{:}\StringTok{\textquotesingle{}c\textquotesingle{}}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+& a & b & c \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A & 0.4967 & -0.1383 & 0.6477 \\
+B & -0.2342 & -0.2341 & 1.5792 \\
+\end{longtable}
+
+How do I add a column?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df[}\StringTok{\textquotesingle{}e\textquotesingle{}}\NormalTok{] }\OperatorTok{=} \DecValTok{5} \CommentTok{\# pandas broadcasts this 5 to all rows}
+
+\NormalTok{df}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule\noalign{}
+& a & b & c & d & e \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A & 0.4967 & -0.1383 & 0.6477 & 1.5230 & 5 \\
+B & -0.2342 & -0.2341 & 1.5792 & 0.7674 & 5 \\
+C & -0.4695 & 0.5426 & -0.4634 & -0.4657 & 5 \\
+\end{longtable}
+
+A series is the other data structure.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ser }\OperatorTok{=}\NormalTok{ pd.Series(data}\OperatorTok{=}\NormalTok{np.arange(}\FloatTok{2.}\NormalTok{), index}\OperatorTok{=}\BuiltInTok{list}\NormalTok{(}\StringTok{\textquotesingle{}BC\textquotesingle{}}\NormalTok{))}
+
+\NormalTok{ser}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+B   0.0000
+C   1.0000
+dtype: float64
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df[}\StringTok{\textquotesingle{}f\textquotesingle{}}\NormalTok{] }\OperatorTok{=}\NormalTok{ ser}
+
+\NormalTok{df}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllll@{}}
+\toprule\noalign{}
+& a & b & c & d & e & f \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A & 0.4967 & -0.1383 & 0.6477 & 1.5230 & 5 & NaN \\
+B & -0.2342 & -0.2341 & 1.5792 & 0.7674 & 5 & 0.0000 \\
+C & -0.4695 & 0.5426 & -0.4634 & -0.4657 & 5 & 1.0000 \\
+\end{longtable}
+
+\hypertarget{practice-14}{%
+\section{Practice}\label{practice-14}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tickers }\OperatorTok{=} \StringTok{\textquotesingle{}AAPL IBM MSFT GOOG\textquotesingle{}}
+\NormalTok{prices }\OperatorTok{=}\NormalTok{ yf.download(tickers}\OperatorTok{=}\NormalTok{tickers)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
 [*********************100%%**********************]  4 of 4 completed
 \end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    prices[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{] }\CommentTok{\# slices the adj close columns}
+\NormalTok{    .iloc[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{] }\CommentTok{\# drop last date with intraday price}
+\NormalTok{    .pct\_change() }\CommentTok{\# calculate returns}
+\NormalTok{    .dropna() }\CommentTok{\# drop dates with incomplete returns data}
+\NormalTok{)}
+
+\NormalTok{returns}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{longtable}[]{@{}lllll@{}}
 \toprule\noalign{}
@@ -16091,31 +18583,151 @@ Date & & & & \\
 2004-08-25 & 0.0344 & 0.0108 & 0.0042 & 0.0114 \\
 2004-08-26 & 0.0487 & 0.0180 & -0.0045 & -0.0040 \\
 ... & ... & ... & ... & ... \\
-2023-12-18 & -0.0085 & 0.0250 & 0.0031 & 0.0052 \\
-2023-12-19 & 0.0054 & 0.0066 & -0.0073 & 0.0016 \\
-2023-12-20 & -0.0107 & 0.0113 & -0.0093 & -0.0071 \\
-2023-12-21 & -0.0008 & 0.0153 & 0.0046 & 0.0079 \\
-2023-12-22 & 0.0026 & 0.0076 & 0.0072 & 0.0012 \\
+2024-01-22 & 0.0122 & -0.0018 & 0.0079 & -0.0054 \\
+2024-01-23 & 0.0067 & 0.0066 & 0.0064 & 0.0060 \\
+2024-01-24 & -0.0035 & 0.0112 & -0.0001 & 0.0092 \\
+2024-01-25 & -0.0017 & 0.0219 & 0.0949 & 0.0057 \\
+2024-01-26 & -0.0090 & 0.0010 & -0.0158 & -0.0023 \\
 \end{longtable}
 
 \hypertarget{what-are-the-mean-daily-returns-for-these-four-stocks-2}{%
 \subsection{What are the mean daily returns for these four
 stocks?}\label{what-are-the-mean-daily-returns-for-these-four-stocks-2}}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns.mean() }\CommentTok{\# default is axis=0}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL   0.0014
+GOOG   0.0010
+IBM    0.0004
+MSFT   0.0008
+dtype: float64
+\end{verbatim}
+
+If we use \texttt{.mean(axis=1)} on stock returns, we get the
+equallu-weighted portfolio returns on each day.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns.mean(axis}\OperatorTok{=}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Date
+2004-08-20    0.0224
+2004-08-23    0.0041
+2004-08-24   -0.0032
+2004-08-25    0.0152
+2004-08-26    0.0146
+               ...  
+2024-01-22    0.0032
+2024-01-23    0.0064
+2024-01-24    0.0042
+2024-01-25    0.0302
+2024-01-26   -0.0065
+Length: 4892, dtype: float64
+\end{verbatim}
+
 \hypertarget{what-are-the-standard-deviations-of-daily-returns-for-these-four-stocks-2}{%
 \subsection{What are the standard deviations of daily returns for these
 four
 stocks?}\label{what-are-the-standard-deviations-of-daily-returns-for-these-four-stocks-2}}
+
+pandas methods give us \emph{sample} statistics, instead of population
+statistics in NumPy.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns.std()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL   0.0206
+GOOG   0.0193
+IBM    0.0143
+MSFT   0.0171
+dtype: float64
+\end{verbatim}
 
 \hypertarget{what-are-the-annualized-means-and-standard-deviations-of-daily-returns-for-these-four-stocks-2}{%
 \subsection{\texorpdfstring{What are the \emph{annualized} means and
 standard deviations of daily returns for these four
 stocks?}{What are the annualized means and standard deviations of daily returns for these four stocks?}}\label{what-are-the-annualized-means-and-standard-deviations-of-daily-returns-for-these-four-stocks-2}}
 
+We annualize mean returns by multiplying by \(T\) (\(T=252\) for daily
+returns, \(T=12\) for month returns, and so on). We annualize standard
+deviations by multiplying by \(\sqrt(T)\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns.mean().mul(}\DecValTok{252}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL   0.3642
+GOOG   0.2591
+IBM    0.0982
+MSFT   0.2003
+dtype: float64
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns.std().mul(np.sqrt(}\DecValTok{252}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL   0.3277
+GOOG   0.3071
+IBM    0.2272
+MSFT   0.2722
+dtype: float64
+\end{verbatim}
+
 \hypertarget{plot-annualized-means-versus-standard-deviations-of-daily-returns-for-these-four-stocks-2}{%
 \subsection{\texorpdfstring{Plot \emph{annualized} means versus standard
 deviations of daily returns for these four
 stocks}{Plot annualized means versus standard deviations of daily returns for these four stocks}}\label{plot-annualized-means-versus-standard-deviations-of-daily-returns-for-these-four-stocks-2}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{means }\OperatorTok{=}\NormalTok{ returns.mean().mul(}\DecValTok{252} \OperatorTok{*} \DecValTok{100}\NormalTok{)}
+\NormalTok{vols }\OperatorTok{=}\NormalTok{ returns.std().mul(np.sqrt(}\DecValTok{252}\NormalTok{) }\OperatorTok{*} \DecValTok{100}\NormalTok{)}
+
+\NormalTok{plt.scatter(}
+\NormalTok{    x}\OperatorTok{=}\NormalTok{vols,}
+\NormalTok{    y}\OperatorTok{=}\NormalTok{means}
+\NormalTok{)}
+
+\CommentTok{\# add tickers to each point}
+\ControlFlowTok{for}\NormalTok{ i }\KeywordTok{in}\NormalTok{ means.index: }\CommentTok{\# loop over ticker index}
+\NormalTok{    plt.text( }\CommentTok{\# plots string s at coordinates x and y}
+\NormalTok{        x}\OperatorTok{=}\NormalTok{vols[i], }\CommentTok{\# indexes volatility}
+\NormalTok{        y}\OperatorTok{=}\NormalTok{means[i], }\CommentTok{\# indexes mean return}
+\NormalTok{        s}\OperatorTok{=}\NormalTok{i }\CommentTok{\# ticker index}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Annualized Volatility of Daily Returns (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}Annualized Means of Daily Returns (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\StringTok{\textquotesingle{}Returns versus Risk\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_05_practice_04_files/figure-pdf/cell-18-output-1.png}
+
+}
+
+\end{figure}
 
 Use \texttt{plt.scatter()}, which expects arguments as \texttt{x}
 (standard deviations) then \texttt{y} (means).
@@ -16129,6 +18741,24 @@ We can find the current DJIA stocks on
 \href{https://en.wikipedia.org/wiki/Dow_Jones_Industrial_Average}{Wikipedia}.
 We will need to download new data, into \texttt{tickers2},
 \texttt{prices2}, and \texttt{returns2}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{url2 }\OperatorTok{=} \StringTok{\textquotesingle{}https://en.wikipedia.org/wiki/Dow\_Jones\_Industrial\_Average\textquotesingle{}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{wiki2 }\OperatorTok{=}\NormalTok{ pd.read\_html(url2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tickers2 }\OperatorTok{=}\NormalTok{ wiki2[}\DecValTok{1}\NormalTok{][}\StringTok{\textquotesingle{}Symbol\textquotesingle{}}\NormalTok{].to\_list()}
+\end{Highlighting}
+\end{Shaded}
 
 \hypertarget{calculate-total-returns-for-the-stocks-in-the-djia-2}{%
 \subsection{Calculate total returns for the stocks in the
@@ -16169,8 +18799,17 @@ returns}\label{repeat-the-plot-above-with-only-the-minimum-and-maximum-total-ret
 \hypertarget{announcements-15}{%
 \section{Announcements}\label{announcements-15}}
 
-\hypertarget{practice-15}{%
-\section{Practice}\label{practice-15}}
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  No DataCamp this week, but I suggest you keep working on it
+\item
+  Keep forming groups, and I will post our first project early next week
+\end{enumerate}
+
+\hypertarget{minute-recap-14}{%
+\section{10-Minute Recap}\label{minute-recap-14}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -16189,18 +18828,199 @@ returns}\label{repeat-the-plot-above-with-only-the-minimum-and-maximum-total-ret
 \end{Highlighting}
 \end{Shaded}
 
+pandas gives us two data structures:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Data Frames
+\item
+  Series
+\end{enumerate}
+
+A data frame is like a worksheet in an Excel workbook.
+
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{tickers }\OperatorTok{=}\NormalTok{ yf.Tickers(}\StringTok{\textquotesingle{}AAPL IBM MSFT GOOG\textquotesingle{}}\NormalTok{)}
-\NormalTok{prices }\OperatorTok{=}\NormalTok{ tickers.history(period}\OperatorTok{=}\StringTok{\textquotesingle{}max\textquotesingle{}}\NormalTok{, auto\_adjust}\OperatorTok{=}\VariableTok{False}\NormalTok{)}
-\NormalTok{returns }\OperatorTok{=}\NormalTok{ prices[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].pct\_change().dropna()}
-\NormalTok{returns}
+\NormalTok{np.random.seed(}\DecValTok{42}\NormalTok{)}
+\NormalTok{df }\OperatorTok{=}\NormalTok{ pd.DataFrame(}
+\NormalTok{    data}\OperatorTok{=}\NormalTok{np.random.randn(}\DecValTok{3}\NormalTok{, }\DecValTok{5}\NormalTok{), }\CommentTok{\# 15 random numbers}
+\NormalTok{    index}\OperatorTok{=}\BuiltInTok{list}\NormalTok{(}\StringTok{\textquotesingle{}ABC\textquotesingle{}}\NormalTok{), }\CommentTok{\# labels the rows for easy indexing and slicing}
+\NormalTok{    columns}\OperatorTok{=}\BuiltInTok{list}\NormalTok{(}\StringTok{\textquotesingle{}abcde\textquotesingle{}}\NormalTok{) }\CommentTok{\# labels the columns for easy indexing and slicing}
+\NormalTok{)}
+
+\NormalTok{df}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule\noalign{}
+& a & b & c & d & e \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A & 0.4967 & -0.1383 & 0.6477 & 1.5230 & -0.2342 \\
+B & -0.2341 & 1.5792 & 0.7674 & -0.4695 & 0.5426 \\
+C & -0.4634 & -0.4657 & 0.2420 & -1.9133 & -1.7249 \\
+\end{longtable}
+
+How can we get the first two rows and first three columns?
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  We can slice by integer location with the \texttt{.iloc{[}{]}} method
+\item
+  We can slice by names with the \texttt{.loc{[}{]}} method
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df.iloc[:}\DecValTok{2}\NormalTok{, :}\DecValTok{3}\NormalTok{] }\CommentTok{\# j,k slicing, as in NumPy}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+& a & b & c \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A & 0.4967 & -0.1383 & 0.6477 \\
+B & -0.2341 & 1.5792 & 0.7674 \\
+\end{longtable}
+
+\textbf{\emph{When we slice by names, both left and right edges are
+}included\emph{!}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df.loc[}\StringTok{\textquotesingle{}A\textquotesingle{}}\NormalTok{:}\StringTok{\textquotesingle{}B\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}a\textquotesingle{}}\NormalTok{:}\StringTok{\textquotesingle{}c\textquotesingle{}}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+& a & b & c \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A & 0.4967 & -0.1383 & 0.6477 \\
+B & -0.2341 & 1.5792 & 0.7674 \\
+\end{longtable}
+
+We can use the \texttt{.head()} method to show the first \texttt{n} rows
+in \texttt{df}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df.head(}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule\noalign{}
+& a & b & c & d & e \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A & 0.4967 & -0.1383 & 0.6477 & 1.5230 & -0.2342 \\
+B & -0.2341 & 1.5792 & 0.7674 & -0.4695 & 0.5426 \\
+\end{longtable}
+
+How do I add a column?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df[}\StringTok{\textquotesingle{}f\textquotesingle{}}\NormalTok{] }\OperatorTok{=} \DecValTok{5} \CommentTok{\# as in NumPy, this 5 will broadcast to all the rows}
+
+\NormalTok{df}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllll@{}}
+\toprule\noalign{}
+& a & b & c & d & e & f \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A & 0.4967 & -0.1383 & 0.6477 & 1.5230 & -0.2342 & 5 \\
+B & -0.2341 & 1.5792 & 0.7674 & -0.4695 & 0.5426 & 5 \\
+C & -0.4634 & -0.4657 & 0.2420 & -1.9133 & -1.7249 & 5 \\
+\end{longtable}
+
+A series is like a single column in an Excel worksheet (or a pandas data
+frame).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ser }\OperatorTok{=}\NormalTok{ pd.Series(data}\OperatorTok{=}\NormalTok{np.arange(}\FloatTok{2.}\NormalTok{), index}\OperatorTok{=}\BuiltInTok{list}\NormalTok{(}\StringTok{\textquotesingle{}BC\textquotesingle{}}\NormalTok{))}
+
+\NormalTok{ser}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+B   0.0000
+C   1.0000
+dtype: float64
+\end{verbatim}
+
+pandas aligns operations on row and column names
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df[}\StringTok{\textquotesingle{}g\textquotesingle{}}\NormalTok{] }\OperatorTok{=}\NormalTok{ ser}
+
+\NormalTok{df}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllllll@{}}
+\toprule\noalign{}
+& a & b & c & d & e & f & g \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+A & 0.4967 & -0.1383 & 0.6477 & 1.5230 & -0.2342 & 5 & NaN \\
+B & -0.2341 & 1.5792 & 0.7674 & -0.4695 & 0.5426 & 5 & 0.0000 \\
+C & -0.4634 & -0.4657 & 0.2420 & -1.9133 & -1.7249 & 5 & 1.0000 \\
+\end{longtable}
+
+\hypertarget{practice-15}{%
+\section{Practice}\label{practice-15}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tickers }\OperatorTok{=} \StringTok{\textquotesingle{}AAPL IBM MSFT GOOG\textquotesingle{}}
+\NormalTok{prices }\OperatorTok{=}\NormalTok{ yf.download(tickers}\OperatorTok{=}\NormalTok{tickers)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
 [*********************100%%**********************]  4 of 4 completed
 \end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    prices[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{] }\CommentTok{\# slice adj close column}
+\NormalTok{    .iloc[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{] }\CommentTok{\# drop last row with intra day prices, which are sometimes missing}
+\NormalTok{    .pct\_change() }\CommentTok{\# calculate returns}
+\NormalTok{    .dropna() }\CommentTok{\# drop leading rows with at least one missing value}
+\NormalTok{)}
+
+\NormalTok{returns}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{longtable}[]{@{}lllll@{}}
 \toprule\noalign{}
@@ -16210,32 +19030,121 @@ Date & & & & \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-2004-08-20 & 0.0029 & 0.0794 & 0.0042 & 0.0029 \\
+2004-08-20 & 0.0029 & 0.0794 & 0.0042 & 0.0030 \\
 2004-08-23 & 0.0091 & 0.0101 & -0.0070 & 0.0044 \\
 2004-08-24 & 0.0280 & -0.0414 & 0.0007 & 0.0000 \\
 2004-08-25 & 0.0344 & 0.0108 & 0.0042 & 0.0114 \\
 2004-08-26 & 0.0487 & 0.0180 & -0.0045 & -0.0040 \\
 ... & ... & ... & ... & ... \\
-2023-12-18 & -0.0085 & 0.0250 & 0.0031 & 0.0052 \\
-2023-12-19 & 0.0054 & 0.0066 & -0.0073 & 0.0016 \\
-2023-12-20 & -0.0107 & 0.0113 & -0.0093 & -0.0071 \\
-2023-12-21 & -0.0008 & 0.0153 & 0.0046 & 0.0079 \\
-2023-12-22 & 0.0026 & 0.0076 & 0.0072 & 0.0012 \\
+2024-01-23 & 0.0067 & 0.0066 & 0.0064 & 0.0060 \\
+2024-01-24 & -0.0035 & 0.0112 & -0.0001 & 0.0092 \\
+2024-01-25 & -0.0017 & 0.0219 & 0.0949 & 0.0057 \\
+2024-01-26 & -0.0090 & 0.0010 & -0.0158 & -0.0023 \\
+2024-01-29 & -0.0036 & 0.0068 & -0.0015 & 0.0143 \\
 \end{longtable}
 
 \hypertarget{what-are-the-mean-daily-returns-for-these-four-stocks-3}{%
 \subsection{What are the mean daily returns for these four
 stocks?}\label{what-are-the-mean-daily-returns-for-these-four-stocks-3}}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns.mean() }\CommentTok{\# default is axis=0, so we get the mean of each column}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL   0.0014
+GOOG   0.0010
+IBM    0.0004
+MSFT   0.0008
+dtype: float64
+\end{verbatim}
+
+We if want an equally-weighted portfolio return? We could take the mean
+of each \emph{row} with \texttt{.mean(axis=1)}. The mean is the same as
+the sum of 0.25 times each of the 4 columns.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns.mean(axis}\OperatorTok{=}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Date
+2004-08-20    0.0224
+2004-08-23    0.0041
+2004-08-24   -0.0032
+2004-08-25    0.0152
+2004-08-26    0.0146
+               ...  
+2024-01-23    0.0064
+2024-01-24    0.0042
+2024-01-25    0.0302
+2024-01-26   -0.0065
+2024-01-29    0.0040
+Length: 4893, dtype: float64
+\end{verbatim}
+
 \hypertarget{what-are-the-standard-deviations-of-daily-returns-for-these-four-stocks-3}{%
 \subsection{What are the standard deviations of daily returns for these
 four
 stocks?}\label{what-are-the-standard-deviations-of-daily-returns-for-these-four-stocks-3}}
 
+We can use the \texttt{.std()} method to find the \emph{sample} standard
+deviation of each column.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns.std()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL   0.0206
+GOOG   0.0193
+IBM    0.0143
+MSFT   0.0171
+dtype: float64
+\end{verbatim}
+
 \hypertarget{what-are-the-annualized-means-and-standard-deviations-of-daily-returns-for-these-four-stocks-3}{%
 \subsection{\texorpdfstring{What are the \emph{annualized} means and
 standard deviations of daily returns for these four
 stocks?}{What are the annualized means and standard deviations of daily returns for these four stocks?}}\label{what-are-the-annualized-means-and-standard-deviations-of-daily-returns-for-these-four-stocks-3}}
+
+We annualize mean returns by multiplying by \(T\) (\(T=252\) for daily
+returns, \(T=12\) for month returns, and so on). We annualize standard
+deviations by multiplying by \(\sqrt(T)\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns.mean().mul(}\DecValTok{252}\NormalTok{) }\CommentTok{\# whenever I can, I use the .mul() method, so I can keep chaining!}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL   0.3640
+GOOG   0.2594
+IBM    0.0981
+MSFT   0.2010
+dtype: float64
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns.std().mul(np.sqrt(}\DecValTok{252}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL   0.3276
+GOOG   0.3070
+IBM    0.2271
+MSFT   0.2722
+dtype: float64
+\end{verbatim}
 
 \hypertarget{plot-annualized-means-versus-standard-deviations-of-daily-returns-for-these-four-stocks-3}{%
 \subsection{\texorpdfstring{Plot \emph{annualized} means versus standard
@@ -16244,6 +19153,43 @@ stocks}{Plot annualized means versus standard deviations of daily returns for th
 
 Use \texttt{plt.scatter()}, which expects arguments as \texttt{x}
 (standard deviations) then \texttt{y} (means).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{vols }\OperatorTok{=}\NormalTok{ returns.std().mul(np.sqrt(}\DecValTok{252}\NormalTok{) }\OperatorTok{*} \DecValTok{100}\NormalTok{)}
+\NormalTok{means }\OperatorTok{=}\NormalTok{ returns.mean().mul(}\DecValTok{252} \OperatorTok{*} \DecValTok{100}\NormalTok{)}
+
+\NormalTok{plt.scatter(}
+\NormalTok{    x}\OperatorTok{=}\NormalTok{vols,}
+\NormalTok{    y}\OperatorTok{=}\NormalTok{means}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Annualized Volatility of Daily Returns (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}Annualized Mean of Daily Returns (\%)\textquotesingle{}}\NormalTok{)}
+
+\CommentTok{\# plt.xlim((0, vols.max() + 5))}
+\CommentTok{\# plt.ylim((0, means.max() + 5))}
+
+\CommentTok{\# add tickers to each point}
+\ControlFlowTok{for}\NormalTok{ i }\KeywordTok{in}\NormalTok{ means.index: }\CommentTok{\# loop over ticker index}
+\NormalTok{    plt.text( }\CommentTok{\# plots string s at coordinates x and y}
+\NormalTok{        x}\OperatorTok{=}\NormalTok{vols[i], }\CommentTok{\# indexes volatility}
+\NormalTok{        y}\OperatorTok{=}\NormalTok{means[i], }\CommentTok{\# indexes mean return}
+\NormalTok{        s}\OperatorTok{=}\NormalTok{i }\CommentTok{\# ticker index}
+\NormalTok{    )}
+
+\NormalTok{plt.title(}\StringTok{\textquotesingle{}Returns versus Risk\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show() }\CommentTok{\# suppresses output of last function call}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_05_practice_05_files/figure-pdf/cell-18-output-1.png}
+
+}
+
+\end{figure}
 
 \hypertarget{repeat-the-previous-calculations-and-plot-for-the-stocks-in-the-dow-jones-industrial-index-djia-3}{%
 \subsection{Repeat the previous calculations and plot for the stocks in
@@ -16254,6 +19200,113 @@ We can find the current DJIA stocks on
 \href{https://en.wikipedia.org/wiki/Dow_Jones_Industrial_Average}{Wikipedia}.
 We will need to download new data, into \texttt{tickers2},
 \texttt{prices2}, and \texttt{returns2}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{url2 }\OperatorTok{=} \StringTok{\textquotesingle{}https://en.wikipedia.org/wiki/Dow\_Jones\_Industrial\_Average\textquotesingle{}}
+\NormalTok{wiki2 }\OperatorTok{=}\NormalTok{ pd.read\_html(io}\OperatorTok{=}\NormalTok{url2)}
+\NormalTok{tickers2 }\OperatorTok{=}\NormalTok{ wiki2[}\DecValTok{1}\NormalTok{][}\StringTok{\textquotesingle{}Symbol\textquotesingle{}}\NormalTok{].to\_list()}
+\NormalTok{prices2 }\OperatorTok{=}\NormalTok{ yf.download(tickers}\OperatorTok{=}\NormalTok{tickers2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[*********************100%%**********************]  30 of 30 completed
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns2 }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    prices2[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{] }\CommentTok{\# slices the adj close group of columns from prices}
+\NormalTok{    .iloc[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{] }\CommentTok{\# drop last row (which is intraday during class) to avoid fill\_method warning}
+\NormalTok{    .pct\_change() }\CommentTok{\# calculate percent in adj closes (row[n] {-} row[n{-}1]) / row[n{-}1]}
+\NormalTok{    .dropna() }\CommentTok{\# drops rows with any missing values}
+\NormalTok{)}
+
+\NormalTok{returns2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllllllllllllllllllll@{}}
+\toprule\noalign{}
+& AAPL & AMGN & AXP & BA & CAT & CRM & CSCO & CVX & DIS & DOW & ... &
+MRK & MSFT & NKE & PG & TRV & UNH & V & VZ & WBA & WMT \\
+Date & & & & & & & & & & & & & & & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2019-03-21 & 0.0368 & 0.0040 & 0.0095 & -0.0092 & 0.0079 & 0.0210 &
+0.0128 & 0.0094 & -0.0121 & -0.0165 & ... & 0.0106 & 0.0230 & 0.0152 &
+0.0076 & 0.0231 & 0.0061 & 0.0133 & 0.0108 & 0.0129 & 0.0043 \\
+2019-03-22 & -0.0207 & -0.0270 & -0.0211 & -0.0283 & -0.0320 & -0.0326 &
+-0.0222 & -0.0220 & -0.0040 & -0.0078 & ... & -0.0080 & -0.0264 &
+-0.0661 & -0.0081 & 0.0039 & -0.0196 & -0.0175 & 0.0252 & -0.0187 &
+-0.0079 \\
+2019-03-25 & -0.0121 & -0.0006 & -0.0038 & 0.0229 & 0.0124 & -0.0038 &
+-0.0002 & -0.0016 & -0.0041 & 0.0113 & ... & 0.0007 & 0.0052 & 0.0017 &
+0.0030 & 0.0004 & -0.0009 & -0.0003 & 0.0054 & -0.0115 & -0.0011 \\
+2019-03-26 & -0.0103 & 0.0090 & 0.0042 & -0.0002 & 0.0035 & -0.0092 &
+0.0095 & 0.0101 & 0.0218 & -0.0061 & ... & 0.0069 & 0.0021 & 0.0128 &
+0.0104 & 0.0002 & -0.0141 & 0.0148 & 0.0092 & 0.0037 & 0.0015 \\
+2019-03-27 & 0.0090 & -0.0104 & -0.0047 & 0.0103 & -0.0049 & -0.0269 &
+-0.0017 & -0.0108 & 0.0013 & 0.0256 & ... & -0.0076 & -0.0097 & -0.0035
+& -0.0012 & 0.0101 & -0.0069 & -0.0070 & 0.0041 & 0.0050 & -0.0113 \\
+... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... &
+... & ... & ... & ... & ... & ... & ... & ... & ... & ... \\
+2024-01-23 & 0.0067 & -0.0008 & 0.0025 & -0.0160 & 0.0006 & -0.0126 &
+0.0037 & -0.0028 & -0.0138 & 0.0065 & ... & 0.0034 & 0.0060 & 0.0133 &
+0.0414 & -0.0135 & 0.0049 & 0.0002 & 0.0670 & 0.0009 & 0.0025 \\
+2024-01-24 & -0.0035 & -0.0142 & 0.0019 & 0.0124 & 0.0064 & 0.0004 &
+-0.0087 & 0.0199 & -0.0029 & -0.0152 & ... & -0.0080 & 0.0092 & -0.0112
+& -0.0121 & 0.0000 & -0.0044 & 0.0014 & -0.0225 & -0.0093 & -0.0141 \\
+2024-01-25 & -0.0017 & 0.0156 & 0.0121 & -0.0572 & 0.0347 & 0.0078 &
+0.0199 & 0.0252 & 0.0145 & 0.0348 & ... & 0.0105 & 0.0057 & 0.0001 &
+0.0230 & 0.0026 & -0.0386 & 0.0035 & 0.0245 & 0.0331 & 0.0146 \\
+2024-01-26 & -0.0090 & 0.0049 & 0.0710 & 0.0178 & -0.0045 & 0.0033 &
+-0.0036 & 0.0038 & 0.0053 & -0.0160 & ... & 0.0057 & -0.0023 & 0.0196 &
+0.0033 & -0.0004 & 0.0199 & -0.0171 & 0.0026 & -0.0113 & 0.0088 \\
+2024-01-29 & -0.0036 & 0.0054 & -0.0028 & -0.0014 & 0.0128 & 0.0283 &
+0.0029 & -0.0004 & 0.0223 & 0.0002 & ... & 0.0038 & 0.0143 & 0.0110 &
+0.0001 & -0.0015 & 0.0027 & 0.0213 & -0.0083 & -0.0057 & 0.0047 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{vols }\OperatorTok{=}\NormalTok{ returns2.std().mul(np.sqrt(}\DecValTok{252}\NormalTok{) }\OperatorTok{*} \DecValTok{100}\NormalTok{)}
+\NormalTok{means }\OperatorTok{=}\NormalTok{ returns2.mean().mul(}\DecValTok{252} \OperatorTok{*} \DecValTok{100}\NormalTok{)}
+
+\NormalTok{plt.scatter(}
+\NormalTok{    x}\OperatorTok{=}\NormalTok{vols,}
+\NormalTok{    y}\OperatorTok{=}\NormalTok{means}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Annualized Volatility of Daily Returns (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}Annualized Mean of Daily Returns (\%)\textquotesingle{}}\NormalTok{)}
+
+\CommentTok{\# plt.xlim((0, vols.max() + 5))}
+\CommentTok{\# plt.ylim((0, means.max() + 5))}
+
+\CommentTok{\# add tickers to each point}
+\ControlFlowTok{for}\NormalTok{ i }\KeywordTok{in}\NormalTok{ means.index: }\CommentTok{\# loop over ticker index}
+\NormalTok{    plt.text( }\CommentTok{\# plots string s at coordinates x and y}
+\NormalTok{        x}\OperatorTok{=}\NormalTok{vols[i], }\CommentTok{\# indexes volatility}
+\NormalTok{        y}\OperatorTok{=}\NormalTok{means[i], }\CommentTok{\# indexes mean return}
+\NormalTok{        s}\OperatorTok{=}\NormalTok{i }\CommentTok{\# ticker index}
+\NormalTok{    )}
+
+\NormalTok{plt.title(}\StringTok{\textquotesingle{}Returns versus Risk\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show() }\CommentTok{\# suppresses output of last function call}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_05_practice_05_files/figure-pdf/cell-21-output-1.png}
+
+}
+
+\end{figure}
 
 \hypertarget{calculate-total-returns-for-the-stocks-in-the-djia-3}{%
 \subsection{Calculate total returns for the stocks in the
