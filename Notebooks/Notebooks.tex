@@ -203,7 +203,7 @@
 
 \begin{document}
 \maketitle
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[sharp corners, enhanced, interior hidden, boxrule=0pt, borderline west={3pt}{0pt}{shadecolor}, breakable, frame hidden]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[breakable, boxrule=0pt, frame hidden, borderline west={3pt}{0pt}{shadecolor}, enhanced, sharp corners, interior hidden]}{\end{tcolorbox}}\fi
 
 \renewcommand*\contentsname{Table of contents}
 {
@@ -17679,16 +17679,21 @@ Date & & & & \\
 2004-08-25 & 0.0344 & 0.0108 & 0.0042 & 0.0114 \\
 2004-08-26 & 0.0487 & 0.0180 & -0.0045 & -0.0040 \\
 ... & ... & ... & ... & ... \\
-2024-01-23 & 0.0067 & 0.0066 & 0.0064 & 0.0060 \\
-2024-01-24 & -0.0035 & 0.0112 & -0.0001 & 0.0092 \\
-2024-01-25 & -0.0017 & 0.0219 & 0.0949 & 0.0057 \\
 2024-01-26 & -0.0090 & 0.0010 & -0.0158 & -0.0023 \\
 2024-01-29 & -0.0036 & 0.0068 & -0.0015 & 0.0143 \\
+2024-01-30 & -0.0192 & -0.0116 & 0.0039 & -0.0028 \\
+2024-01-31 & -0.0194 & -0.0735 & -0.0224 & -0.0269 \\
+2024-02-01 & 0.0133 & 0.0064 & 0.0176 & 0.0156 \\
 \end{longtable}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{returns }\OperatorTok{=}\NormalTok{ prices[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].pct\_change().dropna()}
+\NormalTok{returns }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    prices[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{]}
+\NormalTok{    .iloc[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{]}
+\NormalTok{    .pct\_change()}
+\NormalTok{    .dropna()}
+\NormalTok{)}
 \NormalTok{returns}
 \end{Highlighting}
 \end{Shaded}
@@ -17707,11 +17712,11 @@ Date & & & & \\
 2004-08-25 & 0.0344 & 0.0108 & 0.0042 & 0.0114 \\
 2004-08-26 & 0.0487 & 0.0180 & -0.0045 & -0.0040 \\
 ... & ... & ... & ... & ... \\
-2024-01-24 & -0.0035 & 0.0112 & -0.0001 & 0.0092 \\
-2024-01-25 & -0.0017 & 0.0219 & 0.0949 & 0.0057 \\
 2024-01-26 & -0.0090 & 0.0010 & -0.0158 & -0.0023 \\
 2024-01-29 & -0.0036 & 0.0068 & -0.0015 & 0.0143 \\
 2024-01-30 & -0.0192 & -0.0116 & 0.0039 & -0.0028 \\
+2024-01-31 & -0.0194 & -0.0735 & -0.0224 & -0.0269 \\
+2024-02-01 & 0.0133 & 0.0064 & 0.0176 & 0.0156 \\
 \end{longtable}
 
 \hypertarget{what-are-the-mean-daily-returns-for-these-four-stocks}{%
@@ -17750,12 +17755,12 @@ Date
 2004-08-25    0.0152
 2004-08-26    0.0146
                ...  
-2024-01-24    0.0042
-2024-01-25    0.0302
 2024-01-26   -0.0065
 2024-01-29    0.0040
 2024-01-30   -0.0074
-Length: 4894, dtype: float64
+2024-01-31   -0.0356
+2024-02-01    0.0132
+Length: 4896, dtype: float64
 \end{verbatim}
 
 \hypertarget{what-are-the-standard-deviations-of-daily-returns-for-these-four-stocks}{%
@@ -17771,7 +17776,7 @@ stocks?}\label{what-are-the-standard-deviations-of-daily-returns-for-these-four-
 
 \begin{verbatim}
 AAPL   0.0206
-GOOG   0.0193
+GOOG   0.0194
 IBM    0.0143
 MSFT   0.0171
 dtype: float64
@@ -17792,10 +17797,10 @@ observations per year.
 \end{Shaded}
 
 \begin{verbatim}
-AAPL   0.3629
-GOOG   0.2588
-IBM    0.0983
-MSFT   0.2008
+AAPL   0.3625
+GOOG   0.2552
+IBM    0.0980
+MSFT   0.2002
 dtype: float64
 \end{verbatim}
 
@@ -17810,9 +17815,9 @@ the number of observations per year.
 
 \begin{verbatim}
 AAPL   0.3276
-GOOG   0.3070
-IBM    0.2271
-MSFT   0.2721
+GOOG   0.3074
+IBM    0.2272
+MSFT   0.2722
 dtype: float64
 \end{verbatim}
 
@@ -17872,6 +17877,128 @@ We can find the current DJIA stocks on
 We will need to download new data, into \texttt{tickers2},
 \texttt{prices2}, and \texttt{returns2}.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{url2 }\OperatorTok{=} \StringTok{\textquotesingle{}https://en.wikipedia.org/wiki/Dow\_Jones\_Industrial\_Average\textquotesingle{}}
+\NormalTok{wiki2 }\OperatorTok{=}\NormalTok{ pd.read\_html(io}\OperatorTok{=}\NormalTok{url2)}
+\NormalTok{tickers2 }\OperatorTok{=}\NormalTok{ wiki2[}\DecValTok{1}\NormalTok{][}\StringTok{\textquotesingle{}Symbol\textquotesingle{}}\NormalTok{].to\_list()}
+\NormalTok{tickers2[:}\DecValTok{5}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+['MMM', 'AXP', 'AMGN', 'AAPL', 'BA']
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{prices2 }\OperatorTok{=}\NormalTok{ yf.download(tickers}\OperatorTok{=}\NormalTok{tickers2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[*********************100%%**********************]  30 of 30 completed
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns2 }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    prices2[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{] }\CommentTok{\# slice the adj close columns for all 30 tickers}
+\NormalTok{    .iloc[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{] }\CommentTok{\# drop last row with incomplete prices because we are before the close}
+\NormalTok{    .pct\_change() }\CommentTok{\# calculate returns}
+\NormalTok{    .dropna() }\CommentTok{\# drops any row with incomplete data}
+\NormalTok{)}
+
+\NormalTok{returns2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllllllllllllllllllll@{}}
+\toprule\noalign{}
+& AAPL & AMGN & AXP & BA & CAT & CRM & CSCO & CVX & DIS & DOW & ... &
+MRK & MSFT & NKE & PG & TRV & UNH & V & VZ & WBA & WMT \\
+Date & & & & & & & & & & & & & & & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2019-03-21 & 0.0368 & 0.0040 & 0.0095 & -0.0092 & 0.0079 & 0.0210 &
+0.0128 & 0.0094 & -0.0121 & -0.0165 & ... & 0.0106 & 0.0230 & 0.0152 &
+0.0076 & 0.0231 & 0.0061 & 0.0133 & 0.0108 & 0.0129 & 0.0043 \\
+2019-03-22 & -0.0207 & -0.0270 & -0.0211 & -0.0283 & -0.0320 & -0.0326 &
+-0.0222 & -0.0220 & -0.0040 & -0.0078 & ... & -0.0080 & -0.0264 &
+-0.0661 & -0.0081 & 0.0039 & -0.0196 & -0.0175 & 0.0252 & -0.0187 &
+-0.0079 \\
+2019-03-25 & -0.0121 & -0.0006 & -0.0038 & 0.0229 & 0.0124 & -0.0038 &
+-0.0002 & -0.0016 & -0.0041 & 0.0113 & ... & 0.0007 & 0.0052 & 0.0017 &
+0.0030 & 0.0004 & -0.0009 & -0.0003 & 0.0054 & -0.0115 & -0.0011 \\
+2019-03-26 & -0.0103 & 0.0090 & 0.0042 & -0.0002 & 0.0035 & -0.0092 &
+0.0095 & 0.0101 & 0.0218 & -0.0061 & ... & 0.0069 & 0.0021 & 0.0128 &
+0.0104 & 0.0002 & -0.0141 & 0.0148 & 0.0092 & 0.0037 & 0.0015 \\
+2019-03-27 & 0.0090 & -0.0104 & -0.0047 & 0.0103 & -0.0049 & -0.0269 &
+-0.0017 & -0.0108 & 0.0013 & 0.0256 & ... & -0.0076 & -0.0097 & -0.0035
+& -0.0012 & 0.0101 & -0.0069 & -0.0070 & 0.0041 & 0.0050 & -0.0113 \\
+... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... &
+... & ... & ... & ... & ... & ... & ... & ... & ... & ... \\
+2024-01-26 & -0.0090 & 0.0049 & 0.0710 & 0.0178 & -0.0045 & 0.0033 &
+-0.0036 & 0.0038 & 0.0053 & -0.0160 & ... & 0.0057 & -0.0023 & 0.0196 &
+0.0033 & -0.0004 & 0.0199 & -0.0171 & 0.0026 & -0.0113 & 0.0088 \\
+2024-01-29 & -0.0036 & 0.0054 & -0.0028 & -0.0014 & 0.0128 & 0.0283 &
+0.0029 & -0.0004 & 0.0223 & 0.0002 & ... & 0.0038 & 0.0143 & 0.0110 &
+0.0001 & -0.0015 & 0.0027 & 0.0213 & -0.0083 & -0.0057 & 0.0047 \\
+2024-01-30 & -0.0192 & 0.0037 & 0.0164 & -0.0231 & 0.0050 & -0.0005 &
+-0.0010 & 0.0070 & -0.0056 & 0.0074 & ... & 0.0031 & -0.0028 & 0.0029 &
+0.0085 & 0.0115 & -0.0018 & 0.0128 & 0.0100 & 0.0018 & 0.0033 \\
+2024-01-31 & -0.0194 & -0.0011 & -0.0167 & 0.0529 & -0.0146 & -0.0231 &
+-0.0394 & -0.0179 & -0.0092 & -0.0160 & ... & -0.0072 & -0.0269 &
+-0.0254 & -0.0022 & -0.0102 & 0.0161 & -0.0140 & -0.0028 & -0.0083 &
+-0.0021 \\
+2024-02-01 & 0.0133 & 0.0328 & 0.0124 & -0.0058 & 0.0246 & 0.0096 &
+0.0000 & 0.0031 & 0.0105 & -0.0011 & ... & 0.0464 & 0.0156 & 0.0023 &
+0.0130 & 0.0031 & -0.0090 & 0.0139 & 0.0033 & 0.0301 & 0.0185 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{vols2 }\OperatorTok{=}\NormalTok{ returns2.std().mul(np.sqrt(}\DecValTok{252}\NormalTok{) }\OperatorTok{*} \DecValTok{100}\NormalTok{)}
+\NormalTok{means2 }\OperatorTok{=}\NormalTok{ returns2.mean().mul(}\DecValTok{252} \OperatorTok{*} \DecValTok{100}\NormalTok{)}
+
+\NormalTok{plt.scatter(}
+\NormalTok{    x}\OperatorTok{=}\NormalTok{vols2,}
+\NormalTok{    y}\OperatorTok{=}\NormalTok{means2}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Annualized Volatility of Daily Returns (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}Annualized Mean of Daily Returns (\%)\textquotesingle{}}\NormalTok{)}
+
+\CommentTok{\# plt.xlim((0, vols2.max() + 5))}
+\CommentTok{\# plt.ylim((0, means2.max() + 5))}
+
+\CommentTok{\# add tickers to each point}
+\ControlFlowTok{for}\NormalTok{ i }\KeywordTok{in}\NormalTok{ means2.index: }\CommentTok{\# loop over ticker index}
+\NormalTok{    plt.text( }\CommentTok{\# plots string s at coordinates x and y}
+\NormalTok{        x}\OperatorTok{=}\NormalTok{vols2[i], }\CommentTok{\# indexes volatility}
+\NormalTok{        y}\OperatorTok{=}\NormalTok{means2[i], }\CommentTok{\# indexes mean return}
+\NormalTok{        s}\OperatorTok{=}\NormalTok{i }\CommentTok{\# ticker index}
+\NormalTok{    )}
+
+\NormalTok{plt.title(}\StringTok{\textquotesingle{}Returns versus Risk\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show() }\CommentTok{\# suppresses output of last function call}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_05_practice_02_files/figure-pdf/cell-25-output-1.png}
+
+}
+
+\end{figure}
+
+With 30 stocks we see there is no relation between returns and
+volatility because most volatility is \emph{diversifiable} and
+uncompensated.
+
 \hypertarget{calculate-total-returns-for-the-stocks-in-the-djia}{%
 \subsection{Calculate total returns for the stocks in the
 DJIA}\label{calculate-total-returns-for-the-stocks-in-the-djia}}
@@ -17879,6 +18006,26 @@ DJIA}\label{calculate-total-returns-for-the-stocks-in-the-djia}}
 We can use the \texttt{.prod()} method to compound returns as
 \(1 + R_T = \prod_{t=1}^T (1 + R_t)\). Technically, we should write
 \(R_T\) as \(R_{0,T}\), but we typically omit the subscript \(0\).
+
+I prefer to chain these operations, with \texttt{.add(1)}, then
+\texttt{.prod()}, then \texttt{.sub(1)}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2 }\OperatorTok{=}\NormalTok{ returns2.add(}\DecValTok{1}\NormalTok{).prod().sub(}\DecValTok{1}\NormalTok{)}
+
+\NormalTok{total\_returns2.iloc[:}\DecValTok{5}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL    3.1210
+AMGN    0.9635
+AXP     0.9687
+BA     -0.4289
+CAT     1.6083
+dtype: float64
+\end{verbatim}
 
 \hypertarget{plot-the-distribution-of-total-returns-for-the-stocks-in-the-djia}{%
 \subsection{Plot the distribution of total returns for the stocks in the
@@ -17888,9 +18035,162 @@ We can plot a histogram, using either the \texttt{plt.hist()} function
 or the \texttt{.plot(kind=\textquotesingle{}hist\textquotesingle{})}
 method.
 
+A histogram is a great way to visualize data!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}
+\NormalTok{    returns2}
+\NormalTok{    .add(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .prod()}
+\NormalTok{    .sub(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .plot(kind}\OperatorTok{=}\StringTok{\textquotesingle{}hist\textquotesingle{}}\NormalTok{, bins}\OperatorTok{=}\DecValTok{20}\NormalTok{)}
+\NormalTok{)}
+
+\NormalTok{start\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{min}\NormalTok{()}
+\NormalTok{stop\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{max}\NormalTok{()}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Total Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Distribution of Total Returns for DJIA Stocks}\CharTok{\textbackslash{}n}\SpecialStringTok{ from }\SpecialCharTok{\{}\NormalTok{start\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{ through }\SpecialCharTok{\{}\NormalTok{stop\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_05_practice_02_files/figure-pdf/cell-27-output-1.png}
+
+}
+
+\end{figure}
+
+With only 30 stocks, we can actually visualize each total return!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}
+\NormalTok{    returns2}
+\NormalTok{    .add(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .prod()}
+\NormalTok{    .sub(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .sort\_values() }\CommentTok{\# sort by total returns}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .plot(kind}\OperatorTok{=}\StringTok{\textquotesingle{}barh\textquotesingle{}}\NormalTok{) }\CommentTok{\# horizontal bar chart}
+\NormalTok{)}
+
+\NormalTok{start\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{min}\NormalTok{()}
+\NormalTok{stop\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{max}\NormalTok{()}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Total Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Distribution of Total Returns for DJIA Stocks}\CharTok{\textbackslash{}n}\SpecialStringTok{ from }\SpecialCharTok{\{}\NormalTok{start\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{ through }\SpecialCharTok{\{}\NormalTok{stop\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_05_practice_02_files/figure-pdf/cell-28-output-1.png}
+
+}
+
+\end{figure}
+
 \hypertarget{which-stocks-have-the-minimum-and-maximum-total-returns}{%
 \subsection{Which stocks have the minimum and maximum total
 returns?}\label{which-stocks-have-the-minimum-and-maximum-total-returns}}
+
+If we want the \emph{values}, the \texttt{.min()} and \texttt{.max()}
+methods are the way to go!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.}\BuiltInTok{min}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+-0.5384
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.}\BuiltInTok{max}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+3.1210
+\end{verbatim}
+
+If we want the \emph{ticker}, the \texttt{.idxmin()} and
+\texttt{.idxmax()} methods are the way to go!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.idxmin()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+'WBA'
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.idxmax()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+'AAPL'
+\end{verbatim}
+
+If we want the smallest and the largest together, we can chain a few
+methods!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.sort\_values().iloc[[}\DecValTok{0}\NormalTok{, }\OperatorTok{{-}}\DecValTok{1}\NormalTok{]]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+WBA    -0.5384
+AAPL    3.1210
+dtype: float64
+\end{verbatim}
+
+Not the exactly right tool here, but the
+\texttt{.nsmallest()\textquotesingle{}\ and}.nlargest()` methods are
+really useful!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.nsmallest(}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+WBA   -0.5384
+MMM   -0.4408
+BA    -0.4289
+dtype: float64
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.nlargest(}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL   3.1210
+MSFT   2.6028
+CAT    1.6083
+dtype: float64
+\end{verbatim}
 
 \hypertarget{plot-the-cumulative-returns-for-the-stocks-in-the-djia}{%
 \subsection{Plot the cumulative returns for the stocks in the
@@ -17899,10 +18199,75 @@ DJIA}\label{plot-the-cumulative-returns-for-the-stocks-in-the-djia}}
 We can use the cumulative product method \texttt{.cumprod()} to
 calculate the right hand side of the formula above.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}
+\NormalTok{    returns2}
+\NormalTok{    .add(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .cumprod()}
+\NormalTok{    .sub(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .plot(legend}\OperatorTok{=}\VariableTok{False}\NormalTok{, linewidth}\OperatorTok{=}\FloatTok{0.5}\NormalTok{) }\CommentTok{\# with 30 stocks, this legend is too big to be useful}
+\NormalTok{)}
+\NormalTok{start\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{min}\NormalTok{()}
+\NormalTok{stop\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{max}\NormalTok{()}
+
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}Cumulative Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Cumulative Returns for DJIA Stocks}\CharTok{\textbackslash{}n}\SpecialStringTok{ from }\SpecialCharTok{\{}\NormalTok{start\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{ through }\SpecialCharTok{\{}\NormalTok{stop\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_05_practice_02_files/figure-pdf/cell-36-output-1.png}
+
+}
+
+\end{figure}
+
 \hypertarget{repeat-the-plot-above-with-only-the-minimum-and-maximum-total-returns}{%
 \subsection{Repeat the plot above with only the minimum and maximum
 total
 returns}\label{repeat-the-plot-above-with-only-the-minimum-and-maximum-total-returns}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.sort\_values().iloc[[}\DecValTok{0}\NormalTok{, }\OperatorTok{{-}}\DecValTok{1}\NormalTok{]].index}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Index(['WBA', 'AAPL'], dtype='object')
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}
+\NormalTok{    returns2 }\CommentTok{\# all returns for all stocks}
+\NormalTok{    [total\_returns2.sort\_values().iloc[[}\DecValTok{0}\NormalTok{, }\OperatorTok{{-}}\DecValTok{1}\NormalTok{]].index] }\CommentTok{\# slice min and max total return stocks}
+\NormalTok{    .add(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .cumprod()}
+\NormalTok{    .sub(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .plot()}
+\NormalTok{)}
+\NormalTok{start\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{min}\NormalTok{()}
+\NormalTok{stop\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{max}\NormalTok{()}
+
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}Cumulative Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Cumulative Returns for DJIA Stocks}\CharTok{\textbackslash{}n}\SpecialStringTok{ from }\SpecialCharTok{\{}\NormalTok{start\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{ through }\SpecialCharTok{\{}\NormalTok{stop\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_05_practice_02_files/figure-pdf/cell-38-output-1.png}
+
+}
+
+\end{figure}
 
 \hypertarget{mckinney-chapter-5---practice-for-section-03}{%
 \chapter{McKinney Chapter 5 - Practice for Section
@@ -18144,17 +18509,17 @@ Date & & & & \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-2004-08-20 & 0.0029 & 0.0794 & 0.0042 & 0.0029 \\
+2004-08-20 & 0.0029 & 0.0794 & 0.0042 & 0.0030 \\
 2004-08-23 & 0.0091 & 0.0101 & -0.0070 & 0.0044 \\
 2004-08-24 & 0.0280 & -0.0414 & 0.0007 & 0.0000 \\
-2004-08-25 & 0.0344 & 0.0108 & 0.0043 & 0.0114 \\
+2004-08-25 & 0.0344 & 0.0108 & 0.0042 & 0.0114 \\
 2004-08-26 & 0.0487 & 0.0180 & -0.0045 & -0.0040 \\
 ... & ... & ... & ... & ... \\
-2024-01-23 & 0.0067 & 0.0066 & 0.0064 & 0.0060 \\
-2024-01-24 & -0.0035 & 0.0112 & -0.0001 & 0.0092 \\
-2024-01-25 & -0.0017 & 0.0219 & 0.0949 & 0.0057 \\
 2024-01-26 & -0.0090 & 0.0010 & -0.0158 & -0.0023 \\
 2024-01-29 & -0.0036 & 0.0068 & -0.0015 & 0.0143 \\
+2024-01-30 & -0.0192 & -0.0116 & 0.0039 & -0.0028 \\
+2024-01-31 & -0.0194 & -0.0735 & -0.0224 & -0.0269 \\
+2024-02-01 & 0.0133 & 0.0064 & 0.0176 & 0.0156 \\
 \end{longtable}
 
 \hypertarget{what-are-the-mean-daily-returns-for-these-four-stocks-1}{%
@@ -18193,12 +18558,12 @@ Date
 2004-08-25    0.0152
 2004-08-26    0.0146
                ...  
-2024-01-23    0.0064
-2024-01-24    0.0042
-2024-01-25    0.0302
 2024-01-26   -0.0065
 2024-01-29    0.0040
-Length: 4893, dtype: float64
+2024-01-30   -0.0074
+2024-01-31   -0.0356
+2024-02-01    0.0132
+Length: 4896, dtype: float64
 \end{verbatim}
 
 \hypertarget{what-are-the-standard-deviations-of-daily-returns-for-these-four-stocks-1}{%
@@ -18216,7 +18581,7 @@ pandas calcualates sample statistics by default.
 
 \begin{verbatim}
 AAPL   0.0206
-GOOG   0.0193
+GOOG   0.0194
 IBM    0.0143
 MSFT   0.0171
 dtype: float64
@@ -18238,10 +18603,10 @@ deviations by multiplying by \(\sqrt(T)\).
 \end{Shaded}
 
 \begin{verbatim}
-AAPL   0.3640
-GOOG   0.2594
-IBM    0.0981
-MSFT   0.2010
+AAPL   0.3625
+GOOG   0.2552
+IBM    0.0980
+MSFT   0.2002
 dtype: float64
 \end{verbatim}
 
@@ -18253,8 +18618,8 @@ dtype: float64
 
 \begin{verbatim}
 AAPL   0.3276
-GOOG   0.3070
-IBM    0.2271
+GOOG   0.3074
+IBM    0.2272
 MSFT   0.2722
 dtype: float64
 \end{verbatim}
@@ -18311,6 +18676,121 @@ We can find the current DJIA stocks on
 We will need to download new data, into \texttt{tickers2},
 \texttt{prices2}, and \texttt{returns2}.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{url2 }\OperatorTok{=} \StringTok{\textquotesingle{}https://en.wikipedia.org/wiki/Dow\_Jones\_Industrial\_Average\textquotesingle{}}
+\NormalTok{wiki2 }\OperatorTok{=}\NormalTok{ pd.read\_html(io}\OperatorTok{=}\NormalTok{url2)}
+\NormalTok{tickers2 }\OperatorTok{=}\NormalTok{ wiki2[}\DecValTok{1}\NormalTok{][}\StringTok{\textquotesingle{}Symbol\textquotesingle{}}\NormalTok{].to\_list()}
+\NormalTok{tickers2[:}\DecValTok{5}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+['MMM', 'AXP', 'AMGN', 'AAPL', 'BA']
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{prices2 }\OperatorTok{=}\NormalTok{ yf.download(tickers}\OperatorTok{=}\NormalTok{tickers2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[*********************100%%**********************]  30 of 30 completed
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns2 }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    prices2[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{] }\CommentTok{\# slide adj close for all stocks}
+\NormalTok{    .iloc[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{] }\CommentTok{\# drop last day of adj close, which are intraday values before 4 PM}
+\NormalTok{    .pct\_change() }\CommentTok{\# calculate returns}
+\NormalTok{    .dropna() }\CommentTok{\# drop any dates with incomplete data}
+\NormalTok{)}
+
+\NormalTok{returns2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllllllllllllllllllll@{}}
+\toprule\noalign{}
+& AAPL & AMGN & AXP & BA & CAT & CRM & CSCO & CVX & DIS & DOW & ... &
+MRK & MSFT & NKE & PG & TRV & UNH & V & VZ & WBA & WMT \\
+Date & & & & & & & & & & & & & & & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2019-03-21 & 0.0368 & 0.0040 & 0.0095 & -0.0092 & 0.0079 & 0.0210 &
+0.0128 & 0.0094 & -0.0121 & -0.0165 & ... & 0.0106 & 0.0230 & 0.0152 &
+0.0076 & 0.0231 & 0.0061 & 0.0133 & 0.0108 & 0.0129 & 0.0043 \\
+2019-03-22 & -0.0207 & -0.0270 & -0.0211 & -0.0283 & -0.0320 & -0.0326 &
+-0.0222 & -0.0220 & -0.0040 & -0.0078 & ... & -0.0080 & -0.0264 &
+-0.0661 & -0.0081 & 0.0039 & -0.0196 & -0.0175 & 0.0252 & -0.0187 &
+-0.0079 \\
+2019-03-25 & -0.0121 & -0.0006 & -0.0038 & 0.0229 & 0.0124 & -0.0038 &
+-0.0002 & -0.0016 & -0.0041 & 0.0113 & ... & 0.0007 & 0.0052 & 0.0017 &
+0.0030 & 0.0004 & -0.0009 & -0.0003 & 0.0054 & -0.0115 & -0.0011 \\
+2019-03-26 & -0.0103 & 0.0090 & 0.0042 & -0.0002 & 0.0035 & -0.0092 &
+0.0095 & 0.0101 & 0.0218 & -0.0061 & ... & 0.0069 & 0.0021 & 0.0128 &
+0.0104 & 0.0002 & -0.0141 & 0.0148 & 0.0092 & 0.0037 & 0.0015 \\
+2019-03-27 & 0.0090 & -0.0104 & -0.0047 & 0.0103 & -0.0049 & -0.0269 &
+-0.0017 & -0.0108 & 0.0013 & 0.0256 & ... & -0.0076 & -0.0097 & -0.0035
+& -0.0012 & 0.0102 & -0.0069 & -0.0070 & 0.0041 & 0.0050 & -0.0113 \\
+... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... &
+... & ... & ... & ... & ... & ... & ... & ... & ... & ... \\
+2024-01-26 & -0.0090 & 0.0049 & 0.0710 & 0.0178 & -0.0045 & 0.0033 &
+-0.0036 & 0.0038 & 0.0053 & -0.0160 & ... & 0.0057 & -0.0023 & 0.0196 &
+0.0033 & -0.0004 & 0.0199 & -0.0171 & 0.0026 & -0.0113 & 0.0088 \\
+2024-01-29 & -0.0036 & 0.0054 & -0.0028 & -0.0014 & 0.0128 & 0.0283 &
+0.0029 & -0.0004 & 0.0223 & 0.0002 & ... & 0.0038 & 0.0143 & 0.0110 &
+0.0001 & -0.0015 & 0.0027 & 0.0213 & -0.0083 & -0.0057 & 0.0047 \\
+2024-01-30 & -0.0192 & 0.0037 & 0.0164 & -0.0231 & 0.0050 & -0.0005 &
+-0.0010 & 0.0070 & -0.0056 & 0.0074 & ... & 0.0031 & -0.0028 & 0.0029 &
+0.0085 & 0.0115 & -0.0018 & 0.0128 & 0.0100 & 0.0018 & 0.0033 \\
+2024-01-31 & -0.0194 & -0.0011 & -0.0167 & 0.0529 & -0.0146 & -0.0231 &
+-0.0394 & -0.0179 & -0.0092 & -0.0160 & ... & -0.0072 & -0.0269 &
+-0.0254 & -0.0022 & -0.0102 & 0.0161 & -0.0140 & -0.0028 & -0.0083 &
+-0.0021 \\
+2024-02-01 & 0.0133 & 0.0328 & 0.0124 & -0.0058 & 0.0246 & 0.0096 &
+0.0000 & 0.0031 & 0.0105 & -0.0011 & ... & 0.0464 & 0.0156 & 0.0023 &
+0.0130 & 0.0031 & -0.0090 & 0.0139 & 0.0033 & 0.0301 & 0.0185 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{vols }\OperatorTok{=}\NormalTok{ returns2.std().mul(np.sqrt(}\DecValTok{252}\NormalTok{) }\OperatorTok{*} \DecValTok{100}\NormalTok{)}
+\NormalTok{means }\OperatorTok{=}\NormalTok{ returns2.mean().mul(}\DecValTok{252} \OperatorTok{*} \DecValTok{100}\NormalTok{)}
+
+\NormalTok{plt.scatter(}
+\NormalTok{    x}\OperatorTok{=}\NormalTok{vols,}
+\NormalTok{    y}\OperatorTok{=}\NormalTok{means}
+\NormalTok{)}
+
+\CommentTok{\# add tickers to each point}
+\ControlFlowTok{for}\NormalTok{ i }\KeywordTok{in}\NormalTok{ means.index: }\CommentTok{\# loop over ticker index}
+\NormalTok{    plt.text( }\CommentTok{\# plots string s at coordinates x and y}
+\NormalTok{        x}\OperatorTok{=}\NormalTok{vols[i], }\CommentTok{\# indexes volatility}
+\NormalTok{        y}\OperatorTok{=}\NormalTok{means[i], }\CommentTok{\# indexes mean return}
+\NormalTok{        s}\OperatorTok{=}\NormalTok{i }\CommentTok{\# ticker index}
+\NormalTok{    )}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Annualized Volatility of Daily Returns (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}Annualized Mean of Daily Returns (\%)\textquotesingle{}}\NormalTok{)}
+
+\NormalTok{plt.title(}\StringTok{\textquotesingle{}Returns versus Risk\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_05_practice_03_files/figure-pdf/cell-22-output-1.png}
+
+}
+
+\end{figure}
+
 \hypertarget{calculate-total-returns-for-the-stocks-in-the-djia-1}{%
 \subsection{Calculate total returns for the stocks in the
 DJIA}\label{calculate-total-returns-for-the-stocks-in-the-djia-1}}
@@ -18318,6 +18798,33 @@ DJIA}\label{calculate-total-returns-for-the-stocks-in-the-djia-1}}
 We can use the \texttt{.prod()} method to compound returns as
 \(1 + R_T = \prod_{t=1}^T (1 + R_t)\). Technically, we should write
 \(R_T\) as \(R_{0,T}\), but we typically omit the subscript \(0\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2 }\OperatorTok{=}\NormalTok{ returns2.add(}\DecValTok{1}\NormalTok{).prod().sub(}\DecValTok{1}\NormalTok{)}
+
+\NormalTok{total\_returns2.iloc[:}\DecValTok{5}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL    3.1210
+AMGN    0.9635
+AXP     0.9687
+BA     -0.4289
+CAT     1.6083
+dtype: float64
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.allclose(((returns2 }\OperatorTok{+} \DecValTok{1}\NormalTok{).prod() }\OperatorTok{{-}} \DecValTok{1}\NormalTok{), total\_returns2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
 
 \hypertarget{plot-the-distribution-of-total-returns-for-the-stocks-in-the-djia-1}{%
 \subsection{Plot the distribution of total returns for the stocks in the
@@ -18327,9 +18834,158 @@ We can plot a histogram, using either the \texttt{plt.hist()} function
 or the \texttt{.plot(kind=\textquotesingle{}hist\textquotesingle{})}
 method.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{start\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{min}\NormalTok{()}
+\NormalTok{stop\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{max}\NormalTok{()}
+
+\NormalTok{(}
+\NormalTok{    returns2}
+\NormalTok{    .add(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .prod()}
+\NormalTok{    .sub(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .plot(kind}\OperatorTok{=}\StringTok{\textquotesingle{}hist\textquotesingle{}}\NormalTok{, bins}\OperatorTok{=}\DecValTok{20}\NormalTok{)}
+\NormalTok{)}
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Total Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Distribution of Total Returns for DJIA Stocks}\CharTok{\textbackslash{}n}\SpecialStringTok{ from }\SpecialCharTok{\{}\NormalTok{start\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{ to }\SpecialCharTok{\{}\NormalTok{stop\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_05_practice_03_files/figure-pdf/cell-25-output-1.png}
+
+}
+
+\end{figure}
+
+With only 30 stocks, we can visualize and interpret each stock
+separately!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{start\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{min}\NormalTok{()}
+\NormalTok{stop\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{max}\NormalTok{()}
+
+\NormalTok{(}
+\NormalTok{    returns2}
+\NormalTok{    .add(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .prod()}
+\NormalTok{    .sub(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .sort\_values()}
+\NormalTok{    .plot(kind}\OperatorTok{=}\StringTok{\textquotesingle{}barh\textquotesingle{}}\NormalTok{, grid}\OperatorTok{=}\VariableTok{True}\NormalTok{)}
+\NormalTok{)}
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Total Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Total Returns for DJIA Stocks}\CharTok{\textbackslash{}n}\SpecialStringTok{ from }\SpecialCharTok{\{}\NormalTok{start\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{ to }\SpecialCharTok{\{}\NormalTok{stop\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_05_practice_03_files/figure-pdf/cell-26-output-1.png}
+
+}
+
+\end{figure}
+
 \hypertarget{which-stocks-have-the-minimum-and-maximum-total-returns-1}{%
 \subsection{Which stocks have the minimum and maximum total
 returns?}\label{which-stocks-have-the-minimum-and-maximum-total-returns-1}}
+
+If we want the \emph{values}, the \texttt{.min()} and \texttt{.max()}
+methods are the way to go!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.}\BuiltInTok{min}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+-0.5384
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.}\BuiltInTok{max}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+3.1210
+\end{verbatim}
+
+The \texttt{.min()} and \texttt{.max()} methods give the values but not
+the tickers (or index). We use the \texttt{.idxmin()} and
+\texttt{.idxmax()} to get the tickers (or index).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.idxmin()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+'WBA'
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.idxmax()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+'AAPL'
+\end{verbatim}
+
+Here is what I would use!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.sort\_values().iloc[[}\DecValTok{0}\NormalTok{, }\OperatorTok{{-}}\DecValTok{1}\NormalTok{]]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+WBA    -0.5384
+AAPL    3.1210
+dtype: float64
+\end{verbatim}
+
+Not the exactly right tool here, but the
+\texttt{.nsmallest()\textquotesingle{}\ and}.nlargest()` methods are
+really useful!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.nsmallest(}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+WBA   -0.5384
+MMM   -0.4408
+BA    -0.4289
+dtype: float64
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.nlargest(}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL   3.1210
+MSFT   2.6028
+CAT    1.6083
+dtype: float64
+\end{verbatim}
 
 \hypertarget{plot-the-cumulative-returns-for-the-stocks-in-the-djia-1}{%
 \subsection{Plot the cumulative returns for the stocks in the
@@ -18338,10 +18994,74 @@ DJIA}\label{plot-the-cumulative-returns-for-the-stocks-in-the-djia-1}}
 We can use the cumulative product method \texttt{.cumprod()} to
 calculate the right hand side of the formula above.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{start\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{min}\NormalTok{()}
+\NormalTok{stop\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{max}\NormalTok{()}
+
+\NormalTok{(}
+\NormalTok{    returns2}
+\NormalTok{    .add(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .cumprod()}
+\NormalTok{    .sub(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .plot(legend}\OperatorTok{=}\VariableTok{False}\NormalTok{)}
+\NormalTok{)}
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Cumulative Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Cumulative Returns for DJIA Stocks}\CharTok{\textbackslash{}n}\SpecialStringTok{ from }\SpecialCharTok{\{}\NormalTok{start\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{ to }\SpecialCharTok{\{}\NormalTok{stop\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_05_practice_03_files/figure-pdf/cell-34-output-1.png}
+
+}
+
+\end{figure}
+
 \hypertarget{repeat-the-plot-above-with-only-the-minimum-and-maximum-total-returns-1}{%
 \subsection{Repeat the plot above with only the minimum and maximum
 total
 returns}\label{repeat-the-plot-above-with-only-the-minimum-and-maximum-total-returns-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.sort\_values().iloc[[}\DecValTok{0}\NormalTok{, }\OperatorTok{{-}}\DecValTok{1}\NormalTok{]].index}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Index(['WBA', 'AAPL'], dtype='object')
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{start\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{min}\NormalTok{()}
+\NormalTok{stop\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{max}\NormalTok{()}
+
+\NormalTok{(}
+\NormalTok{    returns2[total\_returns2.sort\_values().iloc[[}\DecValTok{0}\NormalTok{, }\OperatorTok{{-}}\DecValTok{1}\NormalTok{]].index]}
+\NormalTok{    .add(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .cumprod()}
+\NormalTok{    .sub(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .plot()}
+\NormalTok{)}
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Cumulative Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Cumulative Returns for DJIA Stocks}\CharTok{\textbackslash{}n}\SpecialStringTok{ from }\SpecialCharTok{\{}\NormalTok{start\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{ to }\SpecialCharTok{\{}\NormalTok{stop\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_05_practice_03_files/figure-pdf/cell-36-output-1.png}
+
+}
+
+\end{figure}
 
 \hypertarget{mckinney-chapter-5---practice-for-section-04}{%
 \chapter{McKinney Chapter 5 - Practice for Section
@@ -18577,17 +19297,17 @@ Date & & & & \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-2004-08-20 & 0.0029 & 0.0794 & 0.0042 & 0.0029 \\
+2004-08-20 & 0.0029 & 0.0794 & 0.0042 & 0.0030 \\
 2004-08-23 & 0.0091 & 0.0101 & -0.0070 & 0.0044 \\
 2004-08-24 & 0.0280 & -0.0414 & 0.0007 & 0.0000 \\
 2004-08-25 & 0.0344 & 0.0108 & 0.0042 & 0.0114 \\
 2004-08-26 & 0.0487 & 0.0180 & -0.0045 & -0.0040 \\
 ... & ... & ... & ... & ... \\
-2024-01-22 & 0.0122 & -0.0018 & 0.0079 & -0.0054 \\
-2024-01-23 & 0.0067 & 0.0066 & 0.0064 & 0.0060 \\
-2024-01-24 & -0.0035 & 0.0112 & -0.0001 & 0.0092 \\
-2024-01-25 & -0.0017 & 0.0219 & 0.0949 & 0.0057 \\
 2024-01-26 & -0.0090 & 0.0010 & -0.0158 & -0.0023 \\
+2024-01-29 & -0.0036 & 0.0068 & -0.0015 & 0.0143 \\
+2024-01-30 & -0.0192 & -0.0116 & 0.0039 & -0.0028 \\
+2024-01-31 & -0.0194 & -0.0735 & -0.0224 & -0.0269 \\
+2024-02-01 & 0.0133 & 0.0064 & 0.0176 & 0.0156 \\
 \end{longtable}
 
 \hypertarget{what-are-the-mean-daily-returns-for-these-four-stocks-2}{%
@@ -18625,12 +19345,12 @@ Date
 2004-08-25    0.0152
 2004-08-26    0.0146
                ...  
-2024-01-22    0.0032
-2024-01-23    0.0064
-2024-01-24    0.0042
-2024-01-25    0.0302
 2024-01-26   -0.0065
-Length: 4892, dtype: float64
+2024-01-29    0.0040
+2024-01-30   -0.0074
+2024-01-31   -0.0356
+2024-02-01    0.0132
+Length: 4896, dtype: float64
 \end{verbatim}
 
 \hypertarget{what-are-the-standard-deviations-of-daily-returns-for-these-four-stocks-2}{%
@@ -18649,7 +19369,7 @@ statistics in NumPy.
 
 \begin{verbatim}
 AAPL   0.0206
-GOOG   0.0193
+GOOG   0.0194
 IBM    0.0143
 MSFT   0.0171
 dtype: float64
@@ -18671,10 +19391,10 @@ deviations by multiplying by \(\sqrt(T)\).
 \end{Shaded}
 
 \begin{verbatim}
-AAPL   0.3642
-GOOG   0.2591
-IBM    0.0982
-MSFT   0.2003
+AAPL   0.3625
+GOOG   0.2552
+IBM    0.0980
+MSFT   0.2002
 dtype: float64
 \end{verbatim}
 
@@ -18685,8 +19405,8 @@ dtype: float64
 \end{Shaded}
 
 \begin{verbatim}
-AAPL   0.3277
-GOOG   0.3071
+AAPL   0.3276
+GOOG   0.3074
 IBM    0.2272
 MSFT   0.2722
 dtype: float64
@@ -18713,6 +19433,7 @@ stocks}{Plot annualized means versus standard deviations of daily returns for th
 \NormalTok{        x}\OperatorTok{=}\NormalTok{vols[i], }\CommentTok{\# indexes volatility}
 \NormalTok{        y}\OperatorTok{=}\NormalTok{means[i], }\CommentTok{\# indexes mean return}
 \NormalTok{        s}\OperatorTok{=}\NormalTok{i }\CommentTok{\# ticker index}
+\NormalTok{    )}
 
 \NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Annualized Volatility of Daily Returns (\%)\textquotesingle{}}\NormalTok{)}
 \NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}Annualized Means of Daily Returns (\%)\textquotesingle{}}\NormalTok{)}
@@ -18745,20 +19466,116 @@ We will need to download new data, into \texttt{tickers2},
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{url2 }\OperatorTok{=} \StringTok{\textquotesingle{}https://en.wikipedia.org/wiki/Dow\_Jones\_Industrial\_Average\textquotesingle{}}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
 \NormalTok{wiki2 }\OperatorTok{=}\NormalTok{ pd.read\_html(url2)}
+\NormalTok{tickers2 }\OperatorTok{=}\NormalTok{ wiki2[}\DecValTok{1}\NormalTok{][}\StringTok{\textquotesingle{}Symbol\textquotesingle{}}\NormalTok{].to\_list()}
+\NormalTok{tickers2[:}\DecValTok{5}\NormalTok{]}
 \end{Highlighting}
 \end{Shaded}
 
+\begin{verbatim}
+['MMM', 'AXP', 'AMGN', 'AAPL', 'BA']
+\end{verbatim}
+
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{tickers2 }\OperatorTok{=}\NormalTok{ wiki2[}\DecValTok{1}\NormalTok{][}\StringTok{\textquotesingle{}Symbol\textquotesingle{}}\NormalTok{].to\_list()}
+\NormalTok{prices2 }\OperatorTok{=}\NormalTok{ yf.download(tickers}\OperatorTok{=}\NormalTok{tickers2)}
 \end{Highlighting}
 \end{Shaded}
+
+\begin{verbatim}
+[*********************100%%**********************]  30 of 30 completed
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns2 }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    prices2[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{]}
+\NormalTok{    .iloc[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{]}
+\NormalTok{    .pct\_change()}
+\NormalTok{    .dropna()}
+\NormalTok{)}
+
+\NormalTok{returns2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllllllllllllllllllll@{}}
+\toprule\noalign{}
+& AAPL & AMGN & AXP & BA & CAT & CRM & CSCO & CVX & DIS & DOW & ... &
+MRK & MSFT & NKE & PG & TRV & UNH & V & VZ & WBA & WMT \\
+Date & & & & & & & & & & & & & & & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2019-03-21 & 0.0368 & 0.0040 & 0.0095 & -0.0092 & 0.0079 & 0.0210 &
+0.0128 & 0.0094 & -0.0121 & -0.0165 & ... & 0.0106 & 0.0230 & 0.0152 &
+0.0076 & 0.0231 & 0.0061 & 0.0133 & 0.0108 & 0.0129 & 0.0043 \\
+2019-03-22 & -0.0207 & -0.0270 & -0.0211 & -0.0283 & -0.0320 & -0.0326 &
+-0.0222 & -0.0220 & -0.0040 & -0.0078 & ... & -0.0080 & -0.0264 &
+-0.0661 & -0.0081 & 0.0039 & -0.0196 & -0.0175 & 0.0252 & -0.0187 &
+-0.0079 \\
+2019-03-25 & -0.0121 & -0.0006 & -0.0038 & 0.0229 & 0.0124 & -0.0038 &
+-0.0002 & -0.0016 & -0.0041 & 0.0113 & ... & 0.0007 & 0.0052 & 0.0017 &
+0.0030 & 0.0004 & -0.0009 & -0.0003 & 0.0054 & -0.0115 & -0.0011 \\
+2019-03-26 & -0.0103 & 0.0090 & 0.0042 & -0.0002 & 0.0035 & -0.0092 &
+0.0095 & 0.0101 & 0.0218 & -0.0061 & ... & 0.0069 & 0.0021 & 0.0128 &
+0.0104 & 0.0002 & -0.0141 & 0.0148 & 0.0092 & 0.0037 & 0.0015 \\
+2019-03-27 & 0.0090 & -0.0104 & -0.0047 & 0.0103 & -0.0049 & -0.0269 &
+-0.0017 & -0.0108 & 0.0013 & 0.0256 & ... & -0.0076 & -0.0097 & -0.0035
+& -0.0012 & 0.0101 & -0.0069 & -0.0070 & 0.0041 & 0.0050 & -0.0113 \\
+... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... &
+... & ... & ... & ... & ... & ... & ... & ... & ... & ... \\
+2024-01-26 & -0.0090 & 0.0049 & 0.0710 & 0.0178 & -0.0045 & 0.0033 &
+-0.0036 & 0.0038 & 0.0053 & -0.0160 & ... & 0.0057 & -0.0023 & 0.0196 &
+0.0033 & -0.0004 & 0.0199 & -0.0171 & 0.0026 & -0.0113 & 0.0088 \\
+2024-01-29 & -0.0036 & 0.0054 & -0.0028 & -0.0014 & 0.0128 & 0.0283 &
+0.0029 & -0.0004 & 0.0223 & 0.0002 & ... & 0.0038 & 0.0143 & 0.0110 &
+0.0001 & -0.0015 & 0.0027 & 0.0213 & -0.0083 & -0.0057 & 0.0047 \\
+2024-01-30 & -0.0192 & 0.0037 & 0.0164 & -0.0231 & 0.0050 & -0.0005 &
+-0.0010 & 0.0070 & -0.0056 & 0.0074 & ... & 0.0031 & -0.0028 & 0.0029 &
+0.0085 & 0.0115 & -0.0018 & 0.0128 & 0.0100 & 0.0018 & 0.0033 \\
+2024-01-31 & -0.0194 & -0.0011 & -0.0167 & 0.0529 & -0.0146 & -0.0231 &
+-0.0394 & -0.0179 & -0.0092 & -0.0160 & ... & -0.0072 & -0.0269 &
+-0.0254 & -0.0022 & -0.0102 & 0.0161 & -0.0140 & -0.0028 & -0.0083 &
+-0.0021 \\
+2024-02-01 & 0.0133 & 0.0328 & 0.0124 & -0.0058 & 0.0246 & 0.0096 &
+0.0000 & 0.0031 & 0.0105 & -0.0011 & ... & 0.0464 & 0.0156 & 0.0023 &
+0.0130 & 0.0031 & -0.0090 & 0.0139 & 0.0033 & 0.0301 & 0.0185 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{means }\OperatorTok{=}\NormalTok{ returns2.mean().mul(}\DecValTok{252} \OperatorTok{*} \DecValTok{100}\NormalTok{)}
+\NormalTok{vols }\OperatorTok{=}\NormalTok{ returns2.std().mul(np.sqrt(}\DecValTok{252}\NormalTok{) }\OperatorTok{*} \DecValTok{100}\NormalTok{)}
+
+\NormalTok{plt.scatter(}
+\NormalTok{    x}\OperatorTok{=}\NormalTok{vols,}
+\NormalTok{    y}\OperatorTok{=}\NormalTok{means}
+\NormalTok{)}
+
+\CommentTok{\# add tickers to each point}
+\ControlFlowTok{for}\NormalTok{ i }\KeywordTok{in}\NormalTok{ means.index: }\CommentTok{\# loop over ticker index}
+\NormalTok{    plt.text( }\CommentTok{\# plots string s at coordinates x and y}
+\NormalTok{        x}\OperatorTok{=}\NormalTok{vols[i], }\CommentTok{\# indexes volatility}
+\NormalTok{        y}\OperatorTok{=}\NormalTok{means[i], }\CommentTok{\# indexes mean return}
+\NormalTok{        s}\OperatorTok{=}\NormalTok{i }\CommentTok{\# ticker index}
+\NormalTok{    )}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Annualized Volatility of Daily Returns (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}Annualized Means of Daily Returns (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\StringTok{\textquotesingle{}Returns versus Risk\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_05_practice_04_files/figure-pdf/cell-22-output-1.png}
+
+}
+
+\end{figure}
 
 \hypertarget{calculate-total-returns-for-the-stocks-in-the-djia-2}{%
 \subsection{Calculate total returns for the stocks in the
@@ -18768,6 +19585,22 @@ We can use the \texttt{.prod()} method to compound returns as
 \(1 + R_T = \prod_{t=1}^T (1 + R_t)\). Technically, we should write
 \(R_T\) as \(R_{0,T}\), but we typically omit the subscript \(0\).
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2 }\OperatorTok{=}\NormalTok{ returns2.add(}\DecValTok{1}\NormalTok{).prod().sub(}\DecValTok{1}\NormalTok{)}
+\NormalTok{total\_returns2.iloc[:}\DecValTok{5}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL    3.1210
+AMGN    0.9635
+AXP     0.9687
+BA     -0.4289
+CAT     1.6083
+dtype: float64
+\end{verbatim}
+
 \hypertarget{plot-the-distribution-of-total-returns-for-the-stocks-in-the-djia-2}{%
 \subsection{Plot the distribution of total returns for the stocks in the
 DJIA}\label{plot-the-distribution-of-total-returns-for-the-stocks-in-the-djia-2}}
@@ -18776,9 +19609,158 @@ We can plot a histogram, using either the \texttt{plt.hist()} function
 or the \texttt{.plot(kind=\textquotesingle{}hist\textquotesingle{})}
 method.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{start\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{min}\NormalTok{()}
+\NormalTok{stop\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{max}\NormalTok{()}
+
+\NormalTok{(}
+\NormalTok{    returns2}
+\NormalTok{    .add(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .prod()}
+\NormalTok{    .sub(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .plot(kind}\OperatorTok{=}\StringTok{\textquotesingle{}hist\textquotesingle{}}\NormalTok{, bins}\OperatorTok{=}\DecValTok{20}\NormalTok{)}
+\NormalTok{)}
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Total Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Distribution of Total Returns for DJIA Stocks}\CharTok{\textbackslash{}n}\SpecialStringTok{ from }\SpecialCharTok{\{}\NormalTok{start\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{ to }\SpecialCharTok{\{}\NormalTok{stop\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_05_practice_04_files/figure-pdf/cell-24-output-1.png}
+
+}
+
+\end{figure}
+
+With only 30 stocks, we can visualize and interpret each stock
+separately!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{start\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{min}\NormalTok{()}
+\NormalTok{stop\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{max}\NormalTok{()}
+
+\NormalTok{(}
+\NormalTok{    returns2}
+\NormalTok{    .add(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .prod()}
+\NormalTok{    .sub(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .sort\_values()}
+\NormalTok{    .plot(kind}\OperatorTok{=}\StringTok{\textquotesingle{}barh\textquotesingle{}}\NormalTok{, grid}\OperatorTok{=}\VariableTok{True}\NormalTok{)}
+\NormalTok{)}
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Total Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Total Returns for DJIA Stocks}\CharTok{\textbackslash{}n}\SpecialStringTok{ from }\SpecialCharTok{\{}\NormalTok{start\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{ to }\SpecialCharTok{\{}\NormalTok{stop\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_05_practice_04_files/figure-pdf/cell-25-output-1.png}
+
+}
+
+\end{figure}
+
 \hypertarget{which-stocks-have-the-minimum-and-maximum-total-returns-2}{%
 \subsection{Which stocks have the minimum and maximum total
 returns?}\label{which-stocks-have-the-minimum-and-maximum-total-returns-2}}
+
+If we want the \emph{values}, the \texttt{.min()} and \texttt{.max()}
+methods are the way to go!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.}\BuiltInTok{min}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+-0.5384
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.}\BuiltInTok{max}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+3.1210
+\end{verbatim}
+
+The \texttt{.min()} and \texttt{.max()} methods give the values but not
+the tickers (or index). We use the \texttt{.idxmin()} and
+\texttt{.idxmax()} to get the tickers (or index).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.idxmin()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+'WBA'
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.idxmax()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+'AAPL'
+\end{verbatim}
+
+Here is what I would use!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.sort\_values().iloc[[}\DecValTok{0}\NormalTok{, }\OperatorTok{{-}}\DecValTok{1}\NormalTok{]]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+WBA    -0.5384
+AAPL    3.1210
+dtype: float64
+\end{verbatim}
+
+Not the exactly right tool here, but the
+\texttt{.nsmallest()\textquotesingle{}\ and}.nlargest()` methods are
+really useful!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.nsmallest(}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+WBA   -0.5384
+MMM   -0.4408
+BA    -0.4289
+dtype: float64
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.nlargest(}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL   3.1210
+MSFT   2.6028
+CAT    1.6083
+dtype: float64
+\end{verbatim}
 
 \hypertarget{plot-the-cumulative-returns-for-the-stocks-in-the-djia-2}{%
 \subsection{Plot the cumulative returns for the stocks in the
@@ -18787,10 +19769,74 @@ DJIA}\label{plot-the-cumulative-returns-for-the-stocks-in-the-djia-2}}
 We can use the cumulative product method \texttt{.cumprod()} to
 calculate the right hand side of the formula above.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{start\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{min}\NormalTok{()}
+\NormalTok{stop\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{max}\NormalTok{()}
+
+\NormalTok{(}
+\NormalTok{    returns2}
+\NormalTok{    .add(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .cumprod()}
+\NormalTok{    .sub(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .plot(legend}\OperatorTok{=}\VariableTok{False}\NormalTok{)}
+\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}Cumulative Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Cumulative Returns on DJIA Stocks}\CharTok{\textbackslash{}n}\SpecialStringTok{ from }\SpecialCharTok{\{}\NormalTok{start\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{ to }\SpecialCharTok{\{}\NormalTok{stop\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_05_practice_04_files/figure-pdf/cell-33-output-1.png}
+
+}
+
+\end{figure}
+
 \hypertarget{repeat-the-plot-above-with-only-the-minimum-and-maximum-total-returns-2}{%
 \subsection{Repeat the plot above with only the minimum and maximum
 total
 returns}\label{repeat-the-plot-above-with-only-the-minimum-and-maximum-total-returns-2}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.sort\_values().iloc[[}\DecValTok{0}\NormalTok{, }\OperatorTok{{-}}\DecValTok{1}\NormalTok{]].index}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Index(['WBA', 'AAPL'], dtype='object')
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{start\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{min}\NormalTok{()}
+\NormalTok{stop\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{max}\NormalTok{()}
+
+\NormalTok{(}
+\NormalTok{    returns2[total\_returns2.sort\_values().iloc[[}\DecValTok{0}\NormalTok{, }\OperatorTok{{-}}\DecValTok{1}\NormalTok{]].index]}
+\NormalTok{    .add(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .cumprod()}
+\NormalTok{    .sub(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .plot()}
+\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}Cumulative Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Cumulative Returns on DJIA Stocks}\CharTok{\textbackslash{}n}\SpecialStringTok{ from }\SpecialCharTok{\{}\NormalTok{start\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{ to }\SpecialCharTok{\{}\NormalTok{stop\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_05_practice_04_files/figure-pdf/cell-35-output-1.png}
+
+}
+
+\end{figure}
 
 \hypertarget{mckinney-chapter-5---practice-for-section-05}{%
 \chapter{McKinney Chapter 5 - Practice for Section
@@ -19030,17 +20076,17 @@ Date & & & & \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-2004-08-20 & 0.0029 & 0.0794 & 0.0042 & 0.0030 \\
+2004-08-20 & 0.0029 & 0.0794 & 0.0042 & 0.0029 \\
 2004-08-23 & 0.0091 & 0.0101 & -0.0070 & 0.0044 \\
 2004-08-24 & 0.0280 & -0.0414 & 0.0007 & 0.0000 \\
 2004-08-25 & 0.0344 & 0.0108 & 0.0042 & 0.0114 \\
 2004-08-26 & 0.0487 & 0.0180 & -0.0045 & -0.0040 \\
 ... & ... & ... & ... & ... \\
-2024-01-23 & 0.0067 & 0.0066 & 0.0064 & 0.0060 \\
-2024-01-24 & -0.0035 & 0.0112 & -0.0001 & 0.0092 \\
-2024-01-25 & -0.0017 & 0.0219 & 0.0949 & 0.0057 \\
 2024-01-26 & -0.0090 & 0.0010 & -0.0158 & -0.0023 \\
 2024-01-29 & -0.0036 & 0.0068 & -0.0015 & 0.0143 \\
+2024-01-30 & -0.0192 & -0.0116 & 0.0039 & -0.0028 \\
+2024-01-31 & -0.0194 & -0.0735 & -0.0224 & -0.0269 \\
+2024-02-01 & 0.0133 & 0.0064 & 0.0176 & 0.0156 \\
 \end{longtable}
 
 \hypertarget{what-are-the-mean-daily-returns-for-these-four-stocks-3}{%
@@ -19079,12 +20125,12 @@ Date
 2004-08-25    0.0152
 2004-08-26    0.0146
                ...  
-2024-01-23    0.0064
-2024-01-24    0.0042
-2024-01-25    0.0302
 2024-01-26   -0.0065
 2024-01-29    0.0040
-Length: 4893, dtype: float64
+2024-01-30   -0.0074
+2024-01-31   -0.0356
+2024-02-01    0.0132
+Length: 4896, dtype: float64
 \end{verbatim}
 
 \hypertarget{what-are-the-standard-deviations-of-daily-returns-for-these-four-stocks-3}{%
@@ -19103,7 +20149,7 @@ deviation of each column.
 
 \begin{verbatim}
 AAPL   0.0206
-GOOG   0.0193
+GOOG   0.0194
 IBM    0.0143
 MSFT   0.0171
 dtype: float64
@@ -19125,10 +20171,10 @@ deviations by multiplying by \(\sqrt(T)\).
 \end{Shaded}
 
 \begin{verbatim}
-AAPL   0.3640
-GOOG   0.2594
-IBM    0.0981
-MSFT   0.2010
+AAPL   0.3625
+GOOG   0.2552
+IBM    0.0980
+MSFT   0.2002
 dtype: float64
 \end{verbatim}
 
@@ -19140,8 +20186,8 @@ dtype: float64
 
 \begin{verbatim}
 AAPL   0.3276
-GOOG   0.3070
-IBM    0.2271
+GOOG   0.3074
+IBM    0.2272
 MSFT   0.2722
 dtype: float64
 \end{verbatim}
@@ -19206,6 +20252,16 @@ We will need to download new data, into \texttt{tickers2},
 \NormalTok{url2 }\OperatorTok{=} \StringTok{\textquotesingle{}https://en.wikipedia.org/wiki/Dow\_Jones\_Industrial\_Average\textquotesingle{}}
 \NormalTok{wiki2 }\OperatorTok{=}\NormalTok{ pd.read\_html(io}\OperatorTok{=}\NormalTok{url2)}
 \NormalTok{tickers2 }\OperatorTok{=}\NormalTok{ wiki2[}\DecValTok{1}\NormalTok{][}\StringTok{\textquotesingle{}Symbol\textquotesingle{}}\NormalTok{].to\_list()}
+\NormalTok{tickers2[:}\DecValTok{5}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+['MMM', 'AXP', 'AMGN', 'AAPL', 'BA']
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \NormalTok{prices2 }\OperatorTok{=}\NormalTok{ yf.download(tickers}\OperatorTok{=}\NormalTok{tickers2)}
 \end{Highlighting}
 \end{Shaded}
@@ -19254,21 +20310,22 @@ Date & & & & & & & & & & & & & & & & & & & & & \\
 & -0.0012 & 0.0101 & -0.0069 & -0.0070 & 0.0041 & 0.0050 & -0.0113 \\
 ... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... &
 ... & ... & ... & ... & ... & ... & ... & ... & ... & ... \\
-2024-01-23 & 0.0067 & -0.0008 & 0.0025 & -0.0160 & 0.0006 & -0.0126 &
-0.0037 & -0.0028 & -0.0138 & 0.0065 & ... & 0.0034 & 0.0060 & 0.0133 &
-0.0414 & -0.0135 & 0.0049 & 0.0002 & 0.0670 & 0.0009 & 0.0025 \\
-2024-01-24 & -0.0035 & -0.0142 & 0.0019 & 0.0124 & 0.0064 & 0.0004 &
--0.0087 & 0.0199 & -0.0029 & -0.0152 & ... & -0.0080 & 0.0092 & -0.0112
-& -0.0121 & 0.0000 & -0.0044 & 0.0014 & -0.0225 & -0.0093 & -0.0141 \\
-2024-01-25 & -0.0017 & 0.0156 & 0.0121 & -0.0572 & 0.0347 & 0.0078 &
-0.0199 & 0.0252 & 0.0145 & 0.0348 & ... & 0.0105 & 0.0057 & 0.0001 &
-0.0230 & 0.0026 & -0.0386 & 0.0035 & 0.0245 & 0.0331 & 0.0146 \\
 2024-01-26 & -0.0090 & 0.0049 & 0.0710 & 0.0178 & -0.0045 & 0.0033 &
 -0.0036 & 0.0038 & 0.0053 & -0.0160 & ... & 0.0057 & -0.0023 & 0.0196 &
 0.0033 & -0.0004 & 0.0199 & -0.0171 & 0.0026 & -0.0113 & 0.0088 \\
 2024-01-29 & -0.0036 & 0.0054 & -0.0028 & -0.0014 & 0.0128 & 0.0283 &
 0.0029 & -0.0004 & 0.0223 & 0.0002 & ... & 0.0038 & 0.0143 & 0.0110 &
 0.0001 & -0.0015 & 0.0027 & 0.0213 & -0.0083 & -0.0057 & 0.0047 \\
+2024-01-30 & -0.0192 & 0.0037 & 0.0164 & -0.0231 & 0.0050 & -0.0005 &
+-0.0010 & 0.0070 & -0.0056 & 0.0074 & ... & 0.0031 & -0.0028 & 0.0029 &
+0.0085 & 0.0115 & -0.0018 & 0.0128 & 0.0100 & 0.0018 & 0.0033 \\
+2024-01-31 & -0.0194 & -0.0011 & -0.0167 & 0.0529 & -0.0146 & -0.0231 &
+-0.0394 & -0.0179 & -0.0092 & -0.0160 & ... & -0.0072 & -0.0269 &
+-0.0254 & -0.0022 & -0.0102 & 0.0161 & -0.0140 & -0.0028 & -0.0083 &
+-0.0021 \\
+2024-02-01 & 0.0133 & 0.0328 & 0.0124 & -0.0058 & 0.0246 & 0.0096 &
+0.0000 & 0.0031 & 0.0105 & -0.0011 & ... & 0.0464 & 0.0156 & 0.0023 &
+0.0130 & 0.0031 & -0.0090 & 0.0139 & 0.0033 & 0.0301 & 0.0185 \\
 \end{longtable}
 
 \begin{Shaded}
@@ -19302,11 +20359,15 @@ Date & & & & & & & & & & & & & & & & & & & & & \\
 
 \begin{figure}[H]
 
-{\centering \includegraphics{mckinney_05_practice_05_files/figure-pdf/cell-21-output-1.png}
+{\centering \includegraphics{mckinney_05_practice_05_files/figure-pdf/cell-22-output-1.png}
 
 }
 
 \end{figure}
+
+With 30 stocks we see there is no relation between returns and
+volatility because most volatility is \emph{diversifiable} and
+uncompensated.
 
 \hypertarget{calculate-total-returns-for-the-stocks-in-the-djia-3}{%
 \subsection{Calculate total returns for the stocks in the
@@ -19316,6 +20377,44 @@ We can use the \texttt{.prod()} method to compound returns as
 \(1 + R_T = \prod_{t=1}^T (1 + R_t)\). Technically, we should write
 \(R_T\) as \(R_{0,T}\), but we typically omit the subscript \(0\).
 
+In general, I prefer to do simple math on pandas objects (data frames
+and series) with methods instead of operators:
+
+For example:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \texttt{.add(1)} instead of \texttt{+\ 1}
+\item
+  \texttt{.sub(1)} instead of \texttt{-\ 1}
+\item
+  \texttt{.div(1)} instead of \texttt{/\ 1}
+\item
+  \texttt{.mul(1)} instead of \texttt{*\ 1}
+\end{enumerate}
+
+The advantage of methods over operators, is that we can easily chain
+methods without lots of parentheses.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2 }\OperatorTok{=}\NormalTok{ returns2.add(}\DecValTok{1}\NormalTok{).prod().sub(}\DecValTok{1}\NormalTok{)}
+
+\NormalTok{total\_returns2.iloc[:}\DecValTok{5}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL    3.1210
+AMGN    0.9635
+AXP     0.9687
+BA     -0.4289
+CAT     1.6083
+dtype: float64
+\end{verbatim}
+
 \hypertarget{plot-the-distribution-of-total-returns-for-the-stocks-in-the-djia-3}{%
 \subsection{Plot the distribution of total returns for the stocks in the
 DJIA}\label{plot-the-distribution-of-total-returns-for-the-stocks-in-the-djia-3}}
@@ -19324,9 +20423,160 @@ We can plot a histogram, using either the \texttt{plt.hist()} function
 or the \texttt{.plot(kind=\textquotesingle{}hist\textquotesingle{})}
 method.
 
+A histogram is a great way to visualize data!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{start\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{min}\NormalTok{()}
+\NormalTok{stop\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{max}\NormalTok{()}
+
+\NormalTok{(}
+\NormalTok{    returns2}
+\NormalTok{    .add(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .prod()}
+\NormalTok{    .sub(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .plot(kind}\OperatorTok{=}\StringTok{\textquotesingle{}hist\textquotesingle{}}\NormalTok{, bins}\OperatorTok{=}\DecValTok{20}\NormalTok{) }\CommentTok{\# grids=True to add grid lines}
+\NormalTok{)}
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Total Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Distribution of Total Returns for DJIA Stocks}\CharTok{\textbackslash{}n}\SpecialStringTok{ from }\SpecialCharTok{\{}\NormalTok{start\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{ to }\SpecialCharTok{\{}\NormalTok{stop\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_05_practice_05_files/figure-pdf/cell-24-output-1.png}
+
+}
+
+\end{figure}
+
+With only 30 stocks, we can actually connect a stock to its return in a
+plot!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{start\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{min}\NormalTok{()}
+\NormalTok{stop\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{max}\NormalTok{()}
+
+\NormalTok{(}
+\NormalTok{    returns2}
+\NormalTok{    .add(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .prod()}
+\NormalTok{    .sub(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .sort\_values() }\CommentTok{\# sort by total returns}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .plot(kind}\OperatorTok{=}\StringTok{\textquotesingle{}barh\textquotesingle{}}\NormalTok{) }\CommentTok{\# horizontal bar chart}
+\NormalTok{)}
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Total Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Distribution of Total Returns for DJIA Stocks}\CharTok{\textbackslash{}n}\SpecialStringTok{ from }\SpecialCharTok{\{}\NormalTok{start\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{ to }\SpecialCharTok{\{}\NormalTok{stop\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_05_practice_05_files/figure-pdf/cell-25-output-1.png}
+
+}
+
+\end{figure}
+
 \hypertarget{which-stocks-have-the-minimum-and-maximum-total-returns-3}{%
 \subsection{Which stocks have the minimum and maximum total
 returns?}\label{which-stocks-have-the-minimum-and-maximum-total-returns-3}}
+
+If we want the \emph{values}, the \texttt{.min()} and \texttt{.max()}
+methods are the way to go!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.}\BuiltInTok{min}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+-0.5384
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.}\BuiltInTok{max}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+3.1210
+\end{verbatim}
+
+The \texttt{.min()} and \texttt{.max()} methods give the values but not
+the tickers (or index). We use the \texttt{.idxmin()} and
+\texttt{.idxmax()} to get the tickers (or index).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.idxmin()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+'WBA'
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.idxmax()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+'AAPL'
+\end{verbatim}
+
+Here is what I would use!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.sort\_values().iloc[[}\DecValTok{0}\NormalTok{, }\OperatorTok{{-}}\DecValTok{1}\NormalTok{]]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+WBA    -0.5384
+AAPL    3.1210
+dtype: float64
+\end{verbatim}
+
+Not the exactly right tool here, but the
+\texttt{.nsmallest()\textquotesingle{}\ and}.nlargest()` methods are
+really useful!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.nsmallest(}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+WBA   -0.5384
+MMM   -0.4408
+BA    -0.4289
+dtype: float64
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.nlargest(}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL   3.1210
+MSFT   2.6028
+CAT    1.6083
+dtype: float64
+\end{verbatim}
 
 \hypertarget{plot-the-cumulative-returns-for-the-stocks-in-the-djia-3}{%
 \subsection{Plot the cumulative returns for the stocks in the
@@ -19335,10 +20585,103 @@ DJIA}\label{plot-the-cumulative-returns-for-the-stocks-in-the-djia-3}}
 We can use the cumulative product method \texttt{.cumprod()} to
 calculate the right hand side of the formula above.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{start\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{min}\NormalTok{()}
+\NormalTok{stop\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{max}\NormalTok{()}
+
+\NormalTok{(}
+\NormalTok{    returns2}
+\NormalTok{    .add(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .cumprod()}
+\NormalTok{    .sub(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .plot(legend}\OperatorTok{=}\VariableTok{False}\NormalTok{) }\CommentTok{\# with 30 stocks, this legend is too big to be useful}
+\NormalTok{)}
+
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}Cumulative Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Cumulative Returns for DJIA Stocks}\CharTok{\textbackslash{}n}\SpecialStringTok{ from }\SpecialCharTok{\{}\NormalTok{start\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{ to }\SpecialCharTok{\{}\NormalTok{stop\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_05_practice_05_files/figure-pdf/cell-33-output-1.png}
+
+}
+
+\end{figure}
+
 \hypertarget{repeat-the-plot-above-with-only-the-minimum-and-maximum-total-returns-3}{%
 \subsection{Repeat the plot above with only the minimum and maximum
 total
 returns}\label{repeat-the-plot-above-with-only-the-minimum-and-maximum-total-returns-3}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{total\_returns2.sort\_values().iloc[[}\DecValTok{0}\NormalTok{, }\OperatorTok{{-}}\DecValTok{1}\NormalTok{]].index}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Index(['WBA', 'AAPL'], dtype='object')
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns2[total\_returns2.sort\_values().iloc[[}\DecValTok{0}\NormalTok{, }\OperatorTok{{-}}\DecValTok{1}\NormalTok{]].index]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+& WBA & AAPL \\
+Date & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2019-03-21 & 0.0129 & 0.0368 \\
+2019-03-22 & -0.0187 & -0.0207 \\
+2019-03-25 & -0.0115 & -0.0121 \\
+2019-03-26 & 0.0037 & -0.0103 \\
+2019-03-27 & 0.0050 & 0.0090 \\
+... & ... & ... \\
+2024-01-26 & -0.0113 & -0.0090 \\
+2024-01-29 & -0.0057 & -0.0036 \\
+2024-01-30 & 0.0018 & -0.0192 \\
+2024-01-31 & -0.0083 & -0.0194 \\
+2024-02-01 & 0.0301 & 0.0133 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{start\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{min}\NormalTok{()}
+\NormalTok{stop\_date }\OperatorTok{=}\NormalTok{ returns2.index.}\BuiltInTok{max}\NormalTok{()}
+
+\NormalTok{(}
+\NormalTok{    returns2 }\CommentTok{\# all returns for all stocks}
+\NormalTok{    [total\_returns2.sort\_values().iloc[[}\DecValTok{0}\NormalTok{, }\OperatorTok{{-}}\DecValTok{1}\NormalTok{]].index] }\CommentTok{\# slice min and max total return stocks}
+\NormalTok{    .add(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .cumprod()}
+\NormalTok{    .sub(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .plot()}
+\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}Cumulative Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Cumulative Returns for DJIA Stocks}\CharTok{\textbackslash{}n}\SpecialStringTok{ from }\SpecialCharTok{\{}\NormalTok{start\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{ to }\SpecialCharTok{\{}\NormalTok{stop\_date}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{B }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_05_practice_05_files/figure-pdf/cell-36-output-1.png}
+
+}
+
+\end{figure}
 
 \part{Week 5}
 
@@ -19449,26 +20792,26 @@ NaN & ... & NaN & NaN & NaN & NaN & 73449600 & NaN & NaN & NaN & NaN &
 NaN \\
 ... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... &
 ... & ... & ... & ... & ... & ... & ... & ... & ... & ... \\
-2023-12-18 & 195.8900 & 154.0700 & 137.1900 & 372.6500 & 500.7700 &
-252.0800 & 195.8900 & 154.0700 & 137.1900 & 372.6500 & ... & 133.8600 &
-369.4500 & 494.0000 & 253.7800 & 55751900 & 62512800.0000 &
-25699800.0000 & 21802900.0000 & 41258700.0000 & 116416500.0000 \\
-2023-12-19 & 196.9400 & 153.7900 & 138.1000 & 373.2600 & 496.0400 &
-257.2200 & 196.9400 & 153.7900 & 138.1000 & 373.2600 & ... & 138.0000 &
-371.4900 & 494.2400 & 253.4800 & 40714100 & 43171300.0000 &
-20661000.0000 & 20603700.0000 & 46444400.0000 & 106737400.0000 \\
-2023-12-20 & 194.8300 & 152.1200 & 139.6600 & 370.6200 & 481.1100 &
-247.1400 & 194.8300 & 152.1200 & 139.6600 & 370.6200 & ... & 140.3300 &
-375.0000 & 496.5500 & 256.4100 & 52242800 & 50322100.0000 &
-33507300.0000 & 26316700.0000 & 39789400.0000 & 125097000.0000 \\
-2023-12-21 & 194.6800 & 153.8400 & 141.8000 & 373.5400 & 489.9000 &
-254.5000 & 194.6800 & 153.8400 & 141.8000 & 373.5400 & ... & 140.7700 &
-372.5600 & 488.1100 & 251.9000 & 46432100 & 36258000.0000 &
-18082400.0000 & 17693500.0000 & 29996800.0000 & 109344200.0000 \\
-2023-12-22 & 194.8899 & 153.7950 & 142.3800 & 374.0350 & 490.8500 &
-257.1700 & 194.8899 & 153.7950 & 142.3800 & 374.0350 & ... & 142.1300 &
-373.6800 & 491.9500 & 256.7600 & 5389663 & 4335720.0000 & 3378065.0000 &
-2284660.0000 & 4986729.0000 & 19912376.0000 \\
+2024-01-26 & 192.4200 & 159.1200 & 153.7900 & 403.9300 & 610.3100 &
+183.2500 & 192.4200 & 159.1200 & 153.7900 & 403.9300 & ... & 152.8700 &
+404.3700 & 609.6000 & 185.5000 & 44553400 & 51001100.0000 &
+19483600.0000 & 17786700.0000 & 38983800.0000 & 107063400.0000 \\
+2024-01-29 & 191.7300 & 161.2600 & 154.8400 & 409.7200 & 624.6500 &
+190.9300 & 191.7300 & 161.2600 & 154.8400 & 409.7200 & ... & 153.6400 &
+406.0600 & 612.3200 & 185.6300 & 47145600 & 45270400.0000 &
+20909300.0000 & 24510200.0000 & 34873300.0000 & 125013100.0000 \\
+2024-01-30 & 188.0400 & 159.0000 & 153.0500 & 408.5900 & 627.7400 &
+191.5900 & 188.0400 & 159.0000 & 153.0500 & 408.5900 & ... & 154.0100 &
+412.2600 & 629.0000 & 195.3300 & 55859400 & 45207400.0000 &
+26578900.0000 & 33477600.0000 & 41073500.0000 & 109982300.0000 \\
+2024-01-31 & 184.4000 & 155.2000 & 141.8000 & 397.5800 & 615.2700 &
+187.2900 & 184.4000 & 155.2000 & 141.8000 & 397.5800 & ... & 145.3900 &
+406.9600 & 614.4000 & 187.0000 & 55467800 & 50284400.0000 &
+43908600.0000 & 47871100.0000 & 45379500.0000 & 103221400.0000 \\
+2024-02-01 & 186.8600 & 159.2800 & 142.7100 & 403.7800 & 630.2700 &
+188.8600 & 186.8600 & 159.2800 & 142.7100 & 403.7800 & ... & 143.6900 &
+401.8300 & 621.0000 & 188.5000 & 52672619 & 63406285.0000 &
+24997783.0000 & 29155588.0000 & 35818376.0000 & 90546003.0000 \\
 \end{longtable}
 
 \begin{Shaded}
@@ -19477,7 +20820,7 @@ NaN \\
 \NormalTok{    df}
 \NormalTok{    [}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{]}
 \NormalTok{    .pct\_change()}
-\NormalTok{    .loc[}\StringTok{\textquotesingle{}2022\textquotesingle{}}\NormalTok{]}
+\NormalTok{    .loc[}\StringTok{\textquotesingle{}2023\textquotesingle{}}\NormalTok{]}
 \NormalTok{    .add(}\DecValTok{1}\NormalTok{)}
 \NormalTok{    .cumprod()}
 \NormalTok{    .sub(}\DecValTok{1}\NormalTok{)}
@@ -19485,7 +20828,7 @@ NaN \\
 \NormalTok{    .plot()}
 \NormalTok{)}
 \NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}Year{-}to{-}Date Return (\%)\textquotesingle{}}\NormalTok{)}
-\NormalTok{plt.title(}\StringTok{\textquotesingle{}Year{-}to{-}Date Returns for MATANA Stocks in 2022\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\StringTok{\textquotesingle{}Year{-}to{-}Date Returns for MATANA Stocks in 2023\textquotesingle{}}\NormalTok{)}
 \NormalTok{plt.show()}
 \end{Highlighting}
 \end{Shaded}
@@ -19553,8 +20896,18 @@ data frames.
 \end{Shaded}
 
 \begin{verbatim}
-C:\Users\r.herron\AppData\Local\Temp\ipykernel_19752\2526882917.py:1: FutureWarning: The argument 'date_parser' is deprecated and will be removed in a future version. Please use 'date_format' instead, or read your data in as 'object' dtype and then call 'to_datetime'.
+C:\Users\r.herron\AppData\Local\Temp\ipykernel_26796\2526882917.py:1: FutureWarning: The argument 'date_parser' is deprecated and will be removed in a future version. Please use 'date_format' instead, or read your data in as 'object' dtype and then call 'to_datetime'.
   ff_all = pdr.DataReader(
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\BuiltInTok{type}\NormalTok{(ff\_all)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+dict
 \end{verbatim}
 
 \begin{Shaded}
@@ -19567,32 +20920,60 @@ C:\Users\r.herron\AppData\Local\Temp\ipykernel_19752\2526882917.py:1: FutureWarn
 F-F Research Data Factors daily
 -------------------------------
 
-This file was created by CMPT_ME_BEME_RETS_DAILY using the 202310 CRSP database. The Tbill return is the simple daily rate that, over the number of trading days in the month, compounds to 1-month TBill rate from Ibbotson and Associates Inc. Copyright 2023 Kenneth R. French
+This file was created by CMPT_ME_BEME_RETS_DAILY using the 202312 CRSP database. The Tbill return is the simple daily rate that, over the number of trading days in the month, compounds to 1-month TBill rate from Ibbotson and Associates Inc. Copyright 2023 Kenneth R. French
 
-  0 : (25608 rows x 4 cols)
+  0 : (25649 rows x 4 cols)
 \end{verbatim}
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\NormalTok{ff\_all[}\DecValTok{0}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule\noalign{}
+& Mkt-RF & SMB & HML & RF \\
+Date & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1926-07-01 & 0.1000 & -0.2500 & -0.2700 & 0.0090 \\
+1926-07-02 & 0.4500 & -0.3300 & -0.0600 & 0.0090 \\
+1926-07-06 & 0.1700 & 0.3000 & -0.3900 & 0.0090 \\
+1926-07-07 & 0.0900 & -0.5800 & 0.0200 & 0.0090 \\
+1926-07-08 & 0.2100 & -0.3800 & 0.1900 & 0.0090 \\
+... & ... & ... & ... & ... \\
+2023-12-22 & 0.2100 & 0.6400 & 0.0900 & 0.0210 \\
+2023-12-26 & 0.4800 & 0.6900 & 0.4600 & 0.0210 \\
+2023-12-27 & 0.1600 & 0.1400 & 0.1200 & 0.0210 \\
+2023-12-28 & -0.0100 & -0.3600 & 0.0300 & 0.0210 \\
+2023-12-29 & -0.4300 & -1.1200 & -0.3700 & 0.0210 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \NormalTok{(}
-\NormalTok{    ff\_all[}\DecValTok{0}\NormalTok{]}
-\NormalTok{    .div(}\DecValTok{100}\NormalTok{)}
-\NormalTok{    .add(}\DecValTok{1}\NormalTok{)}
+\NormalTok{    ff\_all[}\DecValTok{0}\NormalTok{] }\CommentTok{\# slice factors}
+\NormalTok{    .div(}\DecValTok{100}\NormalTok{) }\CommentTok{\# convert to decimal}
+\NormalTok{    .add(}\DecValTok{1}\NormalTok{) }\CommentTok{\# calculate cumulative returns}
 \NormalTok{    .cumprod()}
 \NormalTok{    .sub(}\DecValTok{1}\NormalTok{)}
-\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
-\NormalTok{    .plot()}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{) }\CommentTok{\# convert to percent}
+\NormalTok{    .plot() }\CommentTok{\# plot}
 \NormalTok{)}
 \NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}Cumulative Return (\%)\textquotesingle{}}\NormalTok{)}
-\NormalTok{plt.title(}\StringTok{\textquotesingle{}Cumulative Returns for the Daily Benchmark Factors (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\StringTok{\textquotesingle{}Cumulative Returns for the Daily Benchmark Factors\textquotesingle{}}\NormalTok{)}
 \NormalTok{plt.gca().yaxis.set\_major\_formatter(plt.matplotlib.ticker.StrMethodFormatter(}\StringTok{\textquotesingle{}\{x:,.0f\}\textquotesingle{}}\NormalTok{))}
+\CommentTok{\# plt.yscale(\textquotesingle{}log\textquotesingle{}) \# log scale impractical here with negative returns}
 \NormalTok{plt.show()}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{figure}[H]
 
-{\centering \includegraphics{herron_01_lecture_files/figure-pdf/cell-11-output-1.png}
+{\centering \includegraphics{herron_01_lecture_files/figure-pdf/cell-13-output-1.png}
 
 }
 
@@ -19653,7 +21034,7 @@ and log returns is small at these horizons. The following figure shows
 
 \begin{figure}[H]
 
-{\centering \includegraphics{herron_01_lecture_files/figure-pdf/cell-13-output-1.png}
+{\centering \includegraphics{herron_01_lecture_files/figure-pdf/cell-15-output-1.png}
 
 }
 
@@ -19713,8 +21094,29 @@ log returns, then subtract one.
 \begin{Highlighting}[]
 \NormalTok{np.random.seed(}\DecValTok{42}\NormalTok{)}
 \NormalTok{df2 }\OperatorTok{=}\NormalTok{ pd.DataFrame(data}\OperatorTok{=}\NormalTok{\{}\StringTok{\textquotesingle{}R\textquotesingle{}}\NormalTok{: np.exp(np.random.randn(}\DecValTok{10000}\NormalTok{)) }\OperatorTok{{-}} \DecValTok{1}\NormalTok{\})}
+\NormalTok{df2}
 \end{Highlighting}
 \end{Shaded}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+& R \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+0 & 0.6433 \\
+1 & -0.1291 \\
+2 & 0.9111 \\
+3 & 3.5861 \\
+4 & -0.2088 \\
+... & ... \\
+9995 & 2.6733 \\
+9996 & -0.8644 \\
+9997 & -0.5060 \\
+9998 & 0.6418 \\
+9999 & 0.9048 \\
+\end{longtable}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -19761,7 +21163,7 @@ provide the best example of when to use log returns.}}
 \end{Shaded}
 
 \begin{verbatim}
-316 ms ± 114 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+284 ms ± 80.7 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 \end{verbatim}
 
 \begin{Shaded}
@@ -19780,8 +21182,38 @@ provide the best example of when to use log returns.}}
 \end{Shaded}
 
 \begin{verbatim}
-742 µs ± 91.2 µs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
+557 µs ± 60.6 µs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
 \end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df2.head(}\DecValTok{15}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+& R & R12\_via\_simple & R12\_via\_log \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+0 & 0.6433 & NaN & NaN \\
+1 & -0.1291 & NaN & NaN \\
+2 & 0.9111 & NaN & NaN \\
+3 & 3.5861 & NaN & NaN \\
+4 & -0.2088 & NaN & NaN \\
+5 & -0.2087 & NaN & NaN \\
+6 & 3.8511 & NaN & NaN \\
+7 & 1.1542 & NaN & NaN \\
+8 & -0.3747 & NaN & NaN \\
+9 & 0.7204 & NaN & NaN \\
+10 & -0.3709 & NaN & NaN \\
+11 & -0.3723 & 33.8643 & 33.8643 \\
+12 & 0.2737 & 26.0236 & 26.0236 \\
+13 & -0.8524 & 3.5800 & 3.5800 \\
+14 & -0.8218 & -0.5730 & -0.5730 \\
+\end{longtable}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -19818,7 +21250,7 @@ portfolio returns.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{returns }\OperatorTok{=}\NormalTok{ df[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].pct\_change().loc[}\StringTok{\textquotesingle{}2022\textquotesingle{}}\NormalTok{]}
+\NormalTok{returns }\OperatorTok{=}\NormalTok{ df[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].pct\_change().loc[}\StringTok{\textquotesingle{}2023\textquotesingle{}}\NormalTok{]}
 
 \NormalTok{returns}
 \end{Highlighting}
@@ -19832,20 +21264,18 @@ Date & & & & & & \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-2022-01-03 & 0.0250 & 0.0221 & 0.0027 & -0.0047 & 0.0241 & 0.1353 \\
-2022-01-04 & -0.0127 & -0.0169 & -0.0045 & -0.0171 & -0.0276 &
--0.0418 \\
-2022-01-05 & -0.0266 & -0.0189 & -0.0468 & -0.0384 & -0.0576 &
--0.0535 \\
-2022-01-06 & -0.0167 & -0.0067 & -0.0007 & -0.0079 & 0.0208 & -0.0215 \\
-2022-01-07 & 0.0010 & -0.0043 & -0.0040 & 0.0005 & -0.0330 & -0.0354 \\
+2023-01-03 & -0.0374 & 0.0217 & 0.0109 & -0.0010 & -0.0205 & -0.1224 \\
+2023-01-04 & 0.0103 & -0.0079 & -0.0110 & -0.0437 & 0.0303 & 0.0512 \\
+2023-01-05 & -0.0106 & -0.0237 & -0.0219 & -0.0296 & -0.0328 &
+-0.0290 \\
+2023-01-06 & 0.0368 & 0.0356 & 0.0160 & 0.0118 & 0.0416 & 0.0247 \\
+2023-01-09 & 0.0041 & 0.0149 & 0.0073 & 0.0097 & 0.0518 & 0.0593 \\
 ... & ... & ... & ... & ... & ... & ... \\
-2022-12-23 & -0.0028 & 0.0174 & 0.0176 & 0.0023 & -0.0087 & -0.0176 \\
-2022-12-27 & -0.0139 & -0.0259 & -0.0209 & -0.0074 & -0.0714 &
--0.1141 \\
-2022-12-28 & -0.0307 & -0.0147 & -0.0167 & -0.0103 & -0.0060 & 0.0331 \\
-2022-12-29 & 0.0283 & 0.0288 & 0.0288 & 0.0276 & 0.0404 & 0.0808 \\
-2022-12-30 & 0.0025 & -0.0021 & -0.0025 & -0.0049 & 0.0008 & 0.0112 \\
+2023-12-22 & -0.0055 & -0.0027 & 0.0065 & 0.0028 & -0.0033 & -0.0077 \\
+2023-12-26 & -0.0028 & -0.0001 & 0.0007 & 0.0002 & 0.0092 & 0.0161 \\
+2023-12-27 & 0.0005 & -0.0005 & -0.0097 & -0.0016 & 0.0028 & 0.0188 \\
+2023-12-28 & 0.0022 & 0.0003 & -0.0011 & 0.0032 & 0.0021 & -0.0316 \\
+2023-12-29 & -0.0054 & -0.0094 & -0.0025 & 0.0020 & 0.0000 & -0.0186 \\
 \end{longtable}
 
 \begin{Shaded}
@@ -19855,12 +21285,12 @@ Date & & & & & & \\
 \end{Shaded}
 
 \begin{verbatim}
-AAPL   -0.0010
-AMZN   -0.0022
-GOOG   -0.0016
-MSFT   -0.0011
-NVDA   -0.0020
-TSLA   -0.0033
+AAPL   0.0017
+AMZN   0.0026
+GOOG   0.0020
+MSFT   0.0020
+NVDA   0.0053
+TSLA   0.0034
 dtype: float64
 \end{verbatim}
 
@@ -19873,18 +21303,18 @@ dtype: float64
 
 \begin{verbatim}
 Date
-2022-01-03    0.0341
-2022-01-04   -0.0201
-2022-01-05   -0.0403
-2022-01-06   -0.0055
-2022-01-07   -0.0125
+2023-01-03   -0.0248
+2023-01-04    0.0049
+2023-01-05   -0.0246
+2023-01-06    0.0278
+2023-01-09    0.0245
                ...  
-2022-12-23    0.0014
-2022-12-27   -0.0423
-2022-12-28   -0.0075
-2022-12-29    0.0391
-2022-12-30    0.0008
-Length: 251, dtype: float64
+2023-12-22   -0.0017
+2023-12-26    0.0039
+2023-12-27    0.0017
+2023-12-28   -0.0041
+2023-12-29   -0.0056
+Length: 250, dtype: float64
 \end{verbatim}
 
 \textbf{\emph{Note that when we apply the same portfolio weights every
@@ -19923,18 +21353,18 @@ array([0.1667, 0.1667, 0.1667, 0.1667, 0.1667, 0.1667])
 
 \begin{verbatim}
 Date
-2022-01-03    0.0341
-2022-01-04   -0.0201
-2022-01-05   -0.0403
-2022-01-06   -0.0055
-2022-01-07   -0.0125
+2023-01-03   -0.0248
+2023-01-04    0.0049
+2023-01-05   -0.0246
+2023-01-06    0.0278
+2023-01-09    0.0245
                ...  
-2022-12-23    0.0014
-2022-12-27   -0.0423
-2022-12-28   -0.0075
-2022-12-29    0.0391
-2022-12-30    0.0008
-Length: 251, dtype: float64
+2023-12-22   -0.0017
+2023-12-26    0.0039
+2023-12-27    0.0017
+2023-12-28   -0.0041
+2023-12-29   -0.0056
+Length: 250, dtype: float64
 \end{verbatim}
 
 Both approaches give the same answer!
@@ -19956,14 +21386,45 @@ True
 \hypertarget{announcements-16}{%
 \section{Announcements}\label{announcements-16}}
 
-\hypertarget{practice-16}{%
-\section{Practice}\label{practice-16}}
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  DataCamp
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    \emph{Data Manipulation with pandas} due by Friday, 2/9, at 11:59 PM
+  \item
+    \emph{Joining Data with pandas} due by Friday, 2/16, at 11:59 PM
+  \item
+    \emph{Earn 10,000 XP} due by Friday, 3/15, at 11:59 PM
+  \end{enumerate}
+\item
+  I posted Project 1 to Canvas
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    Slides and notebook due by Friday, 2/23, at 11:59 PM
+  \item
+    Keep joining teams and let me know if you need help
+  \end{enumerate}
+\end{enumerate}
+
+\hypertarget{minute-recap-15}{%
+\section{10-Minute Recap}\label{minute-recap-15}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \ImportTok{import}\NormalTok{ matplotlib.pyplot }\ImportTok{as}\NormalTok{ plt}
 \ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
 \ImportTok{import}\NormalTok{ pandas }\ImportTok{as}\NormalTok{ pd}
+\ImportTok{import}\NormalTok{ pandas\_datareader }\ImportTok{as}\NormalTok{ pdr}
+\ImportTok{import}\NormalTok{ yfinance }\ImportTok{as}\NormalTok{ yf}
 \end{Highlighting}
 \end{Shaded}
 
@@ -19975,30 +21436,282 @@ True
 \end{Highlighting}
 \end{Shaded}
 
+First, we will use two packages to download data from the web:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \texttt{yfinance} for Yahoo! Finance data
+\item
+  \texttt{pandas-datareader} for Ken French data (and FRED data)
+\end{enumerate}
+
+Second, there are ``simple returns'' and ``log returns''
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Simple returns are the returns that investors receive that we learned
+  in FINA 6331 and FINA 6333:
+  \(r_t = \frac{p_t + d_t - p_{t-1}}{p_{t-1}}\)
+\item
+  Log returns are the log of one plus simple returns. Why do we use
+  them?
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    \textbf{\emph{Log returns are additive}}, while simple returns are
+    multiplicative. This additive property makes math really easy with
+    log returns:
+    \(\log(\prod_{t=0}^T (1 + r_t)) = \sum_{t=0}^T \log(1+r_t)\), so
+    \(r_{0,T} = \prod_{t=0}^T (1 + r_t) - 1 = e^{\sum_{t=0}^T \log(1+r_t)} - 1\)
+  \item
+    \textbf{\emph{Log returns are almost normally distributed}}
+  \end{enumerate}
+\end{enumerate}
+
+\textbf{\emph{We will almost always use simple returns.}} The exeception
+is time-consuming calculations, which we will often do in log returns to
+save us time.
+
+Third, we can calculate portfolio returns a few ways
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  We can calculate equally-weighted returns with
+  \texttt{returns.mean(axis=1)}, \textbf{\emph{rebalanced at the same
+  frequency as returns}}
+\item
+  We can calculate any-weighted with \texttt{returns.dot(weights)},
+  where \texttt{weights} is an array of portfolio weights that are not
+  necessarily equally-weighted, still \textbf{\emph{rebalanced at the
+  same frequency as returns}}
+\end{enumerate}
+
+\hypertarget{practice-16}{%
+\section{Practice}\label{practice-16}}
+
+\hypertarget{download-all-available-daily-price-data-for-tickers-tsla-f-aapl-amzn-and-meta-to-data-frame-prices}{%
+\subsection{\texorpdfstring{Download all available daily price data for
+tickers TSLA, F, AAPL, AMZN, and META to data frame
+\texttt{prices}}{Download all available daily price data for tickers TSLA, F, AAPL, AMZN, and META to data frame prices}}\label{download-all-available-daily-price-data-for-tickers-tsla-f-aapl-amzn-and-meta-to-data-frame-prices}}
+
 \begin{Shaded}
 \begin{Highlighting}[]
-\ImportTok{import}\NormalTok{ yfinance }\ImportTok{as}\NormalTok{ yf}
-\ImportTok{import}\NormalTok{ pandas\_datareader }\ImportTok{as}\NormalTok{ pdr}
+\NormalTok{tickers }\OperatorTok{=} \StringTok{\textquotesingle{}TSLA F AAPL AMZN META\textquotesingle{}}
+\CommentTok{\# tickers = [\textquotesingle{}TSLA\textquotesingle{}, \textquotesingle{}F\textquotesingle{},  \textquotesingle{}AAPL\textquotesingle{}, \textquotesingle{}AMZN\textquotesingle{}, \textquotesingle{}META\textquotesingle{}]}
+\NormalTok{prices }\OperatorTok{=}\NormalTok{ yf.download(tickers}\OperatorTok{=}\NormalTok{tickers)}
+
+\NormalTok{prices}
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{download-all-available-daily-price-data-for-tickers-tsla-f-aapl-amzn-and-meta-to-data-frame-histories}{%
-\subsection{\texorpdfstring{Download all available daily price data for
-tickers TSLA, F, AAPL, AMZN, and META to data frame
-\texttt{histories}}{Download all available daily price data for tickers TSLA, F, AAPL, AMZN, and META to data frame histories}}\label{download-all-available-daily-price-data-for-tickers-tsla-f-aapl-amzn-and-meta-to-data-frame-histories}}
+\begin{verbatim}
+[*********************100%%**********************]  5 of 5 completed
+\end{verbatim}
 
-Remove time zone information from the index and use
-\texttt{histories.columns.names} to label the variables and tickers as
-\texttt{Variable} and \texttt{Ticker}.
+\begin{longtable}[]{@{}llllllllllllllllllllll@{}}
+\toprule\noalign{}
+&
+\multicolumn{5}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 8\tabcolsep}}{%
+Adj Close} &
+\multicolumn{5}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 8\tabcolsep}}{%
+Close} & ... &
+\multicolumn{5}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 8\tabcolsep}}{%
+Open} &
+\multicolumn{5}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 8\tabcolsep}@{}}{%
+Volume} \\
+& AAPL & AMZN & F & META & TSLA & AAPL & AMZN & F & META & TSLA & ... &
+AAPL & AMZN & F & META & TSLA & AAPL & AMZN & F & META & TSLA \\
+Date & & & & & & & & & & & & & & & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1972-06-01 & NaN & NaN & 0.2419 & NaN & NaN & NaN & NaN & 2.1532 & NaN &
+NaN & ... & NaN & NaN & 0.0000 & NaN & NaN & NaN & NaN & 1091238 & NaN &
+NaN \\
+1972-06-02 & NaN & NaN & 0.2414 & NaN & NaN & NaN & NaN & 2.1492 & NaN &
+NaN & ... & NaN & NaN & 2.1532 & NaN & NaN & NaN & NaN & 1174468 & NaN &
+NaN \\
+1972-06-05 & NaN & NaN & 0.2414 & NaN & NaN & NaN & NaN & 2.1492 & NaN &
+NaN & ... & NaN & NaN & 2.1492 & NaN & NaN & NaN & NaN & 5209582 & NaN &
+NaN \\
+1972-06-06 & NaN & NaN & 0.2387 & NaN & NaN & NaN & NaN & 2.1248 & NaN &
+NaN & ... & NaN & NaN & 2.1492 & NaN & NaN & NaN & NaN & 1424158 & NaN &
+NaN \\
+1972-06-07 & NaN & NaN & 0.2373 & NaN & NaN & NaN & NaN & 2.1127 & NaN &
+NaN & ... & NaN & NaN & 2.1248 & NaN & NaN & NaN & NaN & 675088 & NaN &
+NaN \\
+... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... &
+... & ... & ... & ... & ... & ... & ... & ... & ... & ... \\
+2024-01-31 & 184.4000 & 155.2000 & 11.7200 & 390.1400 & 187.2900 &
+184.4000 & 155.2000 & 11.7200 & 390.1400 & 187.2900 & ... & 187.0400 &
+157.0000 & 11.7600 & 389.0000 & 187.0000 & 55467800.0000 & 50284400.0000
+& 74558900 & 20180800.0000 & 103221400.0000 \\
+2024-02-01 & 186.8600 & 159.2800 & 12.1000 & 394.7800 & 188.8600 &
+186.8600 & 159.2800 & 12.1000 & 394.7800 & 188.8600 & ... & 183.9900 &
+155.8700 & 11.8200 & 393.9400 & 188.5000 & 64885400.0000 & 76542400.0000
+& 81065800 & 29727100.0000 & 91843300.0000 \\
+2024-02-02 & 185.8500 & 171.8100 & 12.1400 & 474.9900 & 187.9100 &
+185.8500 & 171.8100 & 12.1400 & 474.9900 & 187.9100 & ... & 179.8600 &
+169.1900 & 12.0300 & 459.6000 & 185.0400 & 102518000.0000 &
+117154900.0000 & 73087000 & 84615500.0000 & 110505100.0000 \\
+2024-02-05 & 187.6800 & 170.3100 & 11.5900 & 459.4100 & 181.0600 &
+187.6800 & 170.3100 & 11.5900 & 459.4100 & 181.0600 & ... & 188.1500 &
+170.2000 & 12.0100 & 469.8800 & 184.2600 & 69668800.0000 & 55081300.0000
+& 81026800 & 40832400.0000 & 134294400.0000 \\
+2024-02-06 & 189.3000 & 169.1500 & 12.0700 & 454.7200 & 185.1000 &
+189.3000 & 169.1500 & 12.0700 & 454.7200 & 185.1000 & ... & 186.8600 &
+169.3900 & 11.6400 & 464.0000 & 177.2100 & 43225255.0000 & 39617363.0000
+& 83842760 & 21584859.0000 & 122217420.0000 \\
+\end{longtable}
 
 \hypertarget{calculate-all-available-daily-returns-and-save-to-data-frame-returns}{%
 \subsection{\texorpdfstring{Calculate all available daily returns and
 save to data frame
 \texttt{returns}}{Calculate all available daily returns and save to data frame returns}}\label{calculate-all-available-daily-returns-and-save-to-data-frame-returns}}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    prices[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{] }\CommentTok{\# slice adj close}
+\NormalTok{    .iloc[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{] }\CommentTok{\# drop the last price because it might be intraday (i.e., not a close)}
+\NormalTok{    .pct\_change() }\CommentTok{\# calculate simple returns}
+\NormalTok{)}
+
+\NormalTok{returns}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule\noalign{}
+& AAPL & AMZN & F & META & TSLA \\
+Date & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1972-06-01 & NaN & NaN & NaN & NaN & NaN \\
+1972-06-02 & NaN & NaN & -0.0019 & NaN & NaN \\
+1972-06-05 & NaN & NaN & 0.0000 & NaN & NaN \\
+1972-06-06 & NaN & NaN & -0.0113 & NaN & NaN \\
+1972-06-07 & NaN & NaN & -0.0057 & NaN & NaN \\
+... & ... & ... & ... & ... & ... \\
+2024-01-30 & -0.0192 & -0.0140 & 0.0199 & -0.0024 & 0.0035 \\
+2024-01-31 & -0.0194 & -0.0239 & -0.0051 & -0.0248 & -0.0224 \\
+2024-02-01 & 0.0133 & 0.0263 & 0.0324 & 0.0119 & 0.0084 \\
+2024-02-02 & -0.0054 & 0.0787 & 0.0033 & 0.2032 & -0.0050 \\
+2024-02-05 & 0.0098 & -0.0087 & -0.0453 & -0.0328 & -0.0365 \\
+\end{longtable}
+
 \hypertarget{slices-returns-for-the-2020s-and-assign-to-returns_2020s}{%
 \subsection{\texorpdfstring{Slices returns for the 2020s and assign to
 \texttt{returns\_2020s}}{Slices returns for the 2020s and assign to returns\_2020s}}\label{slices-returns-for-the-2020s-and-assign-to-returns_2020s}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns\_2020s }\OperatorTok{=}\NormalTok{ returns.loc[}\StringTok{\textquotesingle{}2020\textquotesingle{}}\NormalTok{:] }\CommentTok{\# always use an unambiguos date format, like YYYY{-}MM{-}DD}
+
+\NormalTok{returns\_2020s}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule\noalign{}
+& AAPL & AMZN & F & META & TSLA \\
+Date & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2020-01-02 & 0.0228 & 0.0272 & 0.0129 & 0.0221 & 0.0285 \\
+2020-01-03 & -0.0097 & -0.0121 & -0.0223 & -0.0053 & 0.0296 \\
+2020-01-06 & 0.0080 & 0.0149 & -0.0054 & 0.0188 & 0.0193 \\
+2020-01-07 & -0.0047 & 0.0021 & 0.0098 & 0.0022 & 0.0388 \\
+2020-01-08 & 0.0161 & -0.0078 & 0.0000 & 0.0101 & 0.0492 \\
+... & ... & ... & ... & ... & ... \\
+2024-01-30 & -0.0192 & -0.0140 & 0.0199 & -0.0024 & 0.0035 \\
+2024-01-31 & -0.0194 & -0.0239 & -0.0051 & -0.0248 & -0.0224 \\
+2024-02-01 & 0.0133 & 0.0263 & 0.0324 & 0.0119 & 0.0084 \\
+2024-02-02 & -0.0054 & 0.0787 & 0.0033 & 0.2032 & -0.0050 \\
+2024-02-05 & 0.0098 & -0.0087 & -0.0453 & -0.0328 & -0.0365 \\
+\end{longtable}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+What if we want a more complicated slice? We can combine
+\texttt{.loc{[}{]}} and Boolean conditions!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns.loc[}
+\NormalTok{    (returns.index.year }\OperatorTok{==} \DecValTok{2020}\NormalTok{) }\OperatorTok{\&}
+\NormalTok{    ((returns.index.month }\OperatorTok{==} \DecValTok{1}\NormalTok{) }\OperatorTok{|}\NormalTok{ (returns.index.month }\OperatorTok{==} \DecValTok{12}\NormalTok{))}
+\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule\noalign{}
+& AAPL & AMZN & F & META & TSLA \\
+Date & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2020-01-02 & 0.0228 & 0.0272 & 0.0129 & 0.0221 & 0.0285 \\
+2020-01-03 & -0.0097 & -0.0121 & -0.0223 & -0.0053 & 0.0296 \\
+2020-01-06 & 0.0080 & 0.0149 & -0.0054 & 0.0188 & 0.0193 \\
+2020-01-07 & -0.0047 & 0.0021 & 0.0098 & 0.0022 & 0.0388 \\
+2020-01-08 & 0.0161 & -0.0078 & 0.0000 & 0.0101 & 0.0492 \\
+2020-01-09 & 0.0212 & 0.0048 & 0.0011 & 0.0143 & -0.0219 \\
+2020-01-10 & 0.0023 & -0.0094 & -0.0011 & -0.0011 & -0.0066 \\
+2020-01-13 & 0.0214 & 0.0043 & -0.0011 & 0.0177 & 0.0977 \\
+2020-01-14 & -0.0135 & -0.0116 & 0.0054 & -0.0128 & 0.0249 \\
+2020-01-15 & -0.0043 & -0.0040 & -0.0108 & 0.0095 & -0.0361 \\
+2020-01-16 & 0.0125 & 0.0085 & -0.0022 & 0.0028 & -0.0097 \\
+2020-01-17 & 0.0111 & -0.0070 & -0.0011 & 0.0017 & -0.0058 \\
+2020-01-21 & -0.0068 & 0.0146 & 0.0055 & -0.0032 & 0.0719 \\
+2020-01-22 & 0.0036 & -0.0024 & -0.0054 & -0.0005 & 0.0409 \\
+2020-01-23 & 0.0048 & -0.0015 & -0.0022 & -0.0070 & 0.0046 \\
+2020-01-24 & -0.0029 & -0.0122 & -0.0153 & -0.0083 & -0.0129 \\
+2020-01-27 & -0.0294 & -0.0179 & -0.0122 & -0.0141 & -0.0120 \\
+2020-01-28 & 0.0283 & 0.0136 & 0.0090 & 0.0136 & 0.0159 \\
+2020-01-29 & 0.0209 & 0.0026 & 0.0045 & 0.0250 & 0.0249 \\
+2020-01-30 & -0.0014 & 0.0068 & -0.0023 & -0.0614 & 0.1030 \\
+2020-01-31 & -0.0443 & 0.0738 & -0.0023 & -0.0364 & 0.0152 \\
+2020-12-01 & 0.0308 & 0.0164 & 0.0176 & 0.0346 & 0.0302 \\
+2020-12-02 & 0.0029 & -0.0051 & -0.0043 & 0.0034 & -0.0273 \\
+2020-12-03 & -0.0011 & -0.0052 & 0.0011 & -0.0197 & 0.0432 \\
+2020-12-04 & -0.0056 & -0.0076 & 0.0141 & -0.0076 & 0.0095 \\
+2020-12-07 & 0.0123 & -0.0014 & -0.0128 & 0.0210 & 0.0713 \\
+2020-12-08 & 0.0051 & 0.0061 & 0.0033 & -0.0076 & 0.0127 \\
+2020-12-09 & -0.0209 & -0.0230 & 0.0216 & -0.0193 & -0.0699 \\
+2020-12-10 & 0.0120 & -0.0009 & -0.0349 & -0.0029 & 0.0374 \\
+2020-12-11 & -0.0067 & 0.0048 & -0.0110 & -0.0129 & -0.0272 \\
+2020-12-14 & -0.0051 & 0.0130 & -0.0122 & 0.0023 & 0.0489 \\
+2020-12-15 & 0.0501 & 0.0026 & 0.0269 & 0.0050 & -0.0103 \\
+2020-12-16 & -0.0005 & 0.0240 & -0.0120 & 0.0004 & -0.0165 \\
+2020-12-17 & 0.0070 & -0.0015 & 0.0044 & -0.0043 & 0.0532 \\
+2020-12-18 & -0.0159 & -0.0106 & -0.0143 & 0.0070 & 0.0596 \\
+2020-12-21 & 0.0124 & 0.0014 & -0.0022 & -0.0131 & -0.0649 \\
+2020-12-22 & 0.0285 & 0.0001 & -0.0157 & -0.0209 & -0.0146 \\
+2020-12-23 & -0.0070 & -0.0066 & 0.0228 & 0.0038 & 0.0088 \\
+2020-12-24 & 0.0077 & -0.0039 & -0.0145 & -0.0026 & 0.0244 \\
+2020-12-28 & 0.0358 & 0.0351 & 0.0034 & 0.0359 & 0.0029 \\
+2020-12-29 & -0.0133 & 0.0116 & -0.0079 & -0.0008 & 0.0035 \\
+2020-12-30 & -0.0085 & -0.0109 & 0.0045 & -0.0177 & 0.0432 \\
+2020-12-31 & -0.0077 & -0.0088 & -0.0079 & 0.0047 & 0.0157 \\
+\end{longtable}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
 \hypertarget{download-all-available-data-for-the-fama-and-french-daily-benchmark-factors-to-dictionary-ff_all}{%
 \subsection{\texorpdfstring{Download all available data for the Fama and
@@ -20022,15 +21735,101 @@ the daily benchmark factors file.
  'F-F_Research_Data_5_Factors_2x3_daily']
 \end{verbatim}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ff\_all }\OperatorTok{=}\NormalTok{ pdr.DataReader(}
+\NormalTok{    name}\OperatorTok{=}\StringTok{\textquotesingle{}F{-}F\_Research\_Data\_Factors\_daily\textquotesingle{}}\NormalTok{,}
+\NormalTok{    data\_source}\OperatorTok{=}\StringTok{\textquotesingle{}famafrench\textquotesingle{}}\NormalTok{,}
+\NormalTok{    start}\OperatorTok{=}\StringTok{\textquotesingle{}1900\textquotesingle{}}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+C:\Users\r.herron\AppData\Local\Temp\ipykernel_25920\2526882917.py:1: FutureWarning: The argument 'date_parser' is deprecated and will be removed in a future version. Please use 'date_format' instead, or read your data in as 'object' dtype and then call 'to_datetime'.
+  ff_all = pdr.DataReader(
+\end{verbatim}
+
+The \texttt{DESCR} key in the dictionary tells us about the data frames
+that \texttt{pandas-datareader} returns.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\BuiltInTok{print}\NormalTok{(ff\_all[}\StringTok{\textquotesingle{}DESCR\textquotesingle{}}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+F-F Research Data Factors daily
+-------------------------------
+
+This file was created by CMPT_ME_BEME_RETS_DAILY using the 202312 CRSP database. The Tbill return is the simple daily rate that, over the number of trading days in the month, compounds to 1-month TBill rate from Ibbotson and Associates Inc. Copyright 2023 Kenneth R. French
+
+  0 : (25649 rows x 4 cols)
+\end{verbatim}
+
 \hypertarget{slice-the-daily-benchmark-factors-convert-them-to-decimal-returns-and-assign-to-ff}{%
 \subsection{\texorpdfstring{Slice the daily benchmark factors, convert
 them to decimal returns, and assign to
 \texttt{ff}}{Slice the daily benchmark factors, convert them to decimal returns, and assign to ff}}\label{slice-the-daily-benchmark-factors-convert-them-to-decimal-returns-and-assign-to-ff}}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ff }\OperatorTok{=}\NormalTok{ ff\_all[}\DecValTok{0}\NormalTok{].div(}\DecValTok{100}\NormalTok{)}
+
+\NormalTok{ff}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule\noalign{}
+& Mkt-RF & SMB & HML & RF \\
+Date & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1926-07-01 & 0.0010 & -0.0025 & -0.0027 & 0.0001 \\
+1926-07-02 & 0.0045 & -0.0033 & -0.0006 & 0.0001 \\
+1926-07-06 & 0.0017 & 0.0030 & -0.0039 & 0.0001 \\
+1926-07-07 & 0.0009 & -0.0058 & 0.0002 & 0.0001 \\
+1926-07-08 & 0.0021 & -0.0038 & 0.0019 & 0.0001 \\
+... & ... & ... & ... & ... \\
+2023-12-22 & 0.0021 & 0.0064 & 0.0009 & 0.0002 \\
+2023-12-26 & 0.0048 & 0.0069 & 0.0046 & 0.0002 \\
+2023-12-27 & 0.0016 & 0.0014 & 0.0012 & 0.0002 \\
+2023-12-28 & -0.0001 & -0.0036 & 0.0003 & 0.0002 \\
+2023-12-29 & -0.0043 & -0.0112 & -0.0037 & 0.0002 \\
+\end{longtable}
+
 \hypertarget{use-the-.cumprod-method-to-plot-cumulative-returns-for-these-stocks-in-the-2020s}{%
 \subsection{\texorpdfstring{Use the \texttt{.cumprod()} method to plot
 cumulative returns for these stocks in the
 2020s}{Use the .cumprod() method to plot cumulative returns for these stocks in the 2020s}}\label{use-the-.cumprod-method-to-plot-cumulative-returns-for-these-stocks-in-the-2020s}}
+
+We use the \texttt{.prod()} method to calculate \emph{total} returns,
+because
+\(r_{total} = r_{0,T} = \left[ \prod_{t=0}^T (1 + r_t) \right] -1\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}
+\NormalTok{    returns\_2020s }\CommentTok{\# returns during the 2020s}
+\NormalTok{    .add(}\DecValTok{1}\NormalTok{) }\CommentTok{\# add 1 before we compound}
+\NormalTok{    .prod() }\CommentTok{\# compound all returns}
+\NormalTok{    .sub(}\DecValTok{1}\NormalTok{) }\CommentTok{\# subtract 1 to recover total returns}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL   1.6241
+AMZN   0.8433
+F      0.4535
+META   1.2383
+TSLA   5.4922
+dtype: float64
+\end{verbatim}
 
 \hypertarget{use-the-.cumsum-method-with-log-returns-to-plot-cumulative-returns-for-these-stocks-in-the-2020s}{%
 \subsection{\texorpdfstring{Use the \texttt{.cumsum()} method with log
@@ -20050,8 +21849,8 @@ Calculate the Sharpe Ratio with all available returns and 2020s returns.
 Recall the Sharpe Ratio is \(\frac{\overline{R_i - R_f}}{\sigma_i}\),
 where \(\sigma_i\) is the volatility of \emph{excess} returns.
 
-\textbf{\emph{I suggest you write a function named \texttt{sharpe()} to
-use for the rest of this notebook.}}
+\textbf{\emph{I suggest you write a function named
+\texttt{calc\_sharpe()} to use for the rest of this notebook.}}
 
 \hypertarget{calculate-the-market-beta-for-tsla}{%
 \subsection{Calculate the market beta for
@@ -20063,8 +21862,8 @@ regression \(R_i-R_f = \alpha + \beta (R_m-R_f) + \epsilon\). We can
 estimate market beta with the covariance formula above for a univariate
 regression if we do not need goodness of fit statistics.
 
-\textbf{\emph{I suggest you write a function named \texttt{beta()} to
-use for the rest of this notebook.}}
+\textbf{\emph{I suggest you write a function named \texttt{calc\_beta()}
+to use for the rest of this notebook.}}
 
 \hypertarget{guess-the-sharpe-ratios-for-these-stocks-in-the-2020s}{%
 \subsection{Guess the Sharpe Ratios for these stocks in the
@@ -20120,14 +21919,45 @@ betas}\label{plot-the-time-series-of-market-betas}}
 \hypertarget{announcements-17}{%
 \section{Announcements}\label{announcements-17}}
 
-\hypertarget{practice-17}{%
-\section{Practice}\label{practice-17}}
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  DataCamp
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    \emph{Data Manipulation with pandas} due by Friday, 2/9, at 11:59 PM
+  \item
+    \emph{Joining Data with pandas} due by Friday, 2/16, at 11:59 PM
+  \item
+    \emph{Earn 10,000 XP} due by Friday, 3/15, at 11:59 PM
+  \end{enumerate}
+\item
+  I posted Project 1 to Canvas
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    Slides and notebook due by Friday, 2/23, at 11:59 PM
+  \item
+    Keep joining teams and let me know if you need help
+  \end{enumerate}
+\end{enumerate}
+
+\hypertarget{minute-recap-16}{%
+\section{10-Minute Recap}\label{minute-recap-16}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \ImportTok{import}\NormalTok{ matplotlib.pyplot }\ImportTok{as}\NormalTok{ plt}
 \ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
 \ImportTok{import}\NormalTok{ pandas }\ImportTok{as}\NormalTok{ pd}
+\ImportTok{import}\NormalTok{ pandas\_datareader }\ImportTok{as}\NormalTok{ pdr}
+\ImportTok{import}\NormalTok{ yfinance }\ImportTok{as}\NormalTok{ yf}
 \end{Highlighting}
 \end{Shaded}
 
@@ -20139,30 +21969,213 @@ betas}\label{plot-the-time-series-of-market-betas}}
 \end{Highlighting}
 \end{Shaded}
 
+First, we can easily download data in Python with two packages:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \texttt{yfinance} to download data from Yahoo! Finance
+\item
+  \texttt{pandas-datareader} to download data from Ken French (and FRED
+  and others)
+\end{enumerate}
+
+Second, there are ``simple returns'' and ``log returns''
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Simple returns are the returns that investors receive that we learned
+  in FINA 6331 and FINA 6333:
+  \(r_t = \frac{p_t + d_t - p_{t-1}}{p_{t-1}}\)
+\item
+  Log returns are the log of one plus simple returns. Why do we use
+  them?
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    \textbf{\emph{Log returns are additive}}, while simple returns are
+    multiplicative. This additive property makes math really easy with
+    log returns:
+    \(\log(\prod_{t=0}^T (1 + r_t)) = \sum_{t=0}^T \log(1+r_t)\), so
+    \(r_{0,T} = \prod_{t=0}^T (1 + r_t) - 1 = e^{\sum_{t=0}^T \log(1+r_t)} - 1\)
+  \item
+    \textbf{\emph{Log returns are almost normally distributed}}
+  \end{enumerate}
+\end{enumerate}
+
+\textbf{\emph{We will almost always use simple returns.}} The exeception
+is time-consuming calculations, which we will often do in log returns to
+save us time.
+
+Third, we can easily calculate portfolio returns in pandas!
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \texttt{returns.mean(axis=1)} is the equally-weighted portfolio return
+  for the stocks in \texttt{returns}, \textbf{\emph{rebalanced at the
+  same frequency as the returns in \texttt{returns}!}}
+\item
+  \texttt{returns.dot(weights)} lets us use weights in array
+  \texttt{weights} instead of equally-weighted, but is still
+  \textbf{\emph{rebalanced at the same frequency as the returns in
+  \texttt{returns}!}}
+\end{enumerate}
+
+\hypertarget{practice-17}{%
+\section{Practice}\label{practice-17}}
+
+\hypertarget{download-all-available-daily-price-data-for-tickers-tsla-f-aapl-amzn-and-meta-to-data-frame-prices-1}{%
+\subsection{\texorpdfstring{Download all available daily price data for
+tickers TSLA, F, AAPL, AMZN, and META to data frame
+\texttt{prices}}{Download all available daily price data for tickers TSLA, F, AAPL, AMZN, and META to data frame prices}}\label{download-all-available-daily-price-data-for-tickers-tsla-f-aapl-amzn-and-meta-to-data-frame-prices-1}}
+
 \begin{Shaded}
 \begin{Highlighting}[]
-\ImportTok{import}\NormalTok{ yfinance }\ImportTok{as}\NormalTok{ yf}
-\ImportTok{import}\NormalTok{ pandas\_datareader }\ImportTok{as}\NormalTok{ pdr}
+\NormalTok{tickers }\OperatorTok{=} \StringTok{\textquotesingle{}TSLA F AAPL AMZN META\textquotesingle{}}
+\NormalTok{prices }\OperatorTok{=}\NormalTok{ yf.download(tickers}\OperatorTok{=}\NormalTok{tickers)}
+
+\NormalTok{prices}
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{download-all-available-daily-price-data-for-tickers-tsla-f-aapl-amzn-and-meta-to-data-frame-histories-1}{%
-\subsection{\texorpdfstring{Download all available daily price data for
-tickers TSLA, F, AAPL, AMZN, and META to data frame
-\texttt{histories}}{Download all available daily price data for tickers TSLA, F, AAPL, AMZN, and META to data frame histories}}\label{download-all-available-daily-price-data-for-tickers-tsla-f-aapl-amzn-and-meta-to-data-frame-histories-1}}
+\begin{verbatim}
+[*********************100%%**********************]  5 of 5 completed
+\end{verbatim}
 
-Remove time zone information from the index and use
-\texttt{histories.columns.names} to label the variables and tickers as
-\texttt{Variable} and \texttt{Ticker}.
+\begin{longtable}[]{@{}llllllllllllllllllllll@{}}
+\toprule\noalign{}
+&
+\multicolumn{5}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 8\tabcolsep}}{%
+Adj Close} &
+\multicolumn{5}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 8\tabcolsep}}{%
+Close} & ... &
+\multicolumn{5}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 8\tabcolsep}}{%
+Open} &
+\multicolumn{5}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 8\tabcolsep}@{}}{%
+Volume} \\
+& AAPL & AMZN & F & META & TSLA & AAPL & AMZN & F & META & TSLA & ... &
+AAPL & AMZN & F & META & TSLA & AAPL & AMZN & F & META & TSLA \\
+Date & & & & & & & & & & & & & & & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1972-06-01 & NaN & NaN & 0.2419 & NaN & NaN & NaN & NaN & 2.1532 & NaN &
+NaN & ... & NaN & NaN & 0.0000 & NaN & NaN & NaN & NaN & 1091238 & NaN &
+NaN \\
+1972-06-02 & NaN & NaN & 0.2414 & NaN & NaN & NaN & NaN & 2.1492 & NaN &
+NaN & ... & NaN & NaN & 2.1532 & NaN & NaN & NaN & NaN & 1174468 & NaN &
+NaN \\
+1972-06-05 & NaN & NaN & 0.2414 & NaN & NaN & NaN & NaN & 2.1492 & NaN &
+NaN & ... & NaN & NaN & 2.1492 & NaN & NaN & NaN & NaN & 5209582 & NaN &
+NaN \\
+1972-06-06 & NaN & NaN & 0.2387 & NaN & NaN & NaN & NaN & 2.1248 & NaN &
+NaN & ... & NaN & NaN & 2.1492 & NaN & NaN & NaN & NaN & 1424158 & NaN &
+NaN \\
+1972-06-07 & NaN & NaN & 0.2373 & NaN & NaN & NaN & NaN & 2.1127 & NaN &
+NaN & ... & NaN & NaN & 2.1248 & NaN & NaN & NaN & NaN & 675088 & NaN &
+NaN \\
+... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... &
+... & ... & ... & ... & ... & ... & ... & ... & ... & ... \\
+2024-01-31 & 184.4000 & 155.2000 & 11.7200 & 390.1400 & 187.2900 &
+184.4000 & 155.2000 & 11.7200 & 390.1400 & 187.2900 & ... & 187.0400 &
+157.0000 & 11.7600 & 389.0000 & 187.0000 & 55467800.0000 & 50284400.0000
+& 74558900 & 20180800.0000 & 103221400.0000 \\
+2024-02-01 & 186.8600 & 159.2800 & 12.1000 & 394.7800 & 188.8600 &
+186.8600 & 159.2800 & 12.1000 & 394.7800 & 188.8600 & ... & 183.9900 &
+155.8700 & 11.8200 & 393.9400 & 188.5000 & 64885400.0000 & 76542400.0000
+& 81065800 & 29727100.0000 & 91843300.0000 \\
+2024-02-02 & 185.8500 & 171.8100 & 12.1400 & 474.9900 & 187.9100 &
+185.8500 & 171.8100 & 12.1400 & 474.9900 & 187.9100 & ... & 179.8600 &
+169.1900 & 12.0300 & 459.6000 & 185.0400 & 102518000.0000 &
+117154900.0000 & 73087000 & 84615500.0000 & 110505100.0000 \\
+2024-02-05 & 187.6800 & 170.3100 & 11.5900 & 459.4100 & 181.0600 &
+187.6800 & 170.3100 & 11.5900 & 459.4100 & 181.0600 & ... & 188.1500 &
+170.2000 & 12.0100 & 469.8800 & 184.2600 & 69668800.0000 & 55081300.0000
+& 81026800 & 40832400.0000 & 134294400.0000 \\
+2024-02-06 & 189.3000 & 169.1500 & 12.0700 & 454.7200 & 185.1000 &
+189.3000 & 169.1500 & 12.0700 & 454.7200 & 185.1000 & ... & 186.8600 &
+169.3900 & 11.6400 & 464.0000 & 177.2100 & 43225255.0000 & 39617363.0000
+& 83842760 & 21584859.0000 & 122217420.0000 \\
+\end{longtable}
 
 \hypertarget{calculate-all-available-daily-returns-and-save-to-data-frame-returns-1}{%
 \subsection{\texorpdfstring{Calculate all available daily returns and
 save to data frame
 \texttt{returns}}{Calculate all available daily returns and save to data frame returns}}\label{calculate-all-available-daily-returns-and-save-to-data-frame-returns-1}}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    prices[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{] }\CommentTok{\# slice adj close}
+\NormalTok{    .iloc[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{] }\CommentTok{\# drop the last price because it might be intraday (i.e., not a close)}
+\NormalTok{    .pct\_change() }\CommentTok{\# calculate simple returns}
+\NormalTok{)}
+
+\NormalTok{returns}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule\noalign{}
+& AAPL & AMZN & F & META & TSLA \\
+Date & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1972-06-01 & NaN & NaN & NaN & NaN & NaN \\
+1972-06-02 & NaN & NaN & -0.0019 & NaN & NaN \\
+1972-06-05 & NaN & NaN & 0.0000 & NaN & NaN \\
+1972-06-06 & NaN & NaN & -0.0113 & NaN & NaN \\
+1972-06-07 & NaN & NaN & -0.0057 & NaN & NaN \\
+... & ... & ... & ... & ... & ... \\
+2024-01-30 & -0.0192 & -0.0140 & 0.0199 & -0.0024 & 0.0035 \\
+2024-01-31 & -0.0194 & -0.0239 & -0.0051 & -0.0248 & -0.0224 \\
+2024-02-01 & 0.0133 & 0.0263 & 0.0324 & 0.0119 & 0.0084 \\
+2024-02-02 & -0.0054 & 0.0787 & 0.0033 & 0.2032 & -0.0050 \\
+2024-02-05 & 0.0098 & -0.0087 & -0.0453 & -0.0328 & -0.0365 \\
+\end{longtable}
+
 \hypertarget{slices-returns-for-the-2020s-and-assign-to-returns_2020s-1}{%
 \subsection{\texorpdfstring{Slices returns for the 2020s and assign to
 \texttt{returns\_2020s}}{Slices returns for the 2020s and assign to returns\_2020s}}\label{slices-returns-for-the-2020s-and-assign-to-returns_2020s-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns\_2020s }\OperatorTok{=}\NormalTok{ returns.loc[}\StringTok{\textquotesingle{}2020\textquotesingle{}}\NormalTok{:] }\CommentTok{\# always use an unambiguos date format, like YYYY{-}MM{-}DD}
+
+\NormalTok{returns\_2020s}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule\noalign{}
+& AAPL & AMZN & F & META & TSLA \\
+Date & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2020-01-02 & 0.0228 & 0.0272 & 0.0129 & 0.0221 & 0.0285 \\
+2020-01-03 & -0.0097 & -0.0121 & -0.0223 & -0.0053 & 0.0296 \\
+2020-01-06 & 0.0080 & 0.0149 & -0.0054 & 0.0188 & 0.0193 \\
+2020-01-07 & -0.0047 & 0.0021 & 0.0098 & 0.0022 & 0.0388 \\
+2020-01-08 & 0.0161 & -0.0078 & 0.0000 & 0.0101 & 0.0492 \\
+... & ... & ... & ... & ... & ... \\
+2024-01-30 & -0.0192 & -0.0140 & 0.0199 & -0.0024 & 0.0035 \\
+2024-01-31 & -0.0194 & -0.0239 & -0.0051 & -0.0248 & -0.0224 \\
+2024-02-01 & 0.0133 & 0.0263 & 0.0324 & 0.0119 & 0.0084 \\
+2024-02-02 & -0.0054 & 0.0787 & 0.0033 & 0.2032 & -0.0050 \\
+2024-02-05 & 0.0098 & -0.0087 & -0.0453 & -0.0328 & -0.0365 \\
+\end{longtable}
 
 \hypertarget{download-all-available-data-for-the-fama-and-french-daily-benchmark-factors-to-dictionary-ff_all-1}{%
 \subsection{\texorpdfstring{Download all available data for the Fama and
@@ -20186,20 +22199,169 @@ the daily benchmark factors file.
  'F-F_Research_Data_5_Factors_2x3_daily']
 \end{verbatim}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ff\_all }\OperatorTok{=}\NormalTok{ pdr.DataReader(}
+\NormalTok{    name}\OperatorTok{=}\StringTok{\textquotesingle{}F{-}F\_Research\_Data\_Factors\_daily\textquotesingle{}}\NormalTok{,}
+\NormalTok{    data\_source}\OperatorTok{=}\StringTok{\textquotesingle{}famafrench\textquotesingle{}}\NormalTok{,}
+\NormalTok{    start}\OperatorTok{=}\StringTok{\textquotesingle{}1900\textquotesingle{}}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+C:\Users\r.herron\AppData\Local\Temp\ipykernel_10352\2526882917.py:1: FutureWarning: The argument 'date_parser' is deprecated and will be removed in a future version. Please use 'date_format' instead, or read your data in as 'object' dtype and then call 'to_datetime'.
+  ff_all = pdr.DataReader(
+\end{verbatim}
+
+The \texttt{DESCR} key in the dictionary tells us about the data frames
+that \texttt{pandas-datareader} returns.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\BuiltInTok{print}\NormalTok{(ff\_all[}\StringTok{\textquotesingle{}DESCR\textquotesingle{}}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+F-F Research Data Factors daily
+-------------------------------
+
+This file was created by CMPT_ME_BEME_RETS_DAILY using the 202312 CRSP database. The Tbill return is the simple daily rate that, over the number of trading days in the month, compounds to 1-month TBill rate from Ibbotson and Associates Inc. Copyright 2023 Kenneth R. French
+
+  0 : (25649 rows x 4 cols)
+\end{verbatim}
+
 \hypertarget{slice-the-daily-benchmark-factors-convert-them-to-decimal-returns-and-assign-to-ff-1}{%
 \subsection{\texorpdfstring{Slice the daily benchmark factors, convert
 them to decimal returns, and assign to
 \texttt{ff}}{Slice the daily benchmark factors, convert them to decimal returns, and assign to ff}}\label{slice-the-daily-benchmark-factors-convert-them-to-decimal-returns-and-assign-to-ff-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ff }\OperatorTok{=}\NormalTok{ ff\_all[}\DecValTok{0}\NormalTok{].div(}\DecValTok{100}\NormalTok{)}
+
+\NormalTok{ff}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule\noalign{}
+& Mkt-RF & SMB & HML & RF \\
+Date & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1926-07-01 & 0.0010 & -0.0025 & -0.0027 & 0.0001 \\
+1926-07-02 & 0.0045 & -0.0033 & -0.0006 & 0.0001 \\
+1926-07-06 & 0.0017 & 0.0030 & -0.0039 & 0.0001 \\
+1926-07-07 & 0.0009 & -0.0058 & 0.0002 & 0.0001 \\
+1926-07-08 & 0.0021 & -0.0038 & 0.0019 & 0.0001 \\
+... & ... & ... & ... & ... \\
+2023-12-22 & 0.0021 & 0.0064 & 0.0009 & 0.0002 \\
+2023-12-26 & 0.0048 & 0.0069 & 0.0046 & 0.0002 \\
+2023-12-27 & 0.0016 & 0.0014 & 0.0012 & 0.0002 \\
+2023-12-28 & -0.0001 & -0.0036 & 0.0003 & 0.0002 \\
+2023-12-29 & -0.0043 & -0.0112 & -0.0037 & 0.0002 \\
+\end{longtable}
 
 \hypertarget{use-the-.cumprod-method-to-plot-cumulative-returns-for-these-stocks-in-the-2020s-1}{%
 \subsection{\texorpdfstring{Use the \texttt{.cumprod()} method to plot
 cumulative returns for these stocks in the
 2020s}{Use the .cumprod() method to plot cumulative returns for these stocks in the 2020s}}\label{use-the-.cumprod-method-to-plot-cumulative-returns-for-these-stocks-in-the-2020s-1}}
 
+We use the \texttt{.prod()} method to calculate \emph{total} returns,
+because
+\(r_{total} = r_{0,T} = \left[ \prod_{t=0}^T (1 + r_t) \right] -1\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}
+\NormalTok{    returns\_2020s }\CommentTok{\# returns during the 2020s}
+\NormalTok{    .add(}\DecValTok{1}\NormalTok{) }\CommentTok{\# add 1 before we compound}
+\NormalTok{    .prod() }\CommentTok{\# compound all returns}
+\NormalTok{    .sub(}\DecValTok{1}\NormalTok{) }\CommentTok{\# subtract 1 to recover total returns}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL   1.6241
+AMZN   0.8433
+F      0.4535
+META   1.2383
+TSLA   5.4922
+dtype: float64
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns\_2020s.add(}\DecValTok{1}\NormalTok{).cumprod().sub(}\DecValTok{1}\NormalTok{).mul(}\DecValTok{100}\NormalTok{).plot()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+<Axes: xlabel='Date'>
+\end{verbatim}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{herron_01_practice_03_files/figure-pdf/cell-12-output-2.png}
+
+}
+
+\end{figure}
+
 \hypertarget{use-the-.cumsum-method-with-log-returns-to-plot-cumulative-returns-for-these-stocks-in-the-2020s-1}{%
 \subsection{\texorpdfstring{Use the \texttt{.cumsum()} method with log
 returns to plot cumulative returns for these stocks in the
 2020s}{Use the .cumsum() method with log returns to plot cumulative returns for these stocks in the 2020s}}\label{use-the-.cumsum-method-with-log-returns-to-plot-cumulative-returns-for-these-stocks-in-the-2020s-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns\_2020s.add(}\DecValTok{1}\NormalTok{).prod().sub(}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL   1.6241
+AMZN   0.8433
+F      0.4535
+META   1.2383
+TSLA   5.4922
+dtype: float64
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.exp(np.log(}\DecValTok{1} \OperatorTok{+}\NormalTok{ returns\_2020s).}\BuiltInTok{sum}\NormalTok{()) }\OperatorTok{{-}} \DecValTok{1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL   1.6241
+AMZN   0.8433
+F      0.4535
+META   1.2383
+TSLA   5.4922
+dtype: float64
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns\_2020s.pipe(np.log1p).}\BuiltInTok{sum}\NormalTok{().pipe(np.expm1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL   1.6241
+AMZN   0.8433
+F      0.4535
+META   1.2383
+TSLA   5.4922
+dtype: float64
+\end{verbatim}
 
 \hypertarget{use-price-data-only-to-plot-cumulative-returns-for-these-stocks-in-the-2020s-1}{%
 \subsection{Use price data only to plot cumulative returns for these
@@ -20214,8 +22376,8 @@ Calculate the Sharpe Ratio with all available returns and 2020s returns.
 Recall the Sharpe Ratio is \(\frac{\overline{R_i - R_f}}{\sigma_i}\),
 where \(\sigma_i\) is the volatility of \emph{excess} returns.
 
-\textbf{\emph{I suggest you write a function named \texttt{sharpe()} to
-use for the rest of this notebook.}}
+\textbf{\emph{I suggest you write a function named
+\texttt{calc\_sharpe()} to use for the rest of this notebook.}}
 
 \hypertarget{calculate-the-market-beta-for-tsla-1}{%
 \subsection{Calculate the market beta for
@@ -20227,8 +22389,8 @@ regression \(R_i-R_f = \alpha + \beta (R_m-R_f) + \epsilon\). We can
 estimate market beta with the covariance formula above for a univariate
 regression if we do not need goodness of fit statistics.
 
-\textbf{\emph{I suggest you write a function named \texttt{beta()} to
-use for the rest of this notebook.}}
+\textbf{\emph{I suggest you write a function named \texttt{calc\_beta()}
+to use for the rest of this notebook.}}
 
 \hypertarget{guess-the-sharpe-ratios-for-these-stocks-in-the-2020s-1}{%
 \subsection{Guess the Sharpe Ratios for these stocks in the
@@ -20284,14 +22446,45 @@ betas}\label{plot-the-time-series-of-market-betas-1}}
 \hypertarget{announcements-18}{%
 \section{Announcements}\label{announcements-18}}
 
-\hypertarget{practice-18}{%
-\section{Practice}\label{practice-18}}
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  DataCamp
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    \emph{Data Manipulation with pandas} due by Friday, 2/9, at 11:59 PM
+  \item
+    \emph{Joining Data with pandas} due by Friday, 2/16, at 11:59 PM
+  \item
+    \emph{Earn 10,000 XP} due by Friday, 3/15, at 11:59 PM
+  \end{enumerate}
+\item
+  I posted Project 1 to Canvas
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    Slides and notebook due by Friday, 2/23, at 11:59 PM
+  \item
+    Keep joining teams and let me know if you need help
+  \end{enumerate}
+\end{enumerate}
+
+\hypertarget{minute-recap-17}{%
+\section{10-Minute Recap}\label{minute-recap-17}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \ImportTok{import}\NormalTok{ matplotlib.pyplot }\ImportTok{as}\NormalTok{ plt}
 \ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
 \ImportTok{import}\NormalTok{ pandas }\ImportTok{as}\NormalTok{ pd}
+\ImportTok{import}\NormalTok{ pandas\_datareader }\ImportTok{as}\NormalTok{ pdr}
+\ImportTok{import}\NormalTok{ yfinance }\ImportTok{as}\NormalTok{ yf}
 \end{Highlighting}
 \end{Shaded}
 
@@ -20305,28 +22498,226 @@ betas}\label{plot-the-time-series-of-market-betas-1}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\ImportTok{import}\NormalTok{ yfinance }\ImportTok{as}\NormalTok{ yf}
-\ImportTok{import}\NormalTok{ pandas\_datareader }\ImportTok{as}\NormalTok{ pdr}
+\NormalTok{np.expm1(np.log1p(}\FloatTok{0.1}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{download-all-available-daily-price-data-for-tickers-tsla-f-aapl-amzn-and-meta-to-data-frame-histories-2}{%
+\begin{verbatim}
+0.1000
+\end{verbatim}
+
+First, we will use two packages to download data from the web:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \texttt{yfinance} for Yahoo! Finance data
+\item
+  \texttt{pandas-datareader} for Ken French data (or FRED data to
+  others)
+\end{enumerate}
+
+Second, there are ``simple returns'' and ``log returns''
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Simple returns are the returns that investors receive that we learned
+  in FINA 6331 and FINA 6333:
+  \(r_t = \frac{p_t + d_t - p_{t-1}}{p_{t-1}}\)
+\item
+  Log returns are the log of one plus simple returns. Why do we use
+  them?
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    \textbf{\emph{Log returns are additive}}, while simple returns are
+    multiplicative. This additive property makes math really easy with
+    log returns:
+    \(\log(\prod_{t=0}^T (1 + r_t)) = \sum_{t=0}^T \log(1+r_t)\), so
+    \(r_{0,T} = \prod_{t=0}^T (1 + r_t) - 1 = e^{\sum_{t=0}^T \log(1+r_t)} - 1\)
+  \item
+    \textbf{\emph{Log returns are almost normally distributed}}
+  \end{enumerate}
+\end{enumerate}
+
+\textbf{\emph{We will almost always use simple returns.}} The exeception
+is time-consuming calculations, which we will often do in log returns to
+save us time.
+
+Third, we can calculate portfolio returns easily in pandas!
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \texttt{returns.mean(axis=1)} is the return on an equally-weighted
+  portfolio, \textbf{\emph{rebalanced at the same frequency as the
+  returns in \texttt{returns}!}}
+\item
+  \texttt{returns.dot(weights)} is the return on a portfolio weighted
+  according to the weights in the \texttt{weights} array,
+  \textbf{\emph{still rebalanced at the same frequency as the returns in
+  \texttt{returns}!}}
+\end{enumerate}
+
+\hypertarget{practice-18}{%
+\section{Practice}\label{practice-18}}
+
+\hypertarget{download-all-available-daily-price-data-for-tickers-tsla-f-aapl-amzn-and-meta-to-data-frame-prices-2}{%
 \subsection{\texorpdfstring{Download all available daily price data for
 tickers TSLA, F, AAPL, AMZN, and META to data frame
-\texttt{histories}}{Download all available daily price data for tickers TSLA, F, AAPL, AMZN, and META to data frame histories}}\label{download-all-available-daily-price-data-for-tickers-tsla-f-aapl-amzn-and-meta-to-data-frame-histories-2}}
+\texttt{prices}}{Download all available daily price data for tickers TSLA, F, AAPL, AMZN, and META to data frame prices}}\label{download-all-available-daily-price-data-for-tickers-tsla-f-aapl-amzn-and-meta-to-data-frame-prices-2}}
 
-Remove time zone information from the index and use
-\texttt{histories.columns.names} to label the variables and tickers as
-\texttt{Variable} and \texttt{Ticker}.
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tickers }\OperatorTok{=} \StringTok{\textquotesingle{}TSLA F AAPL AMZN META\textquotesingle{}}
+\NormalTok{prices }\OperatorTok{=}\NormalTok{ yf.download(tickers}\OperatorTok{=}\NormalTok{tickers)}
+
+\NormalTok{prices}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[*********************100%%**********************]  5 of 5 completed
+\end{verbatim}
+
+\begin{longtable}[]{@{}llllllllllllllllllllll@{}}
+\toprule\noalign{}
+&
+\multicolumn{5}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 8\tabcolsep}}{%
+Adj Close} &
+\multicolumn{5}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 8\tabcolsep}}{%
+Close} & ... &
+\multicolumn{5}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 8\tabcolsep}}{%
+Open} &
+\multicolumn{5}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 8\tabcolsep}@{}}{%
+Volume} \\
+& AAPL & AMZN & F & META & TSLA & AAPL & AMZN & F & META & TSLA & ... &
+AAPL & AMZN & F & META & TSLA & AAPL & AMZN & F & META & TSLA \\
+Date & & & & & & & & & & & & & & & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1972-06-01 & NaN & NaN & 0.2419 & NaN & NaN & NaN & NaN & 2.1532 & NaN &
+NaN & ... & NaN & NaN & 0.0000 & NaN & NaN & NaN & NaN & 1091238 & NaN &
+NaN \\
+1972-06-02 & NaN & NaN & 0.2414 & NaN & NaN & NaN & NaN & 2.1492 & NaN &
+NaN & ... & NaN & NaN & 2.1532 & NaN & NaN & NaN & NaN & 1174468 & NaN &
+NaN \\
+1972-06-05 & NaN & NaN & 0.2414 & NaN & NaN & NaN & NaN & 2.1492 & NaN &
+NaN & ... & NaN & NaN & 2.1492 & NaN & NaN & NaN & NaN & 5209582 & NaN &
+NaN \\
+1972-06-06 & NaN & NaN & 0.2387 & NaN & NaN & NaN & NaN & 2.1248 & NaN &
+NaN & ... & NaN & NaN & 2.1492 & NaN & NaN & NaN & NaN & 1424158 & NaN &
+NaN \\
+1972-06-07 & NaN & NaN & 0.2373 & NaN & NaN & NaN & NaN & 2.1127 & NaN &
+NaN & ... & NaN & NaN & 2.1248 & NaN & NaN & NaN & NaN & 675088 & NaN &
+NaN \\
+... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... &
+... & ... & ... & ... & ... & ... & ... & ... & ... & ... \\
+2024-01-31 & 184.4000 & 155.2000 & 11.7200 & 390.1400 & 187.2900 &
+184.4000 & 155.2000 & 11.7200 & 390.1400 & 187.2900 & ... & 187.0400 &
+157.0000 & 11.7600 & 389.0000 & 187.0000 & 55467800.0000 & 50284400.0000
+& 74558900 & 20180800.0000 & 103221400.0000 \\
+2024-02-01 & 186.8600 & 159.2800 & 12.1000 & 394.7800 & 188.8600 &
+186.8600 & 159.2800 & 12.1000 & 394.7800 & 188.8600 & ... & 183.9900 &
+155.8700 & 11.8200 & 393.9400 & 188.5000 & 64885400.0000 & 76542400.0000
+& 81065800 & 29727100.0000 & 91843300.0000 \\
+2024-02-02 & 185.8500 & 171.8100 & 12.1400 & 474.9900 & 187.9100 &
+185.8500 & 171.8100 & 12.1400 & 474.9900 & 187.9100 & ... & 179.8600 &
+169.1900 & 12.0300 & 459.6000 & 185.0400 & 102518000.0000 &
+117154900.0000 & 73087000 & 84615500.0000 & 110505100.0000 \\
+2024-02-05 & 187.6800 & 170.3100 & 11.5900 & 459.4100 & 181.0600 &
+187.6800 & 170.3100 & 11.5900 & 459.4100 & 181.0600 & ... & 188.1500 &
+170.2000 & 12.0100 & 469.8800 & 184.2600 & 69668800.0000 & 55081300.0000
+& 81026800 & 40832400.0000 & 134294400.0000 \\
+2024-02-06 & 189.3000 & 169.1500 & 12.0700 & 454.7200 & 185.1000 &
+189.3000 & 169.1500 & 12.0700 & 454.7200 & 185.1000 & ... & 186.8600 &
+169.3900 & 11.6400 & 464.0000 & 177.2100 & 43225255.0000 & 39617363.0000
+& 83842760 & 21584859.0000 & 122217420.0000 \\
+\end{longtable}
 
 \hypertarget{calculate-all-available-daily-returns-and-save-to-data-frame-returns-2}{%
 \subsection{\texorpdfstring{Calculate all available daily returns and
 save to data frame
 \texttt{returns}}{Calculate all available daily returns and save to data frame returns}}\label{calculate-all-available-daily-returns-and-save-to-data-frame-returns-2}}
 
+\hypertarget{calculate-all-available-daily-returns-and-save-to-data-frame-returns-3}{%
+\subsection{\texorpdfstring{Calculate all available daily returns and
+save to data frame
+\texttt{returns}}{Calculate all available daily returns and save to data frame returns}}\label{calculate-all-available-daily-returns-and-save-to-data-frame-returns-3}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    prices[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{] }\CommentTok{\# slice adj close}
+\NormalTok{    .iloc[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{] }\CommentTok{\# drop the last price because it might be intraday (i.e., not a close)}
+\NormalTok{    .pct\_change() }\CommentTok{\# calculate simple returns}
+\NormalTok{)}
+
+\NormalTok{returns}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule\noalign{}
+& AAPL & AMZN & F & META & TSLA \\
+Date & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1972-06-01 & NaN & NaN & NaN & NaN & NaN \\
+1972-06-02 & NaN & NaN & -0.0019 & NaN & NaN \\
+1972-06-05 & NaN & NaN & 0.0000 & NaN & NaN \\
+1972-06-06 & NaN & NaN & -0.0113 & NaN & NaN \\
+1972-06-07 & NaN & NaN & -0.0057 & NaN & NaN \\
+... & ... & ... & ... & ... & ... \\
+2024-01-30 & -0.0192 & -0.0140 & 0.0199 & -0.0024 & 0.0035 \\
+2024-01-31 & -0.0194 & -0.0239 & -0.0051 & -0.0248 & -0.0224 \\
+2024-02-01 & 0.0133 & 0.0263 & 0.0324 & 0.0119 & 0.0084 \\
+2024-02-02 & -0.0054 & 0.0787 & 0.0033 & 0.2032 & -0.0050 \\
+2024-02-05 & 0.0098 & -0.0087 & -0.0453 & -0.0328 & -0.0365 \\
+\end{longtable}
+
 \hypertarget{slices-returns-for-the-2020s-and-assign-to-returns_2020s-2}{%
 \subsection{\texorpdfstring{Slices returns for the 2020s and assign to
 \texttt{returns\_2020s}}{Slices returns for the 2020s and assign to returns\_2020s}}\label{slices-returns-for-the-2020s-and-assign-to-returns_2020s-2}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns\_2020s }\OperatorTok{=}\NormalTok{ returns.loc[}\StringTok{\textquotesingle{}2020\textquotesingle{}}\NormalTok{:] }\CommentTok{\# always use an unambiguos date format, like YYYY{-}MM{-}DD}
+
+\NormalTok{returns\_2020s}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule\noalign{}
+& AAPL & AMZN & F & META & TSLA \\
+Date & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2020-01-02 & 0.0228 & 0.0272 & 0.0129 & 0.0221 & 0.0285 \\
+2020-01-03 & -0.0097 & -0.0121 & -0.0223 & -0.0053 & 0.0296 \\
+2020-01-06 & 0.0080 & 0.0149 & -0.0054 & 0.0188 & 0.0193 \\
+2020-01-07 & -0.0047 & 0.0021 & 0.0098 & 0.0022 & 0.0388 \\
+2020-01-08 & 0.0161 & -0.0078 & 0.0000 & 0.0101 & 0.0492 \\
+... & ... & ... & ... & ... & ... \\
+2024-01-30 & -0.0192 & -0.0140 & 0.0199 & -0.0024 & 0.0035 \\
+2024-01-31 & -0.0194 & -0.0239 & -0.0051 & -0.0248 & -0.0224 \\
+2024-02-01 & 0.0133 & 0.0263 & 0.0324 & 0.0119 & 0.0084 \\
+2024-02-02 & -0.0054 & 0.0787 & 0.0033 & 0.2032 & -0.0050 \\
+2024-02-05 & 0.0098 & -0.0087 & -0.0453 & -0.0328 & -0.0365 \\
+\end{longtable}
 
 \hypertarget{download-all-available-data-for-the-fama-and-french-daily-benchmark-factors-to-dictionary-ff_all-2}{%
 \subsection{\texorpdfstring{Download all available data for the Fama and
@@ -20350,15 +22741,111 @@ the daily benchmark factors file.
  'F-F_Research_Data_5_Factors_2x3_daily']
 \end{verbatim}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ff\_all }\OperatorTok{=}\NormalTok{ pdr.DataReader(}
+\NormalTok{    name}\OperatorTok{=}\StringTok{\textquotesingle{}F{-}F\_Research\_Data\_Factors\_daily\textquotesingle{}}\NormalTok{,}
+\NormalTok{    data\_source}\OperatorTok{=}\StringTok{\textquotesingle{}famafrench\textquotesingle{}}\NormalTok{,}
+\NormalTok{    start}\OperatorTok{=}\StringTok{\textquotesingle{}1900\textquotesingle{}}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+C:\Users\r.herron\AppData\Local\Temp\ipykernel_21288\2526882917.py:1: FutureWarning: The argument 'date_parser' is deprecated and will be removed in a future version. Please use 'date_format' instead, or read your data in as 'object' dtype and then call 'to_datetime'.
+  ff_all = pdr.DataReader(
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\BuiltInTok{type}\NormalTok{(ff\_all)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+dict
+\end{verbatim}
+
+The \texttt{DESCR} key in the dictionary tells us about the data frames
+that \texttt{pandas-datareader} returns.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\BuiltInTok{print}\NormalTok{(ff\_all[}\StringTok{\textquotesingle{}DESCR\textquotesingle{}}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+F-F Research Data Factors daily
+-------------------------------
+
+This file was created by CMPT_ME_BEME_RETS_DAILY using the 202312 CRSP database. The Tbill return is the simple daily rate that, over the number of trading days in the month, compounds to 1-month TBill rate from Ibbotson and Associates Inc. Copyright 2023 Kenneth R. French
+
+  0 : (25649 rows x 4 cols)
+\end{verbatim}
+
 \hypertarget{slice-the-daily-benchmark-factors-convert-them-to-decimal-returns-and-assign-to-ff-2}{%
 \subsection{\texorpdfstring{Slice the daily benchmark factors, convert
 them to decimal returns, and assign to
 \texttt{ff}}{Slice the daily benchmark factors, convert them to decimal returns, and assign to ff}}\label{slice-the-daily-benchmark-factors-convert-them-to-decimal-returns-and-assign-to-ff-2}}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ff }\OperatorTok{=}\NormalTok{ ff\_all[}\DecValTok{0}\NormalTok{].div(}\DecValTok{100}\NormalTok{)}
+
+\NormalTok{ff}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule\noalign{}
+& Mkt-RF & SMB & HML & RF \\
+Date & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1926-07-01 & 0.0010 & -0.0025 & -0.0027 & 0.0001 \\
+1926-07-02 & 0.0045 & -0.0033 & -0.0006 & 0.0001 \\
+1926-07-06 & 0.0017 & 0.0030 & -0.0039 & 0.0001 \\
+1926-07-07 & 0.0009 & -0.0058 & 0.0002 & 0.0001 \\
+1926-07-08 & 0.0021 & -0.0038 & 0.0019 & 0.0001 \\
+... & ... & ... & ... & ... \\
+2023-12-22 & 0.0021 & 0.0064 & 0.0009 & 0.0002 \\
+2023-12-26 & 0.0048 & 0.0069 & 0.0046 & 0.0002 \\
+2023-12-27 & 0.0016 & 0.0014 & 0.0012 & 0.0002 \\
+2023-12-28 & -0.0001 & -0.0036 & 0.0003 & 0.0002 \\
+2023-12-29 & -0.0043 & -0.0112 & -0.0037 & 0.0002 \\
+\end{longtable}
+
 \hypertarget{use-the-.cumprod-method-to-plot-cumulative-returns-for-these-stocks-in-the-2020s-2}{%
 \subsection{\texorpdfstring{Use the \texttt{.cumprod()} method to plot
 cumulative returns for these stocks in the
 2020s}{Use the .cumprod() method to plot cumulative returns for these stocks in the 2020s}}\label{use-the-.cumprod-method-to-plot-cumulative-returns-for-these-stocks-in-the-2020s-2}}
+
+We use the \texttt{.prod()} method to calculate \emph{total} returns,
+because
+\(r_{total} = r_{0,T} = \left[ \prod_{t=0}^T (1 + r_t) \right] -1\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}
+\NormalTok{    returns\_2020s }\CommentTok{\# returns during the 2020s}
+\NormalTok{    .add(}\DecValTok{1}\NormalTok{) }\CommentTok{\# add 1 before we compound}
+\NormalTok{    .prod() }\CommentTok{\# compound all returns}
+\NormalTok{    .sub(}\DecValTok{1}\NormalTok{) }\CommentTok{\# subtract 1 to recover total returns}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL   1.6241
+AMZN   0.8433
+F      0.4535
+META   1.2383
+TSLA   5.4922
+dtype: float64
+\end{verbatim}
 
 \hypertarget{use-the-.cumsum-method-with-log-returns-to-plot-cumulative-returns-for-these-stocks-in-the-2020s-2}{%
 \subsection{\texorpdfstring{Use the \texttt{.cumsum()} method with log
@@ -20378,8 +22865,8 @@ Calculate the Sharpe Ratio with all available returns and 2020s returns.
 Recall the Sharpe Ratio is \(\frac{\overline{R_i - R_f}}{\sigma_i}\),
 where \(\sigma_i\) is the volatility of \emph{excess} returns.
 
-\textbf{\emph{I suggest you write a function named \texttt{sharpe()} to
-use for the rest of this notebook.}}
+\textbf{\emph{I suggest you write a function named
+\texttt{calc\_sharpe()} to use for the rest of this notebook.}}
 
 \hypertarget{calculate-the-market-beta-for-tsla-2}{%
 \subsection{Calculate the market beta for
@@ -20391,8 +22878,8 @@ regression \(R_i-R_f = \alpha + \beta (R_m-R_f) + \epsilon\). We can
 estimate market beta with the covariance formula above for a univariate
 regression if we do not need goodness of fit statistics.
 
-\textbf{\emph{I suggest you write a function named \texttt{beta()} to
-use for the rest of this notebook.}}
+\textbf{\emph{I suggest you write a function named \texttt{calc\_beta()}
+to use for the rest of this notebook.}}
 
 \hypertarget{guess-the-sharpe-ratios-for-these-stocks-in-the-2020s-2}{%
 \subsection{Guess the Sharpe Ratios for these stocks in the
@@ -20448,14 +22935,45 @@ betas}\label{plot-the-time-series-of-market-betas-2}}
 \hypertarget{announcements-19}{%
 \section{Announcements}\label{announcements-19}}
 
-\hypertarget{practice-19}{%
-\section{Practice}\label{practice-19}}
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  DataCamp
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    \emph{Data Manipulation with pandas} due by Friday, 2/9, at 11:59 PM
+  \item
+    \emph{Joining Data with pandas} due by Friday, 2/16, at 11:59 PM
+  \item
+    \emph{Earn 10,000 XP} due by Friday, 3/15, at 11:59 PM
+  \end{enumerate}
+\item
+  I posted Project 1 to Canvas
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    Slides and notebook due by Friday, 2/23, at 11:59 PM
+  \item
+    Keep joining teams and let me know if you need help
+  \end{enumerate}
+\end{enumerate}
+
+\hypertarget{minute-recap-18}{%
+\section{10-Minute Recap}\label{minute-recap-18}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \ImportTok{import}\NormalTok{ matplotlib.pyplot }\ImportTok{as}\NormalTok{ plt}
 \ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
 \ImportTok{import}\NormalTok{ pandas }\ImportTok{as}\NormalTok{ pd}
+\ImportTok{import}\NormalTok{ pandas\_datareader }\ImportTok{as}\NormalTok{ pdr}
+\ImportTok{import}\NormalTok{ yfinance }\ImportTok{as}\NormalTok{ yf}
 \end{Highlighting}
 \end{Shaded}
 
@@ -20467,30 +22985,193 @@ betas}\label{plot-the-time-series-of-market-betas-2}}
 \end{Highlighting}
 \end{Shaded}
 
+First, we will use two packages to download data from the Web:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \texttt{yfinance} for Yahoo! Finance
+\item
+  \texttt{pandas-datareader} for Ken French (and FRED and many others)
+\end{enumerate}
+
+Second, there are ``simple returns'' and ``log returns''
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Simple returns are the returns that investors receive that we learned
+  in FINA 6331 and FINA 6333:
+  \(r_t = \frac{p_t + d_t - p_{t-1}}{p_{t-1}}\)
+\item
+  Log returns are the log of one plus simple returns. Why do we use
+  them?
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    \textbf{\emph{Log returns are additive}}, while simple returns are
+    multiplicative. This additive property makes math really easy with
+    log returns:
+    \(\log(\prod_{t=0}^T (1 + r_t)) = \sum_{t=0}^T \log(1+r_t)\), so
+    \(r_{0,T} = \prod_{t=0}^T (1 + r_t) - 1 = e^{\sum_{t=0}^T \log(1+r_t)} - 1\)
+  \item
+    \textbf{\emph{Log returns are almost normally distributed}}
+  \end{enumerate}
+\end{enumerate}
+
+\textbf{\emph{We will almost always use simple returns.}} The exeception
+is time-consuming calculations, which we will often do in log returns to
+save us time.
+
+Third, we can calculate portfolio returns a few ways!
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \texttt{returns.mean(axis=1)} is \emph{equally-weighted} portfolio
+  returns, rebalanced at the same frequency as the returns (i.e.,
+  rebalanced every return period)
+\item
+  \texttt{returns.dot(weights)} lets us use any weights in the
+  \texttt{weights} array, rebalanced at the same frequency as the
+  returns
+\end{enumerate}
+
+\hypertarget{practice-19}{%
+\section{Practice}\label{practice-19}}
+
+\hypertarget{download-all-available-daily-price-data-for-tickers-tsla-f-aapl-amzn-and-meta-to-data-frame-prices-3}{%
+\subsection{\texorpdfstring{Download all available daily price data for
+tickers TSLA, F, AAPL, AMZN, and META to data frame
+\texttt{prices}}{Download all available daily price data for tickers TSLA, F, AAPL, AMZN, and META to data frame prices}}\label{download-all-available-daily-price-data-for-tickers-tsla-f-aapl-amzn-and-meta-to-data-frame-prices-3}}
+
 \begin{Shaded}
 \begin{Highlighting}[]
-\ImportTok{import}\NormalTok{ yfinance }\ImportTok{as}\NormalTok{ yf}
-\ImportTok{import}\NormalTok{ pandas\_datareader }\ImportTok{as}\NormalTok{ pdr}
+\NormalTok{tickers }\OperatorTok{=} \StringTok{\textquotesingle{}TSLA F AAPL AMZN META\textquotesingle{}}
+\NormalTok{prices }\OperatorTok{=}\NormalTok{ yf.download(tickers}\OperatorTok{=}\NormalTok{tickers)}
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{download-all-available-daily-price-data-for-tickers-tsla-f-aapl-amzn-and-meta-to-data-frame-histories-3}{%
-\subsection{\texorpdfstring{Download all available daily price data for
-tickers TSLA, F, AAPL, AMZN, and META to data frame
-\texttt{histories}}{Download all available daily price data for tickers TSLA, F, AAPL, AMZN, and META to data frame histories}}\label{download-all-available-daily-price-data-for-tickers-tsla-f-aapl-amzn-and-meta-to-data-frame-histories-3}}
+\begin{verbatim}
+[*********************100%%**********************]  5 of 5 completed
+\end{verbatim}
 
-Remove time zone information from the index and use
-\texttt{histories.columns.names} to label the variables and tickers as
-\texttt{Variable} and \texttt{Ticker}.
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{prices.head()}
+\end{Highlighting}
+\end{Shaded}
 
-\hypertarget{calculate-all-available-daily-returns-and-save-to-data-frame-returns-3}{%
+\begin{longtable}[]{@{}llllllllllllllllllllll@{}}
+\toprule\noalign{}
+&
+\multicolumn{5}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 8\tabcolsep}}{%
+Adj Close} &
+\multicolumn{5}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 8\tabcolsep}}{%
+Close} & ... &
+\multicolumn{5}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 8\tabcolsep}}{%
+Open} &
+\multicolumn{5}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 8\tabcolsep}@{}}{%
+Volume} \\
+& AAPL & AMZN & F & META & TSLA & AAPL & AMZN & F & META & TSLA & ... &
+AAPL & AMZN & F & META & TSLA & AAPL & AMZN & F & META & TSLA \\
+Date & & & & & & & & & & & & & & & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1972-06-01 & NaN & NaN & 0.2419 & NaN & NaN & NaN & NaN & 2.1532 & NaN &
+NaN & ... & NaN & NaN & 0.0000 & NaN & NaN & NaN & NaN & 1091238 & NaN &
+NaN \\
+1972-06-02 & NaN & NaN & 0.2414 & NaN & NaN & NaN & NaN & 2.1492 & NaN &
+NaN & ... & NaN & NaN & 2.1532 & NaN & NaN & NaN & NaN & 1174468 & NaN &
+NaN \\
+1972-06-05 & NaN & NaN & 0.2414 & NaN & NaN & NaN & NaN & 2.1492 & NaN &
+NaN & ... & NaN & NaN & 2.1492 & NaN & NaN & NaN & NaN & 5209582 & NaN &
+NaN \\
+1972-06-06 & NaN & NaN & 0.2387 & NaN & NaN & NaN & NaN & 2.1248 & NaN &
+NaN & ... & NaN & NaN & 2.1492 & NaN & NaN & NaN & NaN & 1424158 & NaN &
+NaN \\
+1972-06-07 & NaN & NaN & 0.2373 & NaN & NaN & NaN & NaN & 2.1127 & NaN &
+NaN & ... & NaN & NaN & 2.1248 & NaN & NaN & NaN & NaN & 675088 & NaN &
+NaN \\
+\end{longtable}
+
+\hypertarget{calculate-all-available-daily-returns-and-save-to-data-frame-returns-4}{%
 \subsection{\texorpdfstring{Calculate all available daily returns and
 save to data frame
-\texttt{returns}}{Calculate all available daily returns and save to data frame returns}}\label{calculate-all-available-daily-returns-and-save-to-data-frame-returns-3}}
+\texttt{returns}}{Calculate all available daily returns and save to data frame returns}}\label{calculate-all-available-daily-returns-and-save-to-data-frame-returns-4}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    prices[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{] }\CommentTok{\# slice adj close}
+\NormalTok{    .iloc[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{] }\CommentTok{\# drop the last price because it might be intraday (i.e., not a close)}
+\NormalTok{    .pct\_change() }\CommentTok{\# calculate simple returns}
+\NormalTok{)}
+
+\NormalTok{returns}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule\noalign{}
+& AAPL & AMZN & F & META & TSLA \\
+Date & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1972-06-01 & NaN & NaN & NaN & NaN & NaN \\
+1972-06-02 & NaN & NaN & -0.0019 & NaN & NaN \\
+1972-06-05 & NaN & NaN & 0.0000 & NaN & NaN \\
+1972-06-06 & NaN & NaN & -0.0113 & NaN & NaN \\
+1972-06-07 & NaN & NaN & -0.0057 & NaN & NaN \\
+... & ... & ... & ... & ... & ... \\
+2024-01-30 & -0.0192 & -0.0140 & 0.0199 & -0.0024 & 0.0035 \\
+2024-01-31 & -0.0194 & -0.0239 & -0.0051 & -0.0248 & -0.0224 \\
+2024-02-01 & 0.0133 & 0.0263 & 0.0324 & 0.0119 & 0.0084 \\
+2024-02-02 & -0.0054 & 0.0787 & 0.0033 & 0.2032 & -0.0050 \\
+2024-02-05 & 0.0098 & -0.0087 & -0.0453 & -0.0328 & -0.0365 \\
+\end{longtable}
 
 \hypertarget{slices-returns-for-the-2020s-and-assign-to-returns_2020s-3}{%
 \subsection{\texorpdfstring{Slices returns for the 2020s and assign to
 \texttt{returns\_2020s}}{Slices returns for the 2020s and assign to returns\_2020s}}\label{slices-returns-for-the-2020s-and-assign-to-returns_2020s-3}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns\_2020s }\OperatorTok{=}\NormalTok{ returns.loc[}\StringTok{\textquotesingle{}2020\textquotesingle{}}\NormalTok{:] }\CommentTok{\# always use an unambiguos date format, like YYYY{-}MM{-}DD}
+
+\NormalTok{returns\_2020s}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule\noalign{}
+& AAPL & AMZN & F & META & TSLA \\
+Date & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2020-01-02 & 0.0228 & 0.0272 & 0.0129 & 0.0221 & 0.0285 \\
+2020-01-03 & -0.0097 & -0.0121 & -0.0223 & -0.0053 & 0.0296 \\
+2020-01-06 & 0.0080 & 0.0149 & -0.0054 & 0.0188 & 0.0193 \\
+2020-01-07 & -0.0047 & 0.0021 & 0.0098 & 0.0022 & 0.0388 \\
+2020-01-08 & 0.0161 & -0.0078 & 0.0000 & 0.0101 & 0.0492 \\
+... & ... & ... & ... & ... & ... \\
+2024-01-30 & -0.0192 & -0.0140 & 0.0199 & -0.0024 & 0.0035 \\
+2024-01-31 & -0.0194 & -0.0239 & -0.0051 & -0.0248 & -0.0224 \\
+2024-02-01 & 0.0133 & 0.0263 & 0.0324 & 0.0119 & 0.0084 \\
+2024-02-02 & -0.0054 & 0.0787 & 0.0033 & 0.2032 & -0.0050 \\
+2024-02-05 & 0.0098 & -0.0087 & -0.0453 & -0.0328 & -0.0365 \\
+\end{longtable}
 
 \hypertarget{download-all-available-data-for-the-fama-and-french-daily-benchmark-factors-to-dictionary-ff_all-3}{%
 \subsection{\texorpdfstring{Download all available data for the Fama and
@@ -20514,15 +23195,134 @@ the daily benchmark factors file.
  'F-F_Research_Data_5_Factors_2x3_daily']
 \end{verbatim}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ff\_all }\OperatorTok{=}\NormalTok{ pdr.DataReader(}
+\NormalTok{    name}\OperatorTok{=}\StringTok{\textquotesingle{}F{-}F\_Research\_Data\_Factors\_daily\textquotesingle{}}\NormalTok{,}
+\NormalTok{    data\_source}\OperatorTok{=}\StringTok{\textquotesingle{}famafrench\textquotesingle{}}\NormalTok{,}
+\NormalTok{    start}\OperatorTok{=}\StringTok{\textquotesingle{}1900\textquotesingle{}} \CommentTok{\# most data start in 1926{-}07{-}01, but 1900 is easier to remember and type}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+C:\Users\r.herron\AppData\Local\Temp\ipykernel_15912\4231759426.py:1: FutureWarning: The argument 'date_parser' is deprecated and will be removed in a future version. Please use 'date_format' instead, or read your data in as 'object' dtype and then call 'to_datetime'.
+  ff_all = pdr.DataReader(
+\end{verbatim}
+
+The \texttt{DESCR} key in the dictionary tells us about the data frames
+that \texttt{pandas-datareader} returns.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\BuiltInTok{print}\NormalTok{(ff\_all[}\StringTok{\textquotesingle{}DESCR\textquotesingle{}}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+F-F Research Data Factors daily
+-------------------------------
+
+This file was created by CMPT_ME_BEME_RETS_DAILY using the 202312 CRSP database. The Tbill return is the simple daily rate that, over the number of trading days in the month, compounds to 1-month TBill rate from Ibbotson and Associates Inc. Copyright 2023 Kenneth R. French
+
+  0 : (25649 rows x 4 cols)
+\end{verbatim}
+
 \hypertarget{slice-the-daily-benchmark-factors-convert-them-to-decimal-returns-and-assign-to-ff-3}{%
 \subsection{\texorpdfstring{Slice the daily benchmark factors, convert
 them to decimal returns, and assign to
 \texttt{ff}}{Slice the daily benchmark factors, convert them to decimal returns, and assign to ff}}\label{slice-the-daily-benchmark-factors-convert-them-to-decimal-returns-and-assign-to-ff-3}}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ff }\OperatorTok{=}\NormalTok{ ff\_all[}\DecValTok{0}\NormalTok{].div(}\DecValTok{100}\NormalTok{)}
+
+\NormalTok{ff}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule\noalign{}
+& Mkt-RF & SMB & HML & RF \\
+Date & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1926-07-01 & 0.0010 & -0.0025 & -0.0027 & 0.0001 \\
+1926-07-02 & 0.0045 & -0.0033 & -0.0006 & 0.0001 \\
+1926-07-06 & 0.0017 & 0.0030 & -0.0039 & 0.0001 \\
+1926-07-07 & 0.0009 & -0.0058 & 0.0002 & 0.0001 \\
+1926-07-08 & 0.0021 & -0.0038 & 0.0019 & 0.0001 \\
+... & ... & ... & ... & ... \\
+2023-12-22 & 0.0021 & 0.0064 & 0.0009 & 0.0002 \\
+2023-12-26 & 0.0048 & 0.0069 & 0.0046 & 0.0002 \\
+2023-12-27 & 0.0016 & 0.0014 & 0.0012 & 0.0002 \\
+2023-12-28 & -0.0001 & -0.0036 & 0.0003 & 0.0002 \\
+2023-12-29 & -0.0043 & -0.0112 & -0.0037 & 0.0002 \\
+\end{longtable}
+
 \hypertarget{use-the-.cumprod-method-to-plot-cumulative-returns-for-these-stocks-in-the-2020s-3}{%
 \subsection{\texorpdfstring{Use the \texttt{.cumprod()} method to plot
 cumulative returns for these stocks in the
 2020s}{Use the .cumprod() method to plot cumulative returns for these stocks in the 2020s}}\label{use-the-.cumprod-method-to-plot-cumulative-returns-for-these-stocks-in-the-2020s-3}}
+
+We use the \texttt{.prod()} method to calculate \emph{total} returns,
+because
+\(r_{total} = r_{0,T} = \left[ \prod_{t=0}^T (1 + r_t) \right] -1\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}
+\NormalTok{    returns\_2020s }\CommentTok{\# returns during the 2020s}
+\NormalTok{    .add(}\DecValTok{1}\NormalTok{) }\CommentTok{\# add 1 before we compound}
+\NormalTok{    .prod() }\CommentTok{\# compound all returns}
+\NormalTok{    .sub(}\DecValTok{1}\NormalTok{) }\CommentTok{\# subtract 1 to recover total returns}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+AAPL   1.6241
+AMZN   0.8433
+F      0.4535
+META   1.2383
+TSLA   5.4922
+dtype: float64
+\end{verbatim}
+
+We use the \texttt{.cumprod()} to calculate \emph{cumulative} returns,
+which are the total returns for every date between \(0\) and \(T\)
+(i.e., \(r_{0,t} \forall t \in {0, 1, \ldots T}\))
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}
+\NormalTok{    returns\_2020s }\CommentTok{\# returns during the 2020s}
+\NormalTok{    .add(}\DecValTok{1}\NormalTok{) }\CommentTok{\# add 1 before we compound}
+\NormalTok{    .cumprod() }\CommentTok{\# compound returns up to time t}
+\NormalTok{    .sub(}\DecValTok{1}\NormalTok{) }\CommentTok{\# subtract 1 to recover cumulative return at time t}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{) }\CommentTok{\# convert decimal to percent}
+\NormalTok{    .plot() }\CommentTok{\# plot}
+\NormalTok{)}
+
+\CommentTok{\# https://stackoverflow.com/questions/25973581/how{-}to{-}format{-}axis{-}number{-}format{-}to{-}thousands{-}with{-}a{-}comma}
+\ImportTok{from}\NormalTok{ matplotlib }\ImportTok{import}\NormalTok{ ticker}
+\NormalTok{plt.gca().get\_yaxis().set\_major\_formatter(ticker.FuncFormatter(}\KeywordTok{lambda}\NormalTok{ x, p: }\StringTok{\textquotesingle{}\{:,\}\textquotesingle{}}\NormalTok{.}\BuiltInTok{format}\NormalTok{(x)))}
+
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}Cumulative Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Cumulative Returns}\CharTok{\textbackslash{}n}\SpecialStringTok{ from }\SpecialCharTok{\{}\NormalTok{returns\_2020s}\SpecialCharTok{.}\NormalTok{index}\SpecialCharTok{.}\BuiltInTok{min}\NormalTok{()}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{b }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{ to }\SpecialCharTok{\{}\NormalTok{returns\_2020s}\SpecialCharTok{.}\NormalTok{index}\SpecialCharTok{.}\BuiltInTok{max}\NormalTok{()}\SpecialCharTok{:}\OperatorTok{\%}\NormalTok{b }\OperatorTok{\%}\NormalTok{Y}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{herron_01_practice_05_files/figure-pdf/cell-13-output-1.png}
+
+}
+
+\end{figure}
 
 \hypertarget{use-the-.cumsum-method-with-log-returns-to-plot-cumulative-returns-for-these-stocks-in-the-2020s-3}{%
 \subsection{\texorpdfstring{Use the \texttt{.cumsum()} method with log
@@ -20542,8 +23342,8 @@ Calculate the Sharpe Ratio with all available returns and 2020s returns.
 Recall the Sharpe Ratio is \(\frac{\overline{R_i - R_f}}{\sigma_i}\),
 where \(\sigma_i\) is the volatility of \emph{excess} returns.
 
-\textbf{\emph{I suggest you write a function named \texttt{sharpe()} to
-use for the rest of this notebook.}}
+\textbf{\emph{I suggest you write a function named
+\texttt{calc\_sharpe()} to use for the rest of this notebook.}}
 
 \hypertarget{calculate-the-market-beta-for-tsla-3}{%
 \subsection{Calculate the market beta for
@@ -20555,8 +23355,8 @@ regression \(R_i-R_f = \alpha + \beta (R_m-R_f) + \epsilon\). We can
 estimate market beta with the covariance formula above for a univariate
 regression if we do not need goodness of fit statistics.
 
-\textbf{\emph{I suggest you write a function named \texttt{beta()} to
-use for the rest of this notebook.}}
+\textbf{\emph{I suggest you write a function named \texttt{calc\_beta()}
+to use for the rest of this notebook.}}
 
 \hypertarget{guess-the-sharpe-ratios-for-these-stocks-in-the-2020s-3}{%
 \subsection{Guess the Sharpe Ratios for these stocks in the
