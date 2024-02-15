@@ -203,7 +203,7 @@
 
 \begin{document}
 \maketitle
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[interior hidden, breakable, frame hidden, borderline west={3pt}{0pt}{shadecolor}, enhanced, boxrule=0pt, sharp corners]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[borderline west={3pt}{0pt}{shadecolor}, breakable, interior hidden, frame hidden, sharp corners, enhanced, boxrule=0pt]}{\end{tcolorbox}}\fi
 
 \renewcommand*\contentsname{Table of contents}
 {
@@ -27461,8 +27461,85 @@ index. We will skip these additional aggregation methods for now.
 \hypertarget{announcements-20}{%
 \section{Announcements}\label{announcements-20}}
 
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \emph{Joining Data with pandas}, our fourth and final DataCamp course,
+  is due by Friday, 2/16, at 11:59 PM
+\item
+  We will use class next week, from 2/19 through 2/23, for group work on
+  Project 1, so there is no lecture video or pre-class quiz
+\item
+  Project 1 is due by Tuesday, 2/27, at 8:25 AM
+\item
+  Please complete the
+  \href{https://northeastern.instructure.com/courses/171271/quizzes/586970}{anonymous
+  ungraded survey on Canvas} to help me help you learn better:
+\end{enumerate}
+
+\hypertarget{minute-recap-19}{%
+\section{10-Minute Recap}\label{minute-recap-19}}
+
+Chapter 8 of McKinney covers 3 topics.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \emph{Hierarchical Indexing:} Hierarchical indexing helps us organize
+  data at multiple levels, rather than just a flat, two-dimensional
+  structure. It helps is work with high-dimensional data in a
+  low-dimensional form. For example, we can index rows by multiple
+  levels like ``ticker'' and ``date'', or columns by ``variable'' and
+  ``ticker''.
+\item
+  \emph{Combining Data:} We can combine datasets on one or more keys.
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    We will use the \texttt{pd.merge()} function for database-style
+    joins, which can be \texttt{inner}, \texttt{outer}, \texttt{left},
+    or \texttt{right} joins.
+  \item
+    We will use the \texttt{.join()} method to combine data frames with
+    similar indexes.
+  \item
+    We will use the \texttt{pd.concat()} to combine similarly-shaped
+    series and data frames.
+  \end{enumerate}
+\item
+  \emph{Reshaping Data:} We can reshape data to change its structure,
+  such as pivoting from wide to long format or vice versa. We will most
+  often use the \texttt{.stack()} and \texttt{.unstack()} methods, which
+  pivot columns to rows and rows to columns, respectively. Laster in the
+  course we will learn about the \texttt{.pivot()} method for
+  aggregating data and the \texttt{.melt()} method for more advanced
+  reshaping.
+\end{enumerate}
+
 \hypertarget{practice-20}{%
 \section{Practice}\label{practice-20}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{import}\NormalTok{ matplotlib.pyplot }\ImportTok{as}\NormalTok{ plt}
+\ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
+\ImportTok{import}\NormalTok{ pandas }\ImportTok{as}\NormalTok{ pd}
+\ImportTok{import}\NormalTok{ pandas\_datareader }\ImportTok{as}\NormalTok{ pdr}
+\ImportTok{import}\NormalTok{ yfinance }\ImportTok{as}\NormalTok{ yf}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\OperatorTok{\%}\NormalTok{precision }\DecValTok{4}
+\NormalTok{pd.options.display.float\_format }\OperatorTok{=} \StringTok{\textquotesingle{}}\SpecialCharTok{\{:.4f\}}\StringTok{\textquotesingle{}}\NormalTok{.}\BuiltInTok{format}
+\OperatorTok{\%}\NormalTok{config InlineBackend.figure\_format }\OperatorTok{=} \StringTok{\textquotesingle{}retina\textquotesingle{}}
+\end{Highlighting}
+\end{Shaded}
 
 \hypertarget{download-data-from-yahoo-finance-for-bac-c-gs-jpm-ms-and-pnc-and-assign-to-data-frame-stocks.}{%
 \subsection{\texorpdfstring{Download data from Yahoo! Finance for BAC,
@@ -27585,8 +27662,85 @@ current version of \texttt{yf.download()} does not accept a
 \hypertarget{announcements-21}{%
 \section{Announcements}\label{announcements-21}}
 
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \emph{Joining Data with pandas}, our fourth and final DataCamp course,
+  is due by Friday, 2/16, at 11:59 PM
+\item
+  We will use class next week, from 2/19 through 2/23, for group work on
+  Project 1, so there is no lecture video or pre-class quiz
+\item
+  Project 1 is due by Tuesday, 2/27, at 8:25 AM
+\item
+  Please complete the
+  \href{https://northeastern.instructure.com/courses/171271/quizzes/586970}{anonymous
+  ungraded survey on Canvas} to help me help you learn better:
+\end{enumerate}
+
+\hypertarget{minute-recap-20}{%
+\section{10-Minute Recap}\label{minute-recap-20}}
+
+Chapter 8 of McKinney covers 3 topics.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \emph{Hierarchical Indexing:} Hierarchical indexing helps us organize
+  data at multiple levels, rather than just a flat, two-dimensional
+  structure. It helps is work with high-dimensional data in a
+  low-dimensional form. For example, we can index rows by multiple
+  levels like ``ticker'' and ``date'', or columns by ``variable'' and
+  ``ticker''.
+\item
+  \emph{Combining Data:} We can combine datasets on one or more keys.
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    We will use the \texttt{pd.merge()} function for database-style
+    joins, which can be \texttt{inner}, \texttt{outer}, \texttt{left},
+    or \texttt{right} joins.
+  \item
+    We will use the \texttt{.join()} method to combine data frames with
+    similar indexes.
+  \item
+    We will use the \texttt{pd.concat()} to combine similarly-shaped
+    series and data frames.
+  \end{enumerate}
+\item
+  \emph{Reshaping Data:} We can reshape data to change its structure,
+  such as pivoting from wide to long format or vice versa. We will most
+  often use the \texttt{.stack()} and \texttt{.unstack()} methods, which
+  pivot columns to rows and rows to columns, respectively. Laster in the
+  course we will learn about the \texttt{.pivot()} method for
+  aggregating data and the \texttt{.melt()} method for more advanced
+  reshaping.
+\end{enumerate}
+
 \hypertarget{practice-21}{%
 \section{Practice}\label{practice-21}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{import}\NormalTok{ matplotlib.pyplot }\ImportTok{as}\NormalTok{ plt}
+\ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
+\ImportTok{import}\NormalTok{ pandas }\ImportTok{as}\NormalTok{ pd}
+\ImportTok{import}\NormalTok{ pandas\_datareader }\ImportTok{as}\NormalTok{ pdr}
+\ImportTok{import}\NormalTok{ yfinance }\ImportTok{as}\NormalTok{ yf}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\OperatorTok{\%}\NormalTok{precision }\DecValTok{4}
+\NormalTok{pd.options.display.float\_format }\OperatorTok{=} \StringTok{\textquotesingle{}}\SpecialCharTok{\{:.4f\}}\StringTok{\textquotesingle{}}\NormalTok{.}\BuiltInTok{format}
+\OperatorTok{\%}\NormalTok{config InlineBackend.figure\_format }\OperatorTok{=} \StringTok{\textquotesingle{}retina\textquotesingle{}}
+\end{Highlighting}
+\end{Shaded}
 
 \hypertarget{download-data-from-yahoo-finance-for-bac-c-gs-jpm-ms-and-pnc-and-assign-to-data-frame-stocks.-1}{%
 \subsection{\texorpdfstring{Download data from Yahoo! Finance for BAC,
@@ -27709,8 +27863,85 @@ current version of \texttt{yf.download()} does not accept a
 \hypertarget{announcements-22}{%
 \section{Announcements}\label{announcements-22}}
 
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \emph{Joining Data with pandas}, our fourth and final DataCamp course,
+  is due by Friday, 2/16, at 11:59 PM
+\item
+  We will use class next week, from 2/19 through 2/23, for group work on
+  Project 1, so there is no lecture video or pre-class quiz
+\item
+  Project 1 is due by Tuesday, 2/27, at 8:25 AM
+\item
+  Please complete the
+  \href{https://northeastern.instructure.com/courses/171271/quizzes/586970}{anonymous
+  ungraded survey on Canvas} to help me help you learn better:
+\end{enumerate}
+
+\hypertarget{minute-recap-21}{%
+\section{10-Minute Recap}\label{minute-recap-21}}
+
+Chapter 8 of McKinney covers 3 topics.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \emph{Hierarchical Indexing:} Hierarchical indexing helps us organize
+  data at multiple levels, rather than just a flat, two-dimensional
+  structure. It helps is work with high-dimensional data in a
+  low-dimensional form. For example, we can index rows by multiple
+  levels like ``ticker'' and ``date'', or columns by ``variable'' and
+  ``ticker''.
+\item
+  \emph{Combining Data:} We can combine datasets on one or more keys.
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    We will use the \texttt{pd.merge()} function for database-style
+    joins, which can be \texttt{inner}, \texttt{outer}, \texttt{left},
+    or \texttt{right} joins.
+  \item
+    We will use the \texttt{.join()} method to combine data frames with
+    similar indexes.
+  \item
+    We will use the \texttt{pd.concat()} to combine similarly-shaped
+    series and data frames.
+  \end{enumerate}
+\item
+  \emph{Reshaping Data:} We can reshape data to change its structure,
+  such as pivoting from wide to long format or vice versa. We will most
+  often use the \texttt{.stack()} and \texttt{.unstack()} methods, which
+  pivot columns to rows and rows to columns, respectively. Laster in the
+  course we will learn about the \texttt{.pivot()} method for
+  aggregating data and the \texttt{.melt()} method for more advanced
+  reshaping.
+\end{enumerate}
+
 \hypertarget{practice-22}{%
 \section{Practice}\label{practice-22}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{import}\NormalTok{ matplotlib.pyplot }\ImportTok{as}\NormalTok{ plt}
+\ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
+\ImportTok{import}\NormalTok{ pandas }\ImportTok{as}\NormalTok{ pd}
+\ImportTok{import}\NormalTok{ pandas\_datareader }\ImportTok{as}\NormalTok{ pdr}
+\ImportTok{import}\NormalTok{ yfinance }\ImportTok{as}\NormalTok{ yf}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\OperatorTok{\%}\NormalTok{precision }\DecValTok{4}
+\NormalTok{pd.options.display.float\_format }\OperatorTok{=} \StringTok{\textquotesingle{}}\SpecialCharTok{\{:.4f\}}\StringTok{\textquotesingle{}}\NormalTok{.}\BuiltInTok{format}
+\OperatorTok{\%}\NormalTok{config InlineBackend.figure\_format }\OperatorTok{=} \StringTok{\textquotesingle{}retina\textquotesingle{}}
+\end{Highlighting}
+\end{Shaded}
 
 \hypertarget{download-data-from-yahoo-finance-for-bac-c-gs-jpm-ms-and-pnc-and-assign-to-data-frame-stocks.-2}{%
 \subsection{\texorpdfstring{Download data from Yahoo! Finance for BAC,
@@ -27833,8 +28064,85 @@ current version of \texttt{yf.download()} does not accept a
 \hypertarget{announcements-23}{%
 \section{Announcements}\label{announcements-23}}
 
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \emph{Joining Data with pandas}, our fourth and final DataCamp course,
+  is due by Friday, 2/16, at 11:59 PM
+\item
+  We will use class next week, from 2/19 through 2/23, for group work on
+  Project 1, so there is no lecture video or pre-class quiz
+\item
+  Project 1 is due by Tuesday, 2/27, at 8:25 AM
+\item
+  Please complete the
+  \href{https://northeastern.instructure.com/courses/171271/quizzes/586970}{anonymous
+  ungraded survey on Canvas} to help me help you learn better:
+\end{enumerate}
+
+\hypertarget{minute-recap-22}{%
+\section{10-Minute Recap}\label{minute-recap-22}}
+
+Chapter 8 of McKinney covers 3 topics.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \emph{Hierarchical Indexing:} Hierarchical indexing helps us organize
+  data at multiple levels, rather than just a flat, two-dimensional
+  structure. It helps is work with high-dimensional data in a
+  low-dimensional form. For example, we can index rows by multiple
+  levels like ``ticker'' and ``date'', or columns by ``variable'' and
+  ``ticker''.
+\item
+  \emph{Combining Data:} We can combine datasets on one or more keys.
+
+  \begin{enumerate}
+  \def\labelenumii{\arabic{enumii}.}
+  \tightlist
+  \item
+    We will use the \texttt{pd.merge()} function for database-style
+    joins, which can be \texttt{inner}, \texttt{outer}, \texttt{left},
+    or \texttt{right} joins.
+  \item
+    We will use the \texttt{.join()} method to combine data frames with
+    similar indexes.
+  \item
+    We will use the \texttt{pd.concat()} to combine similarly-shaped
+    series and data frames.
+  \end{enumerate}
+\item
+  \emph{Reshaping Data:} We can reshape data to change its structure,
+  such as pivoting from wide to long format or vice versa. We will most
+  often use the \texttt{.stack()} and \texttt{.unstack()} methods, which
+  pivot columns to rows and rows to columns, respectively. Laster in the
+  course we will learn about the \texttt{.pivot()} method for
+  aggregating data and the \texttt{.melt()} method for more advanced
+  reshaping.
+\end{enumerate}
+
 \hypertarget{practice-23}{%
 \section{Practice}\label{practice-23}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{import}\NormalTok{ matplotlib.pyplot }\ImportTok{as}\NormalTok{ plt}
+\ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
+\ImportTok{import}\NormalTok{ pandas }\ImportTok{as}\NormalTok{ pd}
+\ImportTok{import}\NormalTok{ pandas\_datareader }\ImportTok{as}\NormalTok{ pdr}
+\ImportTok{import}\NormalTok{ yfinance }\ImportTok{as}\NormalTok{ yf}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\OperatorTok{\%}\NormalTok{precision }\DecValTok{4}
+\NormalTok{pd.options.display.float\_format }\OperatorTok{=} \StringTok{\textquotesingle{}}\SpecialCharTok{\{:.4f\}}\StringTok{\textquotesingle{}}\NormalTok{.}\BuiltInTok{format}
+\OperatorTok{\%}\NormalTok{config InlineBackend.figure\_format }\OperatorTok{=} \StringTok{\textquotesingle{}retina\textquotesingle{}}
+\end{Highlighting}
+\end{Shaded}
 
 \hypertarget{download-data-from-yahoo-finance-for-bac-c-gs-jpm-ms-and-pnc-and-assign-to-data-frame-stocks.-3}{%
 \subsection{\texorpdfstring{Download data from Yahoo! Finance for BAC,
