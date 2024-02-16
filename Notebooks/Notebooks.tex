@@ -203,7 +203,7 @@
 
 \begin{document}
 \maketitle
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[borderline west={3pt}{0pt}{shadecolor}, interior hidden, frame hidden, sharp corners, breakable, enhanced, boxrule=0pt]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[breakable, boxrule=0pt, sharp corners, borderline west={3pt}{0pt}{shadecolor}, interior hidden, enhanced, frame hidden]}{\end{tcolorbox}}\fi
 
 \renewcommand*\contentsname{Table of contents}
 {
@@ -27590,10 +27590,6 @@ Date & & & & & & & & & & & & & & & & & & & & & \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-2024-02-09 & 33.0700 & 53.9900 & 384.2600 & 175.0100 & 85.8900 &
-147.7700 & 33.0700 & 53.9900 & 384.2600 & 175.0100 & ... & 384.7700 &
-175.0000 & 85.6900 & 147.8700 & 36176000 & 13843300.0000 & 2028200.0000
-& 6296700.0000 & 5664500.0000 & 1157600.0000 \\
 2024-02-12 & 33.6200 & 53.9200 & 392.6400 & 175.7900 & 86.8700 &
 149.1400 & 33.6200 & 53.9200 & 392.6400 & 175.7900 & ... & 385.0000 &
 174.7800 & 85.8600 & 147.7700 & 34160400 & 17162300.0000 & 2797200.0000
@@ -27608,14 +27604,21 @@ Date & & & & & & & & & & & & & & & & & & & & & \\
 & 7056700.0000 & 5973700.0000 & 1265300.0000 \\
 2024-02-15 & 34.0700 & 55.2100 & 385.4200 & 179.8700 & 85.6700 &
 149.6300 & 34.0700 & 55.2100 & 385.4200 & 179.8700 & ... & 379.4200 &
-176.1500 & 84.4500 & 148.7500 & 41557209 & 16288325.0000 & 1780459.0000
-& 8718729.0000 & 7981854.0000 & 1991304.0000 \\
+176.1500 & 84.4500 & 148.7500 & 41683100 & 16865000.0000 & 2218900.0000
+& 8723400.0000 & 7993500.0000 & 1991800.0000 \\
+2024-02-16 & 34.0900 & 54.8500 & 384.4400 & 179.0300 & 86.5000 &
+148.8500 & 34.0900 & 54.8500 & 384.4400 & 179.0300 & ... & 383.2400 &
+179.6100 & 85.5200 & 148.4200 & 33146357 & 11419637.0000 & 2302099.0000
+& 6234328.0000 & 8369968.0000 & 1465354.0000 \\
 \end{longtable}
 
 \hypertarget{reshape-stocks-from-wide-to-long-with-dates-and-tickers-as-row-indexes-and-assign-to-data-frame-stocks_long.}{%
 \subsection{\texorpdfstring{Reshape \texttt{stocks} from wide to long
 with dates and tickers as row indexes and assign to data frame
 \texttt{stocks\_long}.}{Reshape stocks from wide to long with dates and tickers as row indexes and assign to data frame stocks\_long.}}\label{reshape-stocks-from-wide-to-long-with-dates-and-tickers-as-row-indexes-and-assign-to-data-frame-stocks_long.}}
+
+By default, \texttt{.stack()} stacks the inner column index to the inner
+row index.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -27637,15 +27640,15 @@ Date & Ticker & & & & & & \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-\multirow{5}{*}{2024-02-15} & C & 55.2100 & 55.2100 & 55.4800 & 54.1350
-& 54.2200 & 16288325.0000 \\
-& GS & 385.4200 & 385.4200 & 387.2100 & 379.3500 & 379.4200 &
-1780459.0000 \\
-& JPM & 179.8700 & 179.8700 & 180.2100 & 176.1500 & 176.1500 &
-8718729.0000 \\
-& MS & 85.6700 & 85.6700 & 86.2300 & 84.4100 & 84.4500 & 7981854.0000 \\
-& PNC & 149.6300 & 149.6300 & 150.2575 & 147.3700 & 148.7500 &
-1991304.0000 \\
+\multirow{5}{*}{2024-02-16} & C & 54.8500 & 54.8500 & 55.1950 & 54.5500
+& 54.9600 & 11419637.0000 \\
+& GS & 384.4400 & 384.4400 & 387.5800 & 380.9450 & 383.2400 &
+2302099.0000 \\
+& JPM & 179.0300 & 179.0300 & 179.9800 & 178.1602 & 179.6100 &
+6234328.0000 \\
+& MS & 86.5000 & 86.5000 & 86.7900 & 85.0800 & 85.5200 & 8369968.0000 \\
+& PNC & 148.8500 & 148.8500 & 149.9100 & 147.7700 & 148.4200 &
+1465354.0000 \\
 \end{longtable}
 
 \hypertarget{add-daily-returns-for-each-stock-to-data-frames-stocks-and-stocks_long.}{%
@@ -27656,6 +27659,16 @@ frames \texttt{stocks} and
 Name the returns variable \texttt{Returns}, and maintain all multi
 indexes. \emph{Hint:} Use \texttt{pd.MultiIndex()} to create a multi
 index for the the wide data frame \texttt{stocks}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].columns}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Index(['BAC', 'C', 'GS', 'JPM', 'MS', 'PNC'], dtype='object', name='Ticker')
+\end{verbatim}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -27688,10 +27701,6 @@ Date & & & & & & & & & & & & & & & & & & & & & \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-2024-02-09 & 33.0700 & 53.9900 & 384.2600 & 175.0100 & 85.8900 &
-147.7700 & 33.0700 & 53.9900 & 384.2600 & 175.0100 & ... & 2028200.0000
-& 6296700.0000 & 5664500.0000 & 1157600.0000 & -0.0015 & -0.0055 &
--0.0020 & 0.0012 & 0.0028 & -0.0011 \\
 2024-02-12 & 33.6200 & 53.9200 & 392.6400 & 175.7900 & 86.8700 &
 149.1400 & 33.6200 & 53.9200 & 392.6400 & 175.7900 & ... & 2797200.0000
 & 8539300.0000 & 7888000.0000 & 1612700.0000 & 0.0166 & -0.0013 & 0.0218
@@ -27705,8 +27714,12 @@ Date & & & & & & & & & & & & & & & & & & & & & \\
 & 7056700.0000 & 5973700.0000 & 1265300.0000 & 0.0116 & 0.0231 & -0.0019
 & 0.0102 & 0.0004 & 0.0180 \\
 2024-02-15 & 34.0700 & 55.2100 & 385.4200 & 179.8700 & 85.6700 &
-149.6300 & 34.0700 & 55.2100 & 385.4200 & 179.8700 & ... & 1780459.0000
-& 8718729.0000 & 7981854.0000 & 1991304.0000 & NaN & NaN & NaN & NaN &
+149.6300 & 34.0700 & 55.2100 & 385.4200 & 179.8700 & ... & 2218900.0000
+& 8723400.0000 & 7993500.0000 & 1991800.0000 & 0.0284 & 0.0228 & 0.0195
+& 0.0218 & 0.0199 & 0.0119 \\
+2024-02-16 & 34.0900 & 54.8500 & 384.4400 & 179.0300 & 86.5000 &
+148.8500 & 34.0900 & 54.8500 & 384.4400 & 179.0300 & ... & 2302099.0000
+& 6234328.0000 & 8369968.0000 & 1465354.0000 & NaN & NaN & NaN & NaN &
 NaN & NaN \\
 \end{longtable}
 
@@ -27738,16 +27751,16 @@ Date & Ticker & & & & & & & \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-\multirow{5}{*}{2024-02-15} & C & 55.2100 & 55.2100 & 55.4800 & 54.1350
-& 54.2200 & 16288325.0000 & NaN \\
-& GS & 385.4200 & 385.4200 & 387.2100 & 379.3500 & 379.4200 &
-1780459.0000 & NaN \\
-& JPM & 179.8700 & 179.8700 & 180.2100 & 176.1500 & 176.1500 &
-8718729.0000 & NaN \\
-& MS & 85.6700 & 85.6700 & 86.2300 & 84.4100 & 84.4500 & 7981854.0000 &
+\multirow{5}{*}{2024-02-16} & C & 54.8500 & 54.8500 & 55.1950 & 54.5500
+& 54.9600 & 11419637.0000 & NaN \\
+& GS & 384.4400 & 384.4400 & 387.5800 & 380.9450 & 383.2400 &
+2302099.0000 & NaN \\
+& JPM & 179.0300 & 179.0300 & 179.9800 & 178.1602 & 179.6100 &
+6234328.0000 & NaN \\
+& MS & 86.5000 & 86.5000 & 86.7900 & 85.0800 & 85.5200 & 8369968.0000 &
 NaN \\
-& PNC & 149.6300 & 149.6300 & 150.2575 & 147.3700 & 148.7500 &
-1991304.0000 & NaN \\
+& PNC & 148.8500 & 148.8500 & 149.9100 & 147.7700 & 148.4200 &
+1465354.0000 & NaN \\
 \end{longtable}
 
 \hypertarget{download-the-daily-benchmark-return-factors-from-ken-frenchs-data-library.}{%
@@ -27789,7 +27802,7 @@ of available names for data from Ken French's website.
 \end{Shaded}
 
 \begin{verbatim}
-C:\Users\r.herron\AppData\Local\Temp\ipykernel_13496\1909726130.py:2: FutureWarning: The argument 'date_parser' is deprecated and will be removed in a future version. Please use 'date_format' instead, or read your data in as 'object' dtype and then call 'to_datetime'.
+C:\Users\r.herron\AppData\Local\Temp\ipykernel_11480\1909726130.py:2: FutureWarning: The argument 'date_parser' is deprecated and will be removed in a future version. Please use 'date_format' instead, or read your data in as 'object' dtype and then call 'to_datetime'.
   pdr.DataReader(
 \end{verbatim}
 
@@ -27822,9 +27835,12 @@ Date & & & & \\
 For the wide data frame \texttt{stocks}, use the outer index name
 \texttt{Factors}.
 
-For the wide data frame \texttt{stocks}, the simplest approach is to
-create a multi index with four columns, one for each of the four
-factors.
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# stocks.join(ff)}
+\CommentTok{\# MergeError: Not allowed to merge between different levels. (2 levels on the left, 1 on the right)}
+\end{Highlighting}
+\end{Shaded}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -27857,9 +27873,6 @@ Date & & & & & & & & & & & & & & & & & & & & & \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-2024-02-09 & 33.0700 & 53.9900 & 384.2600 & 175.0100 & 85.8900 &
-147.7700 & 33.0700 & 53.9900 & 384.2600 & 175.0100 & ... & -0.0015 &
--0.0055 & -0.0020 & 0.0012 & 0.0028 & -0.0011 & NaN & NaN & NaN & NaN \\
 2024-02-12 & 33.6200 & 53.9200 & 392.6400 & 175.7900 & 86.8700 &
 149.1400 & 33.6200 & 53.9200 & 392.6400 & 175.7900 & ... & 0.0166 &
 -0.0013 & 0.0218 & 0.0045 & 0.0114 & 0.0093 & NaN & NaN & NaN & NaN \\
@@ -27871,7 +27884,10 @@ NaN \\
 147.8700 & 33.1300 & 53.9800 & 378.0400 & 176.0300 & ... & 0.0116 &
 0.0231 & -0.0019 & 0.0102 & 0.0004 & 0.0180 & NaN & NaN & NaN & NaN \\
 2024-02-15 & 34.0700 & 55.2100 & 385.4200 & 179.8700 & 85.6700 &
-149.6300 & 34.0700 & 55.2100 & 385.4200 & 179.8700 & ... & NaN & NaN &
+149.6300 & 34.0700 & 55.2100 & 385.4200 & 179.8700 & ... & 0.0284 &
+0.0228 & 0.0195 & 0.0218 & 0.0199 & 0.0119 & NaN & NaN & NaN & NaN \\
+2024-02-16 & 34.0900 & 54.8500 & 384.4400 & 179.0300 & 86.5000 &
+148.8500 & 34.0900 & 54.8500 & 384.4400 & 179.0300 & ... & NaN & NaN &
 NaN & NaN & NaN & NaN & NaN & NaN & NaN & NaN \\
 \end{longtable}
 
@@ -27908,9 +27924,12 @@ Date & Ticker & & & & & & & & & & & \\
 41600.0000 & 0.0000 & -0.0115 & -0.0018 & 0.0064 & 0.0002 \\
 \end{longtable}
 
+We can check that \texttt{.join()} used the same factor returns on the
+same days.
+
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{stocks\_long.loc[}\StringTok{\textquotesingle{}2023{-}12\textquotesingle{}}\NormalTok{].iloc[}\OperatorTok{{-}}\DecValTok{12}\NormalTok{:]}
+\NormalTok{stocks\_long.loc[}\StringTok{\textquotesingle{}2023{-}12\textquotesingle{}}\NormalTok{].tail(}\DecValTok{12}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -28012,7 +28031,7 @@ frame!
 
 \begin{verbatim}
 [*********************100%%**********************]  2 of 2 completed
-C:\Users\r.herron\AppData\Local\Temp\ipykernel_13496\3667605341.py:8: FutureWarning: The argument 'date_parser' is deprecated and will be removed in a future version. Please use 'date_format' instead, or read your data in as 'object' dtype and then call 'to_datetime'.
+C:\Users\r.herron\AppData\Local\Temp\ipykernel_11480\3667605341.py:8: FutureWarning: The argument 'date_parser' is deprecated and will be removed in a future version. Please use 'date_format' instead, or read your data in as 'object' dtype and then call 'to_datetime'.
   pdr.DataReader(
 \end{verbatim}
 
@@ -28037,16 +28056,16 @@ Date & Ticker & & & & & & & & & & & \\
 73449600.0000 & 0.0290 & 0.0041 & 0.0022 & 0.0126 & 0.0006 \\
 ... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... &
 ... \\
-2024-02-13 & TSLA & 184.0200 & 184.0200 & 187.2600 & 182.1100 & 183.9900
-& 86759500.0000 & -0.0218 & NaN & NaN & NaN & NaN \\
-\multirow{2}{*}{2024-02-14} & AAPL & 184.1500 & 184.1500 & 185.5300 &
-182.4400 & 185.3200 & 54630500.0000 & -0.0048 & NaN & NaN & NaN & NaN \\
-& TSLA & 188.7100 & 188.7100 & 188.8900 & 183.3500 & 185.3000 &
-81203000.0000 & 0.0255 & NaN & NaN & NaN & NaN \\
+2024-02-14 & TSLA & 188.7100 & 188.7100 & 188.8900 & 183.3500 & 185.3000
+& 81203000.0000 & 0.0255 & NaN & NaN & NaN & NaN \\
 \multirow{2}{*}{2024-02-15} & AAPL & 183.8600 & 183.8600 & 184.4900 &
-181.4000 & 183.5500 & 63936069.0000 & -0.0016 & NaN & NaN & NaN & NaN \\
-& TSLA & 200.4500 & 200.4500 & 200.8800 & 188.8595 & 189.1600 &
-119932134.0000 & 0.0622 & NaN & NaN & NaN & NaN \\
+181.3500 & 183.5500 & 65434500.0000 & -0.0016 & NaN & NaN & NaN & NaN \\
+& TSLA & 200.4500 & 200.4500 & 200.8800 & 188.8600 & 189.1600 &
+120831800.0000 & 0.0622 & NaN & NaN & NaN & NaN \\
+\multirow{2}{*}{2024-02-16} & AAPL & 182.3100 & 182.3100 & 184.8500 &
+181.6650 & 183.4200 & 48627624.0000 & -0.0084 & NaN & NaN & NaN & NaN \\
+& TSLA & 199.9500 & 199.9500 & 203.1700 & 197.4000 & 202.0600 &
+110528448.0000 & -0.0025 & NaN & NaN & NaN & NaN \\
 \end{longtable}
 
 \hypertarget{download-earnings-per-share-for-the-stocks-in-stocks-and-combine-to-a-long-data-frame-earnings.}{%
@@ -28062,14 +28081,51 @@ Use the \texttt{.earnings\_dates} method described
 \texttt{Date} and swap to match the order of the row index in
 \texttt{stocks\_long}.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tickers }\OperatorTok{=}\NormalTok{ yf.Tickers(tickers}\OperatorTok{=}\StringTok{\textquotesingle{}BAC C GS JPM MS PNC\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{earnings  }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    pd.concat(}
+\NormalTok{        objs}\OperatorTok{=}\NormalTok{[tickers.tickers[t].earnings\_dates }\ControlFlowTok{for}\NormalTok{ t }\KeywordTok{in}\NormalTok{ tickers.tickers],}
+\NormalTok{        keys}\OperatorTok{=}\NormalTok{tickers.tickers,}
+\NormalTok{        names}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{]}
+\NormalTok{    )}
+\NormalTok{    .reset\_index()}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{earnings.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule\noalign{}
+& Ticker & Date & EPS Estimate & Reported EPS & Surprise(\%) \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+67 & PNC & 2024-04-16 08:00:00-04:00 & 3.0800 & NaN & NaN \\
+68 & PNC & 2024-01-16 06:00:00-05:00 & 2.9400 & 3.1600 & 0.0737 \\
+69 & PNC & 2023-10-13 06:00:00-04:00 & 3.1100 & 3.6000 & 0.1586 \\
+70 & PNC & 2023-07-18 07:00:00-04:00 & 3.2800 & 3.3600 & 0.0230 \\
+71 & PNC & 2023-04-14 06:00:00-04:00 & 3.6700 & 3.9800 & 0.0847 \\
+\end{longtable}
+
 \hypertarget{combine-earnings-with-the-returns-from-stocks_long.}{%
 \subsection{\texorpdfstring{Combine \texttt{earnings} with the returns
 from
 \texttt{stocks\_long}.}{Combine earnings with the returns from stocks\_long.}}\label{combine-earnings-with-the-returns-from-stocks_long.}}
 
-\textbf{\emph{It is easier to leave \texttt{stocks} and
-\texttt{stocks\_long} as-is and work with slices \texttt{returns} and
-\texttt{returns\_long}.}} Use the
+Use the
 \texttt{tz\_localize(\textquotesingle{}America/New\_York\textquotesingle{})}
 method add time zone information back to \texttt{returns.index} and use
 \texttt{pd.to\_timedelta(16,\ unit=\textquotesingle{}h\textquotesingle{})}
@@ -28079,6 +28135,72 @@ to match earnings announcement dates and times to appropriate return
 periods. For example, if a firm announces earnings after the close at 5
 PM on February 7, we want to match the return period from 4 PM on
 February 7 to 4 PM on February 8.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    stocks\_long}
+\NormalTok{    .reset\_index()}
+\NormalTok{    [[}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]]}
+\NormalTok{    .assign(}
+\NormalTok{        Date}\OperatorTok{=}\KeywordTok{lambda}\NormalTok{ x: x[}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{].dt.tz\_localize(}\StringTok{\textquotesingle{}America/New\_York\textquotesingle{}}\NormalTok{) }\OperatorTok{+}\NormalTok{ pd.to\_timedelta(}\DecValTok{16}\NormalTok{, unit}\OperatorTok{=}\StringTok{\textquotesingle{}H\textquotesingle{}}\NormalTok{)}
+\NormalTok{    )}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+& Date & Ticker & Returns \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+62021 & 2024-02-16 16:00:00-05:00 & C & NaN \\
+62022 & 2024-02-16 16:00:00-05:00 & GS & NaN \\
+62023 & 2024-02-16 16:00:00-05:00 & JPM & NaN \\
+62024 & 2024-02-16 16:00:00-05:00 & MS & NaN \\
+62025 & 2024-02-16 16:00:00-05:00 & PNC & NaN \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{surprises }\OperatorTok{=}\NormalTok{ pd.merge\_asof(}
+\NormalTok{    left}\OperatorTok{=}\NormalTok{earnings.sort\_values([}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{]),}
+\NormalTok{    right}\OperatorTok{=}\NormalTok{returns.sort\_values([}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{]),}
+\NormalTok{    on}\OperatorTok{=}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{,}
+\NormalTok{    by}\OperatorTok{=}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{,}
+\NormalTok{    direction}\OperatorTok{=}\StringTok{\textquotesingle{}forward\textquotesingle{}}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{surprises.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllll@{}}
+\toprule\noalign{}
+& Ticker & Date & EPS Estimate & Reported EPS & Surprise(\%) &
+Returns \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+67 & JPM & 2025-01-15 08:00:00-05:00 & NaN & NaN & NaN & NaN \\
+68 & JPM & 2025-01-15 08:00:00-05:00 & NaN & NaN & NaN & NaN \\
+69 & C & 2025-01-15 11:00:00-05:00 & NaN & NaN & NaN & NaN \\
+70 & PNC & 2025-01-16 08:00:00-05:00 & NaN & NaN & NaN & NaN \\
+71 & PNC & 2025-01-16 10:00:00-05:00 & NaN & NaN & NaN & NaN \\
+\end{longtable}
 
 \hypertarget{plot-the-relation-between-daily-returns-and-earnings-surprises}{%
 \subsection{Plot the relation between daily returns and earnings
@@ -28099,17 +28221,329 @@ Three options in increasing difficulty:
   \texttt{pd.qcut()} to form five groups on earnings surprises
 \end{enumerate}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}
+\NormalTok{    surprises}
+\NormalTok{    [[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]]}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .plot(kind}\OperatorTok{=}\StringTok{\textquotesingle{}scatter\textquotesingle{}}\NormalTok{, x}\OperatorTok{=}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, y}\OperatorTok{=}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{)}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Earnings Surprise (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}One{-}Day Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Earnings Surprise Analysis}\CharTok{\textbackslash{}n}\SpecialStringTok{ }\SpecialCharTok{\{}\StringTok{\textquotesingle{}, \textquotesingle{}}\SpecialCharTok{.}\NormalTok{join(tickers.tickers)}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_08_practice_02_files/figure-pdf/cell-31-output-1.png}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{import}\NormalTok{ seaborn }\ImportTok{as}\NormalTok{ sns}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sns.regplot(}
+\NormalTok{    data}\OperatorTok{=}\NormalTok{surprises[[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]].mul(}\DecValTok{100}\NormalTok{),}
+\NormalTok{    x}\OperatorTok{=}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{,}
+\NormalTok{    y}\OperatorTok{=}\StringTok{\textquotesingle{}Returns\textquotesingle{}}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Earnings Surprise (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}One{-}Day Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Earnings Surprise Analysis}\CharTok{\textbackslash{}n}\SpecialStringTok{ }\SpecialCharTok{\{}\StringTok{\textquotesingle{}, \textquotesingle{}}\SpecialCharTok{.}\NormalTok{join(tickers.tickers)}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_08_practice_02_files/figure-pdf/cell-33-output-1.png}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sns.catplot(}
+\NormalTok{    data}\OperatorTok{=}\NormalTok{(}
+\NormalTok{        surprises[[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]]}
+\NormalTok{        .dropna()}
+\NormalTok{        .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{        .assign(}
+\NormalTok{            surprise\_bin}\OperatorTok{=}\KeywordTok{lambda}\NormalTok{ x: pd.qcut(x[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{], q}\OperatorTok{=}\DecValTok{5}\NormalTok{, labels}\OperatorTok{=}\VariableTok{False}\NormalTok{)}\OperatorTok{+}\DecValTok{1}
+\NormalTok{        )}
+\NormalTok{    ),}
+\NormalTok{    x}\OperatorTok{=}\StringTok{\textquotesingle{}surprise\_bin\textquotesingle{}}\NormalTok{,}
+\NormalTok{    y}\OperatorTok{=}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{,}
+\NormalTok{    kind}\OperatorTok{=}\StringTok{\textquotesingle{}bar\textquotesingle{}}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Earnings Surprise Bin (1=Lowest, 5=Highest)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}One{-}Day Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Earnings Surprise Analysis}\CharTok{\textbackslash{}n}\SpecialStringTok{ }\SpecialCharTok{\{}\StringTok{\textquotesingle{}, \textquotesingle{}}\SpecialCharTok{.}\NormalTok{join(tickers.tickers)}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_08_practice_02_files/figure-pdf/cell-34-output-1.png}
+
+}
+
+\end{figure}
+
 \hypertarget{repeat-the-earnings-exercise-with-the-sp-100-stocks}{%
 \subsection{Repeat the earnings exercise with the S\&P 100
 stocks}\label{repeat-the-earnings-exercise-with-the-sp-100-stocks}}
 
-\hypertarget{repeat-the-earnings-exercise-with-excess-returns-of-the-sp-100-stocks}{%
-\subsection{\texorpdfstring{Repeat the earnings exercise with
-\emph{excess returns} of the S\&P 100
-Stocks}{Repeat the earnings exercise with excess returns of the S\&P 100 Stocks}}\label{repeat-the-earnings-exercise-with-excess-returns-of-the-sp-100-stocks}}
+With more data, we can more clearly see the positive relation between
+earnings surprises and returns!
 
-Excess returns are returns minus market returns. We need to add a
-timezone and the closing time to the market return from Fama and French.
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\_ }\OperatorTok{=}\NormalTok{ pd.read\_html(}\StringTok{\textquotesingle{}https://en.wikipedia.org/wiki/S\%26P\_100\textquotesingle{}}\NormalTok{)[}\DecValTok{2}\NormalTok{][}\StringTok{\textquotesingle{}Symbol\textquotesingle{}}\NormalTok{].to\_list()}
+\NormalTok{tickers\_2 }\OperatorTok{=}\NormalTok{ yf.Tickers(tickers}\OperatorTok{=}\NormalTok{[t.replace(}\StringTok{\textquotesingle{}.\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}{-}\textquotesingle{}}\NormalTok{) }\ControlFlowTok{for}\NormalTok{ t }\KeywordTok{in}\NormalTok{ \_]) }\CommentTok{\# Yahoo! Finance uses "{-}" to indicate share classes instead of "."}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{earnings\_2  }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    pd.concat(}
+\NormalTok{        objs}\OperatorTok{=}\NormalTok{[tickers\_2.tickers[t].earnings\_dates }\ControlFlowTok{for}\NormalTok{ t }\KeywordTok{in}\NormalTok{ tickers\_2.tickers],}
+\NormalTok{        keys}\OperatorTok{=}\NormalTok{tickers\_2.tickers,}
+\NormalTok{        names}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{]}
+\NormalTok{    )}
+\NormalTok{    .reset\_index()}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{earnings\_2.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule\noalign{}
+& Ticker & Date & EPS Estimate & Reported EPS & Surprise(\%) \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1207 & XOM & 2023-04-28 06:00:00-04:00 & 2.5900 & 2.8300 & 0.0943 \\
+1208 & XOM & 2023-01-31 06:00:00-05:00 & 3.2900 & 3.4000 & 0.0319 \\
+1209 & XOM & 2022-10-28 06:00:00-04:00 & 3.7900 & 4.4500 & 0.1733 \\
+1210 & XOM & 2022-07-29 06:00:00-04:00 & 3.7400 & 4.1400 & 0.1077 \\
+1211 & XOM & 2022-04-29 06:00:00-04:00 & 2.1200 & 2.0700 & -0.0247 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns\_2 }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    yf.download(tickers}\OperatorTok{=}\NormalTok{[t }\ControlFlowTok{for}\NormalTok{ t }\KeywordTok{in}\NormalTok{ tickers\_2.tickers])}
+\NormalTok{    .rename\_axis(columns}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Variable\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{])}
+\NormalTok{    [}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{]}
+\NormalTok{    .pct\_change()}
+\NormalTok{    .stack()}
+\NormalTok{    .to\_frame(}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{)}
+\NormalTok{    .reset\_index()}
+\NormalTok{    [[}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]]}
+\NormalTok{    .assign(}
+\NormalTok{        Date}\OperatorTok{=}\KeywordTok{lambda}\NormalTok{ x: x[}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{].dt.tz\_localize(}\StringTok{\textquotesingle{}America/New\_York\textquotesingle{}}\NormalTok{) }\OperatorTok{+}\NormalTok{ pd.to\_timedelta(}\DecValTok{16}\NormalTok{, unit}\OperatorTok{=}\StringTok{\textquotesingle{}H\textquotesingle{}}\NormalTok{)}
+\NormalTok{    )}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[*********************100%%**********************]  101 of 101 completed
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns\_2.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+& Date & Ticker & Returns \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1018569 & 2024-02-16 16:00:00-05:00 & V & -0.0086 \\
+1018570 & 2024-02-16 16:00:00-05:00 & VZ & -0.0025 \\
+1018571 & 2024-02-16 16:00:00-05:00 & WFC & -0.0025 \\
+1018572 & 2024-02-16 16:00:00-05:00 & WMT & 0.0063 \\
+1018573 & 2024-02-16 16:00:00-05:00 & XOM & 0.0000 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{surprises\_2 }\OperatorTok{=}\NormalTok{ pd.merge\_asof(}
+\NormalTok{    left}\OperatorTok{=}\NormalTok{earnings\_2.sort\_values([}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{]),}
+\NormalTok{    right}\OperatorTok{=}\NormalTok{returns\_2.sort\_values([}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{]),}
+\NormalTok{    on}\OperatorTok{=}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{,}
+\NormalTok{    by}\OperatorTok{=}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{,}
+\NormalTok{    direction}\OperatorTok{=}\StringTok{\textquotesingle{}forward\textquotesingle{}}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{surprises\_2.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllll@{}}
+\toprule\noalign{}
+& Ticker & Date & EPS Estimate & Reported EPS & Surprise(\%) &
+Returns \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1207 & USB & 2025-10-16 09:00:00-04:00 & NaN & NaN & NaN & NaN \\
+1208 & USB & 2025-10-16 09:00:00-04:00 & NaN & NaN & NaN & NaN \\
+1209 & RTX & 2025-10-20 06:00:00-04:00 & NaN & NaN & NaN & NaN \\
+1210 & USB & 2026-01-20 09:00:00-05:00 & NaN & NaN & NaN & NaN \\
+1211 & USB & 2026-01-20 09:00:00-05:00 & NaN & NaN & NaN & NaN \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}
+\NormalTok{    surprises\_2}
+\NormalTok{    [[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]]}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .plot(kind}\OperatorTok{=}\StringTok{\textquotesingle{}scatter\textquotesingle{}}\NormalTok{, x}\OperatorTok{=}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, y}\OperatorTok{=}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{)}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Earnings Surprise (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}One{-}Day Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\StringTok{\textquotesingle{}Earnings Surprise Analysis}\CharTok{\textbackslash{}n}\StringTok{ S\&P 100 Stocks\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_08_practice_02_files/figure-pdf/cell-42-output-1.png}
+
+}
+
+\end{figure}
+
+\textbf{\emph{There are a few large negative and positive earnings
+surprises that make our plot difficult to interpret!}} We have these
+huge outliers because surprises are defined as the percent change
+relative to the expected. If expected is a very small number, then the
+surprise can be a very large number! We would use different surprise
+definitions for a more rigorous analysis. Here we can drop observations
+less than the 0.01 quantile and greater than the 0.99 quantile.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{low\_2 }\OperatorTok{=}\NormalTok{ surprises\_2[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{].quantile(}\FloatTok{0.01}\NormalTok{)}
+\NormalTok{high\_2 }\OperatorTok{=}\NormalTok{ surprises\_2[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{].quantile(}\FloatTok{0.91}\NormalTok{)}
+
+\NormalTok{cond\_2 }\OperatorTok{=}\NormalTok{ surprises\_2[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{].between(low\_2, high\_2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}
+\NormalTok{    surprises\_2}
+\NormalTok{    .loc[cond\_2, [}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]]}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .plot(kind}\OperatorTok{=}\StringTok{\textquotesingle{}scatter\textquotesingle{}}\NormalTok{, x}\OperatorTok{=}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, y}\OperatorTok{=}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{, alpha}\OperatorTok{=}\FloatTok{0.5}\NormalTok{)}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Earnings Surprise (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}One{-}Day Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\StringTok{\textquotesingle{}Earnings Surprise Analysis}\CharTok{\textbackslash{}n}\StringTok{ S\&P 100 Stocks\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_08_practice_02_files/figure-pdf/cell-44-output-1.png}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sns.regplot(}
+\NormalTok{    data}\OperatorTok{=}\NormalTok{surprises\_2.loc[cond\_2, [}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]].mul(}\DecValTok{100}\NormalTok{),}
+\NormalTok{    x}\OperatorTok{=}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{,}
+\NormalTok{    y}\OperatorTok{=}\StringTok{\textquotesingle{}Returns\textquotesingle{}}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Earnings Surprise (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}One{-}Day Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\StringTok{\textquotesingle{}Earnings Surprise Analysis}\CharTok{\textbackslash{}n}\StringTok{ S\&P 100 Stocks\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_08_practice_02_files/figure-pdf/cell-45-output-1.png}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sns.catplot(}
+\NormalTok{    data}\OperatorTok{=}\NormalTok{(}
+\NormalTok{        surprises\_2}
+\NormalTok{        .loc[cond\_2, [}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]]}
+\NormalTok{        .dropna()}
+\NormalTok{        .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{        .assign(surprise\_bin}\OperatorTok{=}\KeywordTok{lambda}\NormalTok{ x: pd.qcut(x[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{], q}\OperatorTok{=}\DecValTok{5}\NormalTok{, labels}\OperatorTok{=}\VariableTok{False}\NormalTok{) }\OperatorTok{+} \DecValTok{1}\NormalTok{)}
+\NormalTok{    ),}
+\NormalTok{    x}\OperatorTok{=}\StringTok{\textquotesingle{}surprise\_bin\textquotesingle{}}\NormalTok{,}
+\NormalTok{    y}\OperatorTok{=}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{,}
+\NormalTok{    kind}\OperatorTok{=}\StringTok{\textquotesingle{}bar\textquotesingle{}}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Earnings Surprise Bin (1=Lowest, 5=Highest)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}One{-}Day Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\StringTok{\textquotesingle{}Earnings Surprise Analysis}\CharTok{\textbackslash{}n}\StringTok{ S\&P 100 Stocks\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_08_practice_02_files/figure-pdf/cell-46-output-1.png}
+
+}
+
+\end{figure}
 
 \hypertarget{mckinney-chapter-8---practice-for-section-03}{%
 \chapter{McKinney Chapter 8 - Practice for Section
@@ -28203,13 +28637,110 @@ Chapter 8 of McKinney covers 3 topics.
 C, GS, JPM, MS, and PNC and assign to data frame
 \texttt{stocks}.}{Download data from Yahoo! Finance for BAC, C, GS, JPM, MS, and PNC and assign to data frame stocks.}}\label{download-data-from-yahoo-finance-for-bac-c-gs-jpm-ms-and-pnc-and-assign-to-data-frame-stocks.-1}}
 
-Use \texttt{stocks.columns.names} to assign the names \texttt{Variable}
-and \texttt{Ticker} to the column multi index.
+Use
+\texttt{.rename\_axis(columns=stocks.columns.names\ =\ {[}\textquotesingle{}Variable\textquotesingle{},\ \textquotesingle{}Ticker\textquotesingle{}{]})}
+to assign the names \texttt{Variable} and \texttt{Ticker} to the column
+multi index. We could instead use
+\texttt{stocks.columns.names\ =\ {[}\textquotesingle{}Variable\textquotesingle{},\ \textquotesingle{}Ticker\textquotesingle{}{]}},
+but we can chain the \texttt{.rename\_axis()} method.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    yf.download(tickers}\OperatorTok{=}\StringTok{\textquotesingle{}BAC C GS JPM MS PNC\textquotesingle{}}\NormalTok{)}
+\NormalTok{    .rename\_axis(columns}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Variable\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{])}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[*********************100%%**********************]  6 of 6 completed
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllllllllllllllllllll@{}}
+\toprule\noalign{}
+Variable &
+\multicolumn{6}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 10\tabcolsep}}{%
+Adj Close} &
+\multicolumn{4}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 6\tabcolsep}}{%
+Close} & ... &
+\multicolumn{4}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 6\tabcolsep}}{%
+Open} &
+\multicolumn{6}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 10\tabcolsep}@{}}{%
+Volume} \\
+Ticker & BAC & C & GS & JPM & MS & PNC & BAC & C & GS & JPM & ... & GS &
+JPM & MS & PNC & BAC & C & GS & JPM & MS & PNC \\
+Date & & & & & & & & & & & & & & & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2024-02-12 & 33.6200 & 53.9200 & 392.6400 & 175.7900 & 86.8700 &
+149.1400 & 33.6200 & 53.9200 & 392.6400 & 175.7900 & ... & 385.0000 &
+174.7800 & 85.8600 & 147.7700 & 34160400 & 17162300.0000 & 2797200.0000
+& 8539300.0000 & 7888000.0000 & 1612700.0000 \\
+2024-02-13 & 32.7500 & 52.7600 & 378.7500 & 174.2600 & 83.9700 &
+145.2600 & 32.7500 & 52.7600 & 378.7500 & 174.2600 & ... & 387.5900 &
+175.3200 & 85.8600 & 146.7800 & 43801500 & 17672100.0000 & 3030800.0000
+& 8397600.0000 & 11339400.0000 & 2121400.0000 \\
+2024-02-14 & 33.1300 & 53.9800 & 378.0400 & 176.0300 & 84.0000 &
+147.8700 & 33.1300 & 53.9800 & 378.0400 & 176.0300 & ... & 380.8800 &
+175.0700 & 84.5400 & 146.6300 & 27833900 & 14891900.0000 & 2041300.0000
+& 7056700.0000 & 5973700.0000 & 1265300.0000 \\
+2024-02-15 & 34.0700 & 55.2100 & 385.4200 & 179.8700 & 85.6700 &
+149.6300 & 34.0700 & 55.2100 & 385.4200 & 179.8700 & ... & 379.4200 &
+176.1500 & 84.4500 & 148.7500 & 41683100 & 16865000.0000 & 2218900.0000
+& 8723400.0000 & 7993500.0000 & 1991800.0000 \\
+2024-02-16 & 34.0900 & 54.8500 & 384.4400 & 179.0300 & 86.5000 &
+148.8500 & 34.0900 & 54.8500 & 384.4400 & 179.0300 & ... & 383.2400 &
+179.6100 & 85.5200 & 148.4200 & 33146357 & 11419637.0000 & 2302099.0000
+& 7927785.0000 & 9628557.0000 & 1362728.0000 \\
+\end{longtable}
 
 \hypertarget{reshape-stocks-from-wide-to-long-with-dates-and-tickers-as-row-indexes-and-assign-to-data-frame-stocks_long.-1}{%
 \subsection{\texorpdfstring{Reshape \texttt{stocks} from wide to long
 with dates and tickers as row indexes and assign to data frame
 \texttt{stocks\_long}.}{Reshape stocks from wide to long with dates and tickers as row indexes and assign to data frame stocks\_long.}}\label{reshape-stocks-from-wide-to-long-with-dates-and-tickers-as-row-indexes-and-assign-to-data-frame-stocks_long.-1}}
+
+By default, \texttt{.stack()} stacks the inner column index to the inner
+row index.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks\_long }\OperatorTok{=}\NormalTok{ stocks.stack()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks\_long.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllllll@{}}
+\toprule\noalign{}
+& Variable & Adj Close & Close & High & Low & Open & Volume \\
+Date & Ticker & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\multirow{5}{*}{2024-02-16} & C & 54.8500 & 54.8500 & 55.1950 & 54.5500
+& 54.9600 & 11419637.0000 \\
+& GS & 384.4400 & 384.4400 & 387.5800 & 380.9450 & 383.2400 &
+2302099.0000 \\
+& JPM & 179.0300 & 179.0300 & 179.9800 & 178.1600 & 179.6100 &
+7927785.0000 \\
+& MS & 86.5000 & 86.5000 & 86.7900 & 85.0700 & 85.5200 & 9628557.0000 \\
+& PNC & 148.8500 & 148.8500 & 149.9100 & 147.6900 & 148.4200 &
+1362728.0000 \\
+\end{longtable}
 
 \hypertarget{add-daily-returns-for-each-stock-to-data-frames-stocks-and-stocks_long.-1}{%
 \subsection{\texorpdfstring{Add daily returns for each stock to data
@@ -28220,10 +28751,181 @@ Name the returns variable \texttt{Returns}, and maintain all multi
 indexes. \emph{Hint:} Use \texttt{pd.MultiIndex()} to create a multi
 index for the the wide data frame \texttt{stocks}.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].columns}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Index(['BAC', 'C', 'GS', 'JPM', 'MS', 'PNC'], dtype='object', name='Ticker')
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\_ }\OperatorTok{=}\NormalTok{ pd.MultiIndex.from\_product([[}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{], stocks[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].columns])}
+\NormalTok{stocks[\_] }\OperatorTok{=}\NormalTok{ stocks[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].iloc[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{].pct\_change()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllllllllllllllllllll@{}}
+\toprule\noalign{}
+Variable &
+\multicolumn{6}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 10\tabcolsep}}{%
+Adj Close} &
+\multicolumn{4}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 6\tabcolsep}}{%
+Close} & ... &
+\multicolumn{4}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 6\tabcolsep}}{%
+Volume} &
+\multicolumn{6}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 10\tabcolsep}@{}}{%
+Returns} \\
+Ticker & BAC & C & GS & JPM & MS & PNC & BAC & C & GS & JPM & ... & GS &
+JPM & MS & PNC & BAC & C & GS & JPM & MS & PNC \\
+Date & & & & & & & & & & & & & & & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2024-02-12 & 33.6200 & 53.9200 & 392.6400 & 175.7900 & 86.8700 &
+149.1400 & 33.6200 & 53.9200 & 392.6400 & 175.7900 & ... & 2797200.0000
+& 8539300.0000 & 7888000.0000 & 1612700.0000 & 0.0166 & -0.0013 & 0.0218
+& 0.0045 & 0.0114 & 0.0093 \\
+2024-02-13 & 32.7500 & 52.7600 & 378.7500 & 174.2600 & 83.9700 &
+145.2600 & 32.7500 & 52.7600 & 378.7500 & 174.2600 & ... & 3030800.0000
+& 8397600.0000 & 11339400.0000 & 2121400.0000 & -0.0259 & -0.0215 &
+-0.0354 & -0.0087 & -0.0334 & -0.0260 \\
+2024-02-14 & 33.1300 & 53.9800 & 378.0400 & 176.0300 & 84.0000 &
+147.8700 & 33.1300 & 53.9800 & 378.0400 & 176.0300 & ... & 2041300.0000
+& 7056700.0000 & 5973700.0000 & 1265300.0000 & 0.0116 & 0.0231 & -0.0019
+& 0.0102 & 0.0004 & 0.0180 \\
+2024-02-15 & 34.0700 & 55.2100 & 385.4200 & 179.8700 & 85.6700 &
+149.6300 & 34.0700 & 55.2100 & 385.4200 & 179.8700 & ... & 2218900.0000
+& 8723400.0000 & 7993500.0000 & 1991800.0000 & 0.0284 & 0.0228 & 0.0195
+& 0.0218 & 0.0199 & 0.0119 \\
+2024-02-16 & 34.0900 & 54.8500 & 384.4400 & 179.0300 & 86.5000 &
+148.8500 & 34.0900 & 54.8500 & 384.4400 & 179.0300 & ... & 2302099.0000
+& 7927785.0000 & 9628557.0000 & 1362728.0000 & NaN & NaN & NaN & NaN &
+NaN & NaN \\
+\end{longtable}
+
+The easiest way to add returns to long data frame \texttt{stocks\_long}
+is to \texttt{.stack()} the wide data frame \texttt{stocks}! We could
+sort \texttt{stocks\_long} by ticker and date (to sort chronologically
+within each ticker), then use \texttt{.pct\_change()}. However, this
+approach miscalculates the first return for every ticker except for the
+first ticker. The easiest and safest solution is to \texttt{.stack()}
+the wide data frame \texttt{stocks}!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks\_long }\OperatorTok{=}\NormalTok{ stocks.stack()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks\_long.tail(}\DecValTok{12}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllllll@{}}
+\toprule\noalign{}
+& Variable & Adj Close & Close & High & Low & Open & Volume & Returns \\
+Date & Ticker & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\multirow{6}{*}{2024-02-15} & BAC & 34.0700 & 34.0700 & 34.2400 &
+33.3200 & 33.3200 & 41683100.0000 & 0.0284 \\
+& C & 55.2100 & 55.2100 & 55.4800 & 54.1400 & 54.2200 & 16865000.0000 &
+0.0228 \\
+& GS & 385.4200 & 385.4200 & 387.2100 & 379.1400 & 379.4200 &
+2218900.0000 & 0.0195 \\
+& JPM & 179.8700 & 179.8700 & 180.2100 & 176.1500 & 176.1500 &
+8723400.0000 & 0.0218 \\
+& MS & 85.6700 & 85.6700 & 86.2300 & 84.4100 & 84.4500 & 7993500.0000 &
+0.0199 \\
+& PNC & 149.6300 & 149.6300 & 150.2600 & 147.3700 & 148.7500 &
+1991800.0000 & 0.0119 \\
+\multirow{6}{*}{2024-02-16} & BAC & 34.0900 & 34.0900 & 34.1500 &
+32.4900 & 33.9200 & 33146357.0000 & NaN \\
+& C & 54.8500 & 54.8500 & 55.1950 & 54.5500 & 54.9600 & 11419637.0000 &
+NaN \\
+& GS & 384.4400 & 384.4400 & 387.5800 & 380.9450 & 383.2400 &
+2302099.0000 & NaN \\
+& JPM & 179.0300 & 179.0300 & 179.9800 & 178.1600 & 179.6100 &
+7927785.0000 & NaN \\
+& MS & 86.5000 & 86.5000 & 86.7900 & 85.0700 & 85.5200 & 9628557.0000 &
+NaN \\
+& PNC & 148.8500 & 148.8500 & 149.9100 & 147.6900 & 148.4200 &
+1362728.0000 & NaN \\
+\end{longtable}
+
 \hypertarget{download-the-daily-benchmark-return-factors-from-ken-frenchs-data-library.-1}{%
 \subsection{Download the daily benchmark return factors from Ken
 French's data
 library.}\label{download-the-daily-benchmark-return-factors-from-ken-frenchs-data-library.-1}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pdr.famafrench.get\_available\_datasets()[:}\DecValTok{5}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+['F-F_Research_Data_Factors',
+ 'F-F_Research_Data_Factors_weekly',
+ 'F-F_Research_Data_Factors_daily',
+ 'F-F_Research_Data_5_Factors_2x3',
+ 'F-F_Research_Data_5_Factors_2x3_daily']
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ff }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    pdr.DataReader(}
+\NormalTok{        name}\OperatorTok{=}\StringTok{\textquotesingle{}F{-}F\_Research\_Data\_Factors\_daily\textquotesingle{}}\NormalTok{,}
+\NormalTok{        data\_source}\OperatorTok{=}\StringTok{\textquotesingle{}famafrench\textquotesingle{}}\NormalTok{,}
+\NormalTok{        start}\OperatorTok{=}\StringTok{\textquotesingle{}1900\textquotesingle{}}
+\NormalTok{    )}
+\NormalTok{    [}\DecValTok{0}\NormalTok{]}
+\NormalTok{    .div(}\DecValTok{100}\NormalTok{)}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+C:\Users\r.herron\AppData\Local\Temp\ipykernel_13756\2049483829.py:2: FutureWarning: The argument 'date_parser' is deprecated and will be removed in a future version. Please use 'date_format' instead, or read your data in as 'object' dtype and then call 'to_datetime'.
+  pdr.DataReader(
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ff.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule\noalign{}
+& Mkt-RF & SMB & HML & RF \\
+Date & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2023-12-22 & 0.0021 & 0.0064 & 0.0009 & 0.0002 \\
+2023-12-26 & 0.0048 & 0.0069 & 0.0046 & 0.0002 \\
+2023-12-27 & 0.0016 & 0.0014 & 0.0012 & 0.0002 \\
+2023-12-28 & -0.0001 & -0.0036 & 0.0003 & 0.0002 \\
+2023-12-29 & -0.0043 & -0.0112 & -0.0037 & 0.0002 \\
+\end{longtable}
 
 \hypertarget{add-the-daily-benchmark-return-factors-to-stocks-and-stocks_long.-1}{%
 \subsection{\texorpdfstring{Add the daily benchmark return factors to
@@ -28233,11 +28935,225 @@ library.}\label{download-the-daily-benchmark-return-factors-from-ken-frenchs-dat
 For the wide data frame \texttt{stocks}, use the outer index name
 \texttt{Factors}.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# stocks.join(ff)}
+\CommentTok{\# MergeError: Not allowed to merge between different levels. (2 levels on the left, 1 on the right)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\_ }\OperatorTok{=}\NormalTok{ pd.MultiIndex.from\_product([[}\StringTok{\textquotesingle{}Factors\textquotesingle{}}\NormalTok{], ff.columns])}
+\NormalTok{stocks[\_] }\OperatorTok{=}\NormalTok{ ff}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllllllllllllllllllll@{}}
+\toprule\noalign{}
+Variable &
+\multicolumn{6}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 10\tabcolsep}}{%
+Adj Close} &
+\multicolumn{4}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 6\tabcolsep}}{%
+Close} & ... &
+\multicolumn{6}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 10\tabcolsep}}{%
+Returns} &
+\multicolumn{4}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 6\tabcolsep}@{}}{%
+Factors} \\
+Ticker & BAC & C & GS & JPM & MS & PNC & BAC & C & GS & JPM & ... & BAC
+& C & GS & JPM & MS & PNC & Mkt-RF & SMB & HML & RF \\
+Date & & & & & & & & & & & & & & & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1973-02-21 & 1.5818 & NaN & NaN & NaN & NaN & NaN & 4.6250 & NaN & NaN &
+NaN & ... & NaN & NaN & NaN & NaN & NaN & NaN & -0.0074 & -0.0039 &
+0.0054 & 0.0002 \\
+1973-02-22 & 1.5872 & NaN & NaN & NaN & NaN & NaN & 4.6406 & NaN & NaN &
+NaN & ... & 0.0034 & NaN & NaN & NaN & NaN & NaN & -0.0030 & -0.0037 &
+0.0022 & 0.0002 \\
+1973-02-23 & 1.5818 & NaN & NaN & NaN & NaN & NaN & 4.6250 & NaN & NaN &
+NaN & ... & -0.0034 & NaN & NaN & NaN & NaN & NaN & -0.0108 & -0.0019 &
+0.0054 & 0.0002 \\
+1973-02-26 & 1.5818 & NaN & NaN & NaN & NaN & NaN & 4.6250 & NaN & NaN &
+NaN & ... & 0.0000 & NaN & NaN & NaN & NaN & NaN & -0.0088 & -0.0050 &
+0.0054 & 0.0002 \\
+1973-02-27 & 1.5818 & NaN & NaN & NaN & NaN & NaN & 4.6250 & NaN & NaN &
+NaN & ... & 0.0000 & NaN & NaN & NaN & NaN & NaN & -0.0115 & -0.0018 &
+0.0064 & 0.0002 \\
+... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... &
+... & ... & ... & ... & ... & ... & ... & ... & ... & ... \\
+2024-02-12 & 33.6200 & 53.9200 & 392.6400 & 175.7900 & 86.8700 &
+149.1400 & 33.6200 & 53.9200 & 392.6400 & 175.7900 & ... & 0.0166 &
+-0.0013 & 0.0218 & 0.0045 & 0.0114 & 0.0093 & NaN & NaN & NaN & NaN \\
+2024-02-13 & 32.7500 & 52.7600 & 378.7500 & 174.2600 & 83.9700 &
+145.2600 & 32.7500 & 52.7600 & 378.7500 & 174.2600 & ... & -0.0259 &
+-0.0215 & -0.0354 & -0.0087 & -0.0334 & -0.0260 & NaN & NaN & NaN &
+NaN \\
+2024-02-14 & 33.1300 & 53.9800 & 378.0400 & 176.0300 & 84.0000 &
+147.8700 & 33.1300 & 53.9800 & 378.0400 & 176.0300 & ... & 0.0116 &
+0.0231 & -0.0019 & 0.0102 & 0.0004 & 0.0180 & NaN & NaN & NaN & NaN \\
+2024-02-15 & 34.0700 & 55.2100 & 385.4200 & 179.8700 & 85.6700 &
+149.6300 & 34.0700 & 55.2100 & 385.4200 & 179.8700 & ... & 0.0284 &
+0.0228 & 0.0195 & 0.0218 & 0.0199 & 0.0119 & NaN & NaN & NaN & NaN \\
+2024-02-16 & 34.0900 & 54.8500 & 384.4400 & 179.0300 & 86.5000 &
+148.8500 & 34.0900 & 54.8500 & 384.4400 & 179.0300 & ... & NaN & NaN &
+NaN & NaN & NaN & NaN & NaN & NaN & NaN & NaN \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks\_long }\OperatorTok{=}\NormalTok{ stocks\_long.join(ff)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks\_long.loc[}\StringTok{\textquotesingle{}2023\textquotesingle{}}\NormalTok{].tail(}\DecValTok{12}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllllllllll@{}}
+\toprule\noalign{}
+& & Adj Close & Close & High & Low & Open & Volume & Returns & Mkt-RF &
+SMB & HML & RF \\
+Date & Ticker & & & & & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\multirow{6}{*}{2023-12-28} & BAC & 33.8800 & 33.8800 & 33.9700 &
+33.7700 & 33.8200 & 21799600.0000 & 0.0012 & -0.0001 & -0.0036 & 0.0003
+& 0.0002 \\
+& C & 51.0329 & 51.5200 & 51.8000 & 51.4000 & 51.4000 & 10218500.0000 &
+0.0012 & -0.0001 & -0.0036 & 0.0003 & 0.0002 \\
+& GS & 386.4100 & 386.4100 & 387.7600 & 383.6300 & 384.5200 &
+1024700.0000 & 0.0050 & -0.0001 & -0.0036 & 0.0003 & 0.0002 \\
+& JPM & 169.2563 & 170.3000 & 170.6600 & 169.0000 & 169.3500 &
+6320100.0000 & 0.0053 & -0.0001 & -0.0036 & 0.0003 & 0.0002 \\
+& MS & 92.7316 & 93.6400 & 93.9500 & 93.2400 & 93.3100 & 4089500.0000 &
+-0.0002 & -0.0001 & -0.0036 & 0.0003 & 0.0002 \\
+& PNC & 154.0486 & 155.6300 & 156.2100 & 154.9500 & 155.4400 &
+1153300.0000 & 0.0041 & -0.0001 & -0.0036 & 0.0003 & 0.0002 \\
+\multirow{6}{*}{2023-12-29} & BAC & 33.6700 & 33.6700 & 33.9900 &
+33.5500 & 33.9400 & 28037800.0000 & -0.0062 & -0.0043 & -0.0112 &
+-0.0037 & 0.0002 \\
+& C & 50.9537 & 51.4400 & 51.6100 & 51.2200 & 51.5600 & 13147900.0000 &
+-0.0016 & -0.0043 & -0.0112 & -0.0037 & 0.0002 \\
+& GS & 385.7700 & 385.7700 & 386.6400 & 383.5700 & 385.5700 &
+881300.0000 & -0.0017 & -0.0043 & -0.0112 & -0.0037 & 0.0002 \\
+& JPM & 169.0575 & 170.1000 & 170.6900 & 169.6300 & 170.0000 &
+6431800.0000 & -0.0012 & -0.0043 & -0.0112 & -0.0037 & 0.0002 \\
+& MS & 92.3454 & 93.2500 & 93.7700 & 93.0600 & 93.4900 & 4772100.0000 &
+-0.0042 & -0.0043 & -0.0112 & -0.0037 & 0.0002 \\
+& PNC & 153.2765 & 154.8500 & 156.1100 & 154.5200 & 155.2700 &
+1572600.0000 & -0.0050 & -0.0043 & -0.0112 & -0.0037 & 0.0002 \\
+\end{longtable}
+
 \hypertarget{write-a-function-download-that-accepts-tickers-and-returns-a-wide-data-frame-of-returns-with-the-daily-benchmark-return-factors.-1}{%
 \subsection{\texorpdfstring{Write a function \texttt{download()} that
 accepts tickers and returns a wide data frame of returns with the daily
 benchmark return
 factors.}{Write a function download() that accepts tickers and returns a wide data frame of returns with the daily benchmark return factors.}}\label{write-a-function-download-that-accepts-tickers-and-returns-a-wide-data-frame-of-returns-with-the-daily-benchmark-return-factors.-1}}
+
+We can even add a \texttt{shape} argument to return a wide or long data
+frame!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ download(tickers, shape}\OperatorTok{=}\StringTok{\textquotesingle{}wide\textquotesingle{}}\NormalTok{):}
+    \ControlFlowTok{if}\NormalTok{ shape.lower() }\KeywordTok{not} \KeywordTok{in}\NormalTok{ [}\StringTok{\textquotesingle{}wide\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}long\textquotesingle{}}\NormalTok{]:}
+        \ControlFlowTok{raise} \PreprocessorTok{ValueError}\NormalTok{(}\StringTok{\textquotesingle{}Invalid shape: must be "wide" or "long".\textquotesingle{}}\NormalTok{)}
+
+\NormalTok{    stocks }\OperatorTok{=}\NormalTok{ yf.download(tickers)}
+
+\NormalTok{    factors\_all }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{        pdr.DataReader(}
+\NormalTok{            name}\OperatorTok{=}\StringTok{\textquotesingle{}F{-}F\_Research\_Data\_Factors\_daily\textquotesingle{}}\NormalTok{,}
+\NormalTok{            data\_source}\OperatorTok{=}\StringTok{\textquotesingle{}famafrench\textquotesingle{}}\NormalTok{,}
+\NormalTok{            start}\OperatorTok{=}\StringTok{\textquotesingle{}1900\textquotesingle{}}
+\NormalTok{        )}
+\NormalTok{    )}
+    
+\NormalTok{    factors }\OperatorTok{=}\NormalTok{ factors\_all[}\DecValTok{0}\NormalTok{].div(}\DecValTok{100}\NormalTok{)}
+    
+    \CommentTok{\# if stocks has a multi index on the columns because we asked for more than one ticker}
+    \CommentTok{\# then we have more work to do}
+    \ControlFlowTok{if} \BuiltInTok{type}\NormalTok{(stocks.columns) }\KeywordTok{is}\NormalTok{ pd.MultiIndex:}
+        
+        \CommentTok{\# whether we want a wide or long data frame, it is easier to add returns to a wide data frame}
+\NormalTok{        \_ }\OperatorTok{=}\NormalTok{ pd.MultiIndex.from\_product([[}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{], stocks[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].columns])}
+\NormalTok{        stocks[\_] }\OperatorTok{=}\NormalTok{ stocks[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].pct\_change()}
+
+        \CommentTok{\# if we want a wide data frame, then we need a factors multi index}
+        \ControlFlowTok{if}\NormalTok{ shape.lower() }\OperatorTok{==} \StringTok{\textquotesingle{}wide\textquotesingle{}}\NormalTok{:}
+\NormalTok{            \_ }\OperatorTok{=}\NormalTok{ pd.MultiIndex.from\_product([[}\StringTok{\textquotesingle{}Factors\textquotesingle{}}\NormalTok{], factors.columns])}
+\NormalTok{            stocks[\_] }\OperatorTok{=}\NormalTok{ factors}
+            \ControlFlowTok{return}\NormalTok{ stocks.rename\_axis(columns}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Variable\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{])}
+
+        \CommentTok{\# if we want a long data frame, then we need to stack stocks and join factors}
+        \CommentTok{\# because we tested for wide and long above, we know that here shape must be long}
+        \ControlFlowTok{else}\NormalTok{:}
+            \ControlFlowTok{return}\NormalTok{ stocks.stack().join(factors).rename\_axis(columns}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Variable\textquotesingle{}}\NormalTok{], index}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{])}
+            
+    \CommentTok{\# if stocks does not have a multi index on the columns}
+    \CommentTok{\# then we only have join factors}
+    \ControlFlowTok{else}\NormalTok{:}
+        \ControlFlowTok{return}\NormalTok{ stocks.join(ff).rename\_axis(columns}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Variable\textquotesingle{}}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{download(tickers}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}AAPL\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}TSLA\textquotesingle{}}\NormalTok{], shape}\OperatorTok{=}\StringTok{\textquotesingle{}long\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[*********************100%%**********************]  2 of 2 completed
+C:\Users\r.herron\AppData\Local\Temp\ipykernel_13756\3667605341.py:8: FutureWarning: The argument 'date_parser' is deprecated and will be removed in a future version. Please use 'date_format' instead, or read your data in as 'object' dtype and then call 'to_datetime'.
+  pdr.DataReader(
+\end{verbatim}
+
+\begin{longtable}[]{@{}lllllllllllll@{}}
+\toprule\noalign{}
+& Variable & Adj Close & Close & High & Low & Open & Volume & Returns &
+Mkt-RF & SMB & HML & RF \\
+Date & Ticker & & & & & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1980-12-12 & AAPL & 0.0992 & 0.1283 & 0.1289 & 0.1283 & 0.1283 &
+469033600.0000 & NaN & 0.0138 & -0.0001 & -0.0105 & 0.0006 \\
+1980-12-15 & AAPL & 0.0940 & 0.1217 & 0.1222 & 0.1217 & 0.1222 &
+175884800.0000 & -0.0522 & 0.0011 & 0.0025 & -0.0046 & 0.0006 \\
+1980-12-16 & AAPL & 0.0871 & 0.1127 & 0.1133 & 0.1127 & 0.1133 &
+105728000.0000 & -0.0734 & 0.0071 & -0.0075 & -0.0047 & 0.0006 \\
+1980-12-17 & AAPL & 0.0893 & 0.1155 & 0.1161 & 0.1155 & 0.1155 &
+86441600.0000 & 0.0248 & 0.0152 & -0.0086 & -0.0034 & 0.0006 \\
+1980-12-18 & AAPL & 0.0919 & 0.1189 & 0.1194 & 0.1189 & 0.1189 &
+73449600.0000 & 0.0290 & 0.0041 & 0.0022 & 0.0126 & 0.0006 \\
+... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... &
+... \\
+2024-02-14 & TSLA & 188.7100 & 188.7100 & 188.8900 & 183.3500 & 185.3000
+& 81203000.0000 & 0.0255 & NaN & NaN & NaN & NaN \\
+\multirow{2}{*}{2024-02-15} & AAPL & 183.8600 & 183.8600 & 184.4900 &
+181.3500 & 183.5500 & 65434500.0000 & -0.0016 & NaN & NaN & NaN & NaN \\
+& TSLA & 200.4500 & 200.4500 & 200.8800 & 188.8600 & 189.1600 &
+120831800.0000 & 0.0622 & NaN & NaN & NaN & NaN \\
+\multirow{2}{*}{2024-02-16} & AAPL & 182.3100 & 182.3100 & 184.8500 &
+181.6650 & 183.4200 & 48627624.0000 & -0.0084 & NaN & NaN & NaN & NaN \\
+& TSLA & 199.9500 & 199.9500 & 203.1700 & 197.4000 & 202.0600 &
+110528448.0000 & -0.0025 & NaN & NaN & NaN & NaN \\
+\end{longtable}
 
 \hypertarget{download-earnings-per-share-for-the-stocks-in-stocks-and-combine-to-a-long-data-frame-earnings.-1}{%
 \subsection{\texorpdfstring{Download earnings per share for the stocks
@@ -28252,14 +29168,51 @@ Use the \texttt{.earnings\_dates} method described
 \texttt{Date} and swap to match the order of the row index in
 \texttt{stocks\_long}.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tickers }\OperatorTok{=}\NormalTok{ yf.Tickers(tickers}\OperatorTok{=}\StringTok{\textquotesingle{}BAC C GS JPM MS PNC\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{earnings  }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    pd.concat(}
+\NormalTok{        objs}\OperatorTok{=}\NormalTok{[tickers.tickers[t].earnings\_dates }\ControlFlowTok{for}\NormalTok{ t }\KeywordTok{in}\NormalTok{ tickers.tickers],}
+\NormalTok{        keys}\OperatorTok{=}\NormalTok{tickers.tickers,}
+\NormalTok{        names}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{]}
+\NormalTok{    )}
+\NormalTok{    .reset\_index()}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{earnings.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule\noalign{}
+& Ticker & Date & EPS Estimate & Reported EPS & Surprise(\%) \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+67 & PNC & 2024-04-16 08:00:00-04:00 & 3.0800 & NaN & NaN \\
+68 & PNC & 2024-01-16 06:00:00-05:00 & 2.9400 & 3.1600 & 0.0737 \\
+69 & PNC & 2023-10-13 06:00:00-04:00 & 3.1100 & 3.6000 & 0.1586 \\
+70 & PNC & 2023-07-18 07:00:00-04:00 & 3.2800 & 3.3600 & 0.0230 \\
+71 & PNC & 2023-04-14 06:00:00-04:00 & 3.6700 & 3.9800 & 0.0847 \\
+\end{longtable}
+
 \hypertarget{combine-earnings-with-the-returns-from-stocks_long.-1}{%
 \subsection{\texorpdfstring{Combine \texttt{earnings} with the returns
 from
 \texttt{stocks\_long}.}{Combine earnings with the returns from stocks\_long.}}\label{combine-earnings-with-the-returns-from-stocks_long.-1}}
 
-\textbf{\emph{It is easier to leave \texttt{stocks} and
-\texttt{stocks\_long} as-is and work with slices \texttt{returns} and
-\texttt{returns\_long}.}} Use the
+Use the
 \texttt{tz\_localize(\textquotesingle{}America/New\_York\textquotesingle{})}
 method add time zone information back to \texttt{returns.index} and use
 \texttt{pd.to\_timedelta(16,\ unit=\textquotesingle{}h\textquotesingle{})}
@@ -28269,6 +29222,72 @@ to match earnings announcement dates and times to appropriate return
 periods. For example, if a firm announces earnings after the close at 5
 PM on February 7, we want to match the return period from 4 PM on
 February 7 to 4 PM on February 8.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    stocks\_long}
+\NormalTok{    .reset\_index()}
+\NormalTok{    [[}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]]}
+\NormalTok{    .assign(}
+\NormalTok{        Date}\OperatorTok{=}\KeywordTok{lambda}\NormalTok{ x: x[}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{].dt.tz\_localize(}\StringTok{\textquotesingle{}America/New\_York\textquotesingle{}}\NormalTok{) }\OperatorTok{+}\NormalTok{ pd.to\_timedelta(}\DecValTok{16}\NormalTok{, unit}\OperatorTok{=}\StringTok{\textquotesingle{}H\textquotesingle{}}\NormalTok{)}
+\NormalTok{    )}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+& Date & Ticker & Returns \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+62021 & 2024-02-16 16:00:00-05:00 & C & NaN \\
+62022 & 2024-02-16 16:00:00-05:00 & GS & NaN \\
+62023 & 2024-02-16 16:00:00-05:00 & JPM & NaN \\
+62024 & 2024-02-16 16:00:00-05:00 & MS & NaN \\
+62025 & 2024-02-16 16:00:00-05:00 & PNC & NaN \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{surprises }\OperatorTok{=}\NormalTok{ pd.merge\_asof(}
+\NormalTok{    left}\OperatorTok{=}\NormalTok{earnings.sort\_values([}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{]),}
+\NormalTok{    right}\OperatorTok{=}\NormalTok{returns.sort\_values([}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{]),}
+\NormalTok{    on}\OperatorTok{=}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{,}
+\NormalTok{    by}\OperatorTok{=}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{,}
+\NormalTok{    direction}\OperatorTok{=}\StringTok{\textquotesingle{}forward\textquotesingle{}}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{surprises.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllll@{}}
+\toprule\noalign{}
+& Ticker & Date & EPS Estimate & Reported EPS & Surprise(\%) &
+Returns \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+67 & JPM & 2025-01-15 08:00:00-05:00 & NaN & NaN & NaN & NaN \\
+68 & JPM & 2025-01-15 08:00:00-05:00 & NaN & NaN & NaN & NaN \\
+69 & C & 2025-01-15 11:00:00-05:00 & NaN & NaN & NaN & NaN \\
+70 & PNC & 2025-01-16 08:00:00-05:00 & NaN & NaN & NaN & NaN \\
+71 & PNC & 2025-01-16 10:00:00-05:00 & NaN & NaN & NaN & NaN \\
+\end{longtable}
 
 \hypertarget{plot-the-relation-between-daily-returns-and-earnings-surprises-1}{%
 \subsection{Plot the relation between daily returns and earnings
@@ -28289,28 +29308,329 @@ Three options in increasing difficulty:
   \texttt{pd.qcut()} to form five groups on earnings surprises
 \end{enumerate}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}
+\NormalTok{    surprises}
+\NormalTok{    [[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]]}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .plot(kind}\OperatorTok{=}\StringTok{\textquotesingle{}scatter\textquotesingle{}}\NormalTok{, x}\OperatorTok{=}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, y}\OperatorTok{=}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{)}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Earnings Surprise (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}One{-}Day Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Earnings Surprise Analysis}\CharTok{\textbackslash{}n}\SpecialStringTok{ }\SpecialCharTok{\{}\StringTok{\textquotesingle{}, \textquotesingle{}}\SpecialCharTok{.}\NormalTok{join(tickers.tickers)}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_08_practice_03_files/figure-pdf/cell-30-output-1.png}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{import}\NormalTok{ seaborn }\ImportTok{as}\NormalTok{ sns}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sns.regplot(}
+\NormalTok{    data}\OperatorTok{=}\NormalTok{surprises[[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]].mul(}\DecValTok{100}\NormalTok{),}
+\NormalTok{    x}\OperatorTok{=}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{,}
+\NormalTok{    y}\OperatorTok{=}\StringTok{\textquotesingle{}Returns\textquotesingle{}}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Earnings Surprise (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}One{-}Day Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Earnings Surprise Analysis}\CharTok{\textbackslash{}n}\SpecialStringTok{ }\SpecialCharTok{\{}\StringTok{\textquotesingle{}, \textquotesingle{}}\SpecialCharTok{.}\NormalTok{join(tickers.tickers)}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_08_practice_03_files/figure-pdf/cell-32-output-1.png}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sns.catplot(}
+\NormalTok{    data}\OperatorTok{=}\NormalTok{(}
+\NormalTok{        surprises[[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]]}
+\NormalTok{        .dropna()}
+\NormalTok{        .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{        .assign(}
+\NormalTok{            surprise\_bin}\OperatorTok{=}\KeywordTok{lambda}\NormalTok{ x: pd.qcut(x[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{], q}\OperatorTok{=}\DecValTok{5}\NormalTok{, labels}\OperatorTok{=}\VariableTok{False}\NormalTok{)}\OperatorTok{+}\DecValTok{1}
+\NormalTok{        )}
+\NormalTok{    ),}
+\NormalTok{    x}\OperatorTok{=}\StringTok{\textquotesingle{}surprise\_bin\textquotesingle{}}\NormalTok{,}
+\NormalTok{    y}\OperatorTok{=}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{,}
+\NormalTok{    kind}\OperatorTok{=}\StringTok{\textquotesingle{}bar\textquotesingle{}}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Earnings Surprise Bin (1=Lowest, 5=Highest)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}One{-}Day Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Earnings Surprise Analysis}\CharTok{\textbackslash{}n}\SpecialStringTok{ }\SpecialCharTok{\{}\StringTok{\textquotesingle{}, \textquotesingle{}}\SpecialCharTok{.}\NormalTok{join(tickers.tickers)}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_08_practice_03_files/figure-pdf/cell-33-output-1.png}
+
+}
+
+\end{figure}
+
 \hypertarget{repeat-the-earnings-exercise-with-the-sp-100-stocks-1}{%
 \subsection{Repeat the earnings exercise with the S\&P 100
 stocks}\label{repeat-the-earnings-exercise-with-the-sp-100-stocks-1}}
 
-\hypertarget{repeat-the-earnings-exercise-with-excess-returns-of-the-sp-100-stocks-1}{%
-\subsection{\texorpdfstring{Repeat the earnings exercise with
-\emph{excess returns} of the S\&P 100
-Stocks}{Repeat the earnings exercise with excess returns of the S\&P 100 Stocks}}\label{repeat-the-earnings-exercise-with-excess-returns-of-the-sp-100-stocks-1}}
+With more data, we can more clearly see the positive relation between
+earnings surprises and returns!
 
-Excess returns are returns minus market returns. We need to add a
-timezone and the closing time to the market return from Fama and French.
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\_ }\OperatorTok{=}\NormalTok{ pd.read\_html(}\StringTok{\textquotesingle{}https://en.wikipedia.org/wiki/S\%26P\_100\textquotesingle{}}\NormalTok{)[}\DecValTok{2}\NormalTok{][}\StringTok{\textquotesingle{}Symbol\textquotesingle{}}\NormalTok{].to\_list()}
+\NormalTok{tickers\_2 }\OperatorTok{=}\NormalTok{ yf.Tickers(tickers}\OperatorTok{=}\NormalTok{[t.replace(}\StringTok{\textquotesingle{}.\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}{-}\textquotesingle{}}\NormalTok{) }\ControlFlowTok{for}\NormalTok{ t }\KeywordTok{in}\NormalTok{ \_]) }\CommentTok{\# Yahoo! Finance uses "{-}" to indicate share classes instead of "."}
+\end{Highlighting}
+\end{Shaded}
 
-\hypertarget{improve-your-download-function-from-above}{%
-\subsection{\texorpdfstring{Improve your \texttt{download()} function
-from
-above}{Improve your download() function from above}}\label{improve-your-download-function-from-above}}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{earnings\_2  }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    pd.concat(}
+\NormalTok{        objs}\OperatorTok{=}\NormalTok{[tickers\_2.tickers[t].earnings\_dates }\ControlFlowTok{for}\NormalTok{ t }\KeywordTok{in}\NormalTok{ tickers\_2.tickers],}
+\NormalTok{        keys}\OperatorTok{=}\NormalTok{tickers\_2.tickers,}
+\NormalTok{        names}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{]}
+\NormalTok{    )}
+\NormalTok{    .reset\_index()}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
 
-Modify \texttt{download()} to accept one or more than one ticker. Since
-we will not use the advanced functionality of the tickers object that
-\texttt{yf.Tickers()} creates, we will use \texttt{yf.download()}. The
-current version of \texttt{yf.download()} does not accept a
-\texttt{session=} argument.
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{earnings\_2.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule\noalign{}
+& Ticker & Date & EPS Estimate & Reported EPS & Surprise(\%) \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1207 & XOM & 2023-04-28 06:00:00-04:00 & 2.5900 & 2.8300 & 0.0943 \\
+1208 & XOM & 2023-01-31 06:00:00-05:00 & 3.2900 & 3.4000 & 0.0319 \\
+1209 & XOM & 2022-10-28 06:00:00-04:00 & 3.7900 & 4.4500 & 0.1733 \\
+1210 & XOM & 2022-07-29 06:00:00-04:00 & 3.7400 & 4.1400 & 0.1077 \\
+1211 & XOM & 2022-04-29 06:00:00-04:00 & 2.1200 & 2.0700 & -0.0247 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns\_2 }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    yf.download(tickers}\OperatorTok{=}\NormalTok{[t }\ControlFlowTok{for}\NormalTok{ t }\KeywordTok{in}\NormalTok{ tickers\_2.tickers])}
+\NormalTok{    .rename\_axis(columns}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Variable\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{])}
+\NormalTok{    [}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{]}
+\NormalTok{    .pct\_change()}
+\NormalTok{    .stack()}
+\NormalTok{    .to\_frame(}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{)}
+\NormalTok{    .reset\_index()}
+\NormalTok{    [[}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]]}
+\NormalTok{    .assign(}
+\NormalTok{        Date}\OperatorTok{=}\KeywordTok{lambda}\NormalTok{ x: x[}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{].dt.tz\_localize(}\StringTok{\textquotesingle{}America/New\_York\textquotesingle{}}\NormalTok{) }\OperatorTok{+}\NormalTok{ pd.to\_timedelta(}\DecValTok{16}\NormalTok{, unit}\OperatorTok{=}\StringTok{\textquotesingle{}H\textquotesingle{}}\NormalTok{)}
+\NormalTok{    )}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[*********************100%%**********************]  101 of 101 completed
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns\_2.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+& Date & Ticker & Returns \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1018569 & 2024-02-16 16:00:00-05:00 & V & -0.0086 \\
+1018570 & 2024-02-16 16:00:00-05:00 & VZ & -0.0025 \\
+1018571 & 2024-02-16 16:00:00-05:00 & WFC & -0.0025 \\
+1018572 & 2024-02-16 16:00:00-05:00 & WMT & 0.0063 \\
+1018573 & 2024-02-16 16:00:00-05:00 & XOM & 0.0000 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{surprises\_2 }\OperatorTok{=}\NormalTok{ pd.merge\_asof(}
+\NormalTok{    left}\OperatorTok{=}\NormalTok{earnings\_2.sort\_values([}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{]),}
+\NormalTok{    right}\OperatorTok{=}\NormalTok{returns\_2.sort\_values([}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{]),}
+\NormalTok{    on}\OperatorTok{=}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{,}
+\NormalTok{    by}\OperatorTok{=}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{,}
+\NormalTok{    direction}\OperatorTok{=}\StringTok{\textquotesingle{}forward\textquotesingle{}}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{surprises\_2.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllll@{}}
+\toprule\noalign{}
+& Ticker & Date & EPS Estimate & Reported EPS & Surprise(\%) &
+Returns \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1207 & USB & 2025-10-16 09:00:00-04:00 & NaN & NaN & NaN & NaN \\
+1208 & USB & 2025-10-16 09:00:00-04:00 & NaN & NaN & NaN & NaN \\
+1209 & RTX & 2025-10-20 06:00:00-04:00 & NaN & NaN & NaN & NaN \\
+1210 & USB & 2026-01-20 09:00:00-05:00 & NaN & NaN & NaN & NaN \\
+1211 & USB & 2026-01-20 09:00:00-05:00 & NaN & NaN & NaN & NaN \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}
+\NormalTok{    surprises\_2}
+\NormalTok{    [[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]]}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .plot(kind}\OperatorTok{=}\StringTok{\textquotesingle{}scatter\textquotesingle{}}\NormalTok{, x}\OperatorTok{=}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, y}\OperatorTok{=}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{)}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Earnings Surprise (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}One{-}Day Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\StringTok{\textquotesingle{}Earnings Surprise Analysis}\CharTok{\textbackslash{}n}\StringTok{ S\&P 100 Stocks\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_08_practice_03_files/figure-pdf/cell-41-output-1.png}
+
+}
+
+\end{figure}
+
+\textbf{\emph{There are a few large negative and positive earnings
+surprises that make our plot difficult to interpret!}} We have these
+huge outliers because surprises are defined as the percent change
+relative to the expected. If expected is a very small number, then the
+surprise can be a very large number! We would use different surprise
+definitions for a more rigorous analysis. Here we can drop observations
+less than the 0.01 quantile and greater than the 0.99 quantile.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{low\_2 }\OperatorTok{=}\NormalTok{ surprises\_2[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{].quantile(}\FloatTok{0.01}\NormalTok{)}
+\NormalTok{high\_2 }\OperatorTok{=}\NormalTok{ surprises\_2[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{].quantile(}\FloatTok{0.91}\NormalTok{)}
+
+\NormalTok{cond\_2 }\OperatorTok{=}\NormalTok{ surprises\_2[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{].between(low\_2, high\_2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}
+\NormalTok{    surprises\_2}
+\NormalTok{    .loc[cond\_2, [}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]]}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .plot(kind}\OperatorTok{=}\StringTok{\textquotesingle{}scatter\textquotesingle{}}\NormalTok{, x}\OperatorTok{=}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, y}\OperatorTok{=}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{, alpha}\OperatorTok{=}\FloatTok{0.5}\NormalTok{)}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Earnings Surprise (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}One{-}Day Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\StringTok{\textquotesingle{}Earnings Surprise Analysis}\CharTok{\textbackslash{}n}\StringTok{ S\&P 100 Stocks\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_08_practice_03_files/figure-pdf/cell-43-output-1.png}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sns.regplot(}
+\NormalTok{    data}\OperatorTok{=}\NormalTok{surprises\_2.loc[cond\_2, [}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]].mul(}\DecValTok{100}\NormalTok{),}
+\NormalTok{    x}\OperatorTok{=}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{,}
+\NormalTok{    y}\OperatorTok{=}\StringTok{\textquotesingle{}Returns\textquotesingle{}}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Earnings Surprise (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}One{-}Day Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\StringTok{\textquotesingle{}Earnings Surprise Analysis}\CharTok{\textbackslash{}n}\StringTok{ S\&P 100 Stocks\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_08_practice_03_files/figure-pdf/cell-44-output-1.png}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sns.catplot(}
+\NormalTok{    data}\OperatorTok{=}\NormalTok{(}
+\NormalTok{        surprises\_2}
+\NormalTok{        .loc[cond\_2, [}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]]}
+\NormalTok{        .dropna()}
+\NormalTok{        .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{        .assign(surprise\_bin}\OperatorTok{=}\KeywordTok{lambda}\NormalTok{ x: pd.qcut(x[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{], q}\OperatorTok{=}\DecValTok{5}\NormalTok{, labels}\OperatorTok{=}\VariableTok{False}\NormalTok{) }\OperatorTok{+} \DecValTok{1}\NormalTok{)}
+\NormalTok{    ),}
+\NormalTok{    x}\OperatorTok{=}\StringTok{\textquotesingle{}surprise\_bin\textquotesingle{}}\NormalTok{,}
+\NormalTok{    y}\OperatorTok{=}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{,}
+\NormalTok{    kind}\OperatorTok{=}\StringTok{\textquotesingle{}bar\textquotesingle{}}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Earnings Surprise Bin (1=Lowest, 5=Highest)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}One{-}Day Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\StringTok{\textquotesingle{}Earnings Surprise Analysis}\CharTok{\textbackslash{}n}\StringTok{ S\&P 100 Stocks\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_08_practice_03_files/figure-pdf/cell-45-output-1.png}
+
+}
+
+\end{figure}
 
 \hypertarget{mckinney-chapter-8---practice-for-section-04}{%
 \chapter{McKinney Chapter 8 - Practice for Section
@@ -28404,13 +29724,110 @@ Chapter 8 of McKinney covers 3 topics.
 C, GS, JPM, MS, and PNC and assign to data frame
 \texttt{stocks}.}{Download data from Yahoo! Finance for BAC, C, GS, JPM, MS, and PNC and assign to data frame stocks.}}\label{download-data-from-yahoo-finance-for-bac-c-gs-jpm-ms-and-pnc-and-assign-to-data-frame-stocks.-2}}
 
-Use \texttt{stocks.columns.names} to assign the names \texttt{Variable}
-and \texttt{Ticker} to the column multi index.
+Use
+\texttt{.rename\_axis(columns=stocks.columns.names\ =\ {[}\textquotesingle{}Variable\textquotesingle{},\ \textquotesingle{}Ticker\textquotesingle{}{]})}
+to assign the names \texttt{Variable} and \texttt{Ticker} to the column
+multi index. We could instead use
+\texttt{stocks.columns.names\ =\ {[}\textquotesingle{}Variable\textquotesingle{},\ \textquotesingle{}Ticker\textquotesingle{}{]}},
+but we can chain the \texttt{.rename\_axis()} method.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    yf.download(tickers}\OperatorTok{=}\StringTok{\textquotesingle{}BAC C GS JPM MS PNC\textquotesingle{}}\NormalTok{)}
+\NormalTok{    .rename\_axis(columns}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Variable\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{])}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[*********************100%%**********************]  6 of 6 completed
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllllllllllllllllllll@{}}
+\toprule\noalign{}
+Variable &
+\multicolumn{6}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 10\tabcolsep}}{%
+Adj Close} &
+\multicolumn{4}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 6\tabcolsep}}{%
+Close} & ... &
+\multicolumn{4}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 6\tabcolsep}}{%
+Open} &
+\multicolumn{6}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 10\tabcolsep}@{}}{%
+Volume} \\
+Ticker & BAC & C & GS & JPM & MS & PNC & BAC & C & GS & JPM & ... & GS &
+JPM & MS & PNC & BAC & C & GS & JPM & MS & PNC \\
+Date & & & & & & & & & & & & & & & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2024-02-12 & 33.6200 & 53.9200 & 392.6400 & 175.7900 & 86.8700 &
+149.1400 & 33.6200 & 53.9200 & 392.6400 & 175.7900 & ... & 385.0000 &
+174.7800 & 85.8600 & 147.7700 & 34160400 & 17162300.0000 & 2797200.0000
+& 8539300.0000 & 7888000.0000 & 1612700.0000 \\
+2024-02-13 & 32.7500 & 52.7600 & 378.7500 & 174.2600 & 83.9700 &
+145.2600 & 32.7500 & 52.7600 & 378.7500 & 174.2600 & ... & 387.5900 &
+175.3200 & 85.8600 & 146.7800 & 43801500 & 17672100.0000 & 3030800.0000
+& 8397600.0000 & 11339400.0000 & 2121400.0000 \\
+2024-02-14 & 33.1300 & 53.9800 & 378.0400 & 176.0300 & 84.0000 &
+147.8700 & 33.1300 & 53.9800 & 378.0400 & 176.0300 & ... & 380.8800 &
+175.0700 & 84.5400 & 146.6300 & 27833900 & 14891900.0000 & 2041300.0000
+& 7056700.0000 & 5973700.0000 & 1265300.0000 \\
+2024-02-15 & 34.0700 & 55.2100 & 385.4200 & 179.8700 & 85.6700 &
+149.6300 & 34.0700 & 55.2100 & 385.4200 & 179.8700 & ... & 379.4200 &
+176.1500 & 84.4500 & 148.7500 & 41683100 & 16865000.0000 & 2218900.0000
+& 8723400.0000 & 7993500.0000 & 1991800.0000 \\
+2024-02-16 & 34.0900 & 54.8500 & 384.4400 & 179.0300 & 86.5000 &
+148.8500 & 34.0900 & 54.8500 & 384.4400 & 179.0300 & ... & 383.2400 &
+179.6100 & 85.5200 & 148.4200 & 33146357 & 11419637.0000 & 2302099.0000
+& 7927785.0000 & 9628557.0000 & 1362728.0000 \\
+\end{longtable}
 
 \hypertarget{reshape-stocks-from-wide-to-long-with-dates-and-tickers-as-row-indexes-and-assign-to-data-frame-stocks_long.-2}{%
 \subsection{\texorpdfstring{Reshape \texttt{stocks} from wide to long
 with dates and tickers as row indexes and assign to data frame
 \texttt{stocks\_long}.}{Reshape stocks from wide to long with dates and tickers as row indexes and assign to data frame stocks\_long.}}\label{reshape-stocks-from-wide-to-long-with-dates-and-tickers-as-row-indexes-and-assign-to-data-frame-stocks_long.-2}}
+
+By default, \texttt{.stack()} stacks the inner column index to the inner
+row index.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks\_long }\OperatorTok{=}\NormalTok{ stocks.stack()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks\_long.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllllll@{}}
+\toprule\noalign{}
+& Variable & Adj Close & Close & High & Low & Open & Volume \\
+Date & Ticker & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\multirow{5}{*}{2024-02-16} & C & 54.8500 & 54.8500 & 55.1950 & 54.5500
+& 54.9600 & 11419637.0000 \\
+& GS & 384.4400 & 384.4400 & 387.5800 & 380.9450 & 383.2400 &
+2302099.0000 \\
+& JPM & 179.0300 & 179.0300 & 179.9800 & 178.1600 & 179.6100 &
+7927785.0000 \\
+& MS & 86.5000 & 86.5000 & 86.7900 & 85.0700 & 85.5200 & 9628557.0000 \\
+& PNC & 148.8500 & 148.8500 & 149.9100 & 147.6900 & 148.4200 &
+1362728.0000 \\
+\end{longtable}
 
 \hypertarget{add-daily-returns-for-each-stock-to-data-frames-stocks-and-stocks_long.-2}{%
 \subsection{\texorpdfstring{Add daily returns for each stock to data
@@ -28421,10 +29838,167 @@ Name the returns variable \texttt{Returns}, and maintain all multi
 indexes. \emph{Hint:} Use \texttt{pd.MultiIndex()} to create a multi
 index for the the wide data frame \texttt{stocks}.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].columns}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Index(['BAC', 'C', 'GS', 'JPM', 'MS', 'PNC'], dtype='object', name='Ticker')
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\_ }\OperatorTok{=}\NormalTok{ pd.MultiIndex.from\_product([[}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{], stocks[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].columns])}
+\NormalTok{stocks[\_] }\OperatorTok{=}\NormalTok{ stocks[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].iloc[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{].pct\_change()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllllllllllllllllllll@{}}
+\toprule\noalign{}
+Variable &
+\multicolumn{6}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 10\tabcolsep}}{%
+Adj Close} &
+\multicolumn{4}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 6\tabcolsep}}{%
+Close} & ... &
+\multicolumn{4}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 6\tabcolsep}}{%
+Volume} &
+\multicolumn{6}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 10\tabcolsep}@{}}{%
+Returns} \\
+Ticker & BAC & C & GS & JPM & MS & PNC & BAC & C & GS & JPM & ... & GS &
+JPM & MS & PNC & BAC & C & GS & JPM & MS & PNC \\
+Date & & & & & & & & & & & & & & & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2024-02-12 & 33.6200 & 53.9200 & 392.6400 & 175.7900 & 86.8700 &
+149.1400 & 33.6200 & 53.9200 & 392.6400 & 175.7900 & ... & 2797200.0000
+& 8539300.0000 & 7888000.0000 & 1612700.0000 & 0.0166 & -0.0013 & 0.0218
+& 0.0045 & 0.0114 & 0.0093 \\
+2024-02-13 & 32.7500 & 52.7600 & 378.7500 & 174.2600 & 83.9700 &
+145.2600 & 32.7500 & 52.7600 & 378.7500 & 174.2600 & ... & 3030800.0000
+& 8397600.0000 & 11339400.0000 & 2121400.0000 & -0.0259 & -0.0215 &
+-0.0354 & -0.0087 & -0.0334 & -0.0260 \\
+2024-02-14 & 33.1300 & 53.9800 & 378.0400 & 176.0300 & 84.0000 &
+147.8700 & 33.1300 & 53.9800 & 378.0400 & 176.0300 & ... & 2041300.0000
+& 7056700.0000 & 5973700.0000 & 1265300.0000 & 0.0116 & 0.0231 & -0.0019
+& 0.0102 & 0.0004 & 0.0180 \\
+2024-02-15 & 34.0700 & 55.2100 & 385.4200 & 179.8700 & 85.6700 &
+149.6300 & 34.0700 & 55.2100 & 385.4200 & 179.8700 & ... & 2218900.0000
+& 8723400.0000 & 7993500.0000 & 1991800.0000 & 0.0284 & 0.0228 & 0.0195
+& 0.0218 & 0.0199 & 0.0119 \\
+2024-02-16 & 34.0900 & 54.8500 & 384.4400 & 179.0300 & 86.5000 &
+148.8500 & 34.0900 & 54.8500 & 384.4400 & 179.0300 & ... & 2302099.0000
+& 7927785.0000 & 9628557.0000 & 1362728.0000 & NaN & NaN & NaN & NaN &
+NaN & NaN \\
+\end{longtable}
+
+The easiest way to add returns to long data frame \texttt{stocks\_long}
+is to \texttt{.stack()} the wide data frame \texttt{stocks}! We could
+sort \texttt{stocks\_long} by ticker and date (to sort chronologically
+within each ticker), then use \texttt{.pct\_change()}. However, this
+approach miscalculates the first return for every ticker except for the
+first ticker. The easiest and safest solution is to \texttt{.stack()}
+the wide data frame \texttt{stocks}!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks\_long }\OperatorTok{=}\NormalTok{ stocks.stack()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks\_long.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllllll@{}}
+\toprule\noalign{}
+& Variable & Adj Close & Close & High & Low & Open & Volume & Returns \\
+Date & Ticker & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\multirow{5}{*}{2024-02-16} & C & 54.8500 & 54.8500 & 55.1950 & 54.5500
+& 54.9600 & 11419637.0000 & NaN \\
+& GS & 384.4400 & 384.4400 & 387.5800 & 380.9450 & 383.2400 &
+2302099.0000 & NaN \\
+& JPM & 179.0300 & 179.0300 & 179.9800 & 178.1600 & 179.6100 &
+7927785.0000 & NaN \\
+& MS & 86.5000 & 86.5000 & 86.7900 & 85.0700 & 85.5200 & 9628557.0000 &
+NaN \\
+& PNC & 148.8500 & 148.8500 & 149.9100 & 147.6900 & 148.4200 &
+1362728.0000 & NaN \\
+\end{longtable}
+
 \hypertarget{download-the-daily-benchmark-return-factors-from-ken-frenchs-data-library.-2}{%
 \subsection{Download the daily benchmark return factors from Ken
 French's data
 library.}\label{download-the-daily-benchmark-return-factors-from-ken-frenchs-data-library.-2}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pdr.famafrench.get\_available\_datasets()[:}\DecValTok{5}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+['F-F_Research_Data_Factors',
+ 'F-F_Research_Data_Factors_weekly',
+ 'F-F_Research_Data_Factors_daily',
+ 'F-F_Research_Data_5_Factors_2x3',
+ 'F-F_Research_Data_5_Factors_2x3_daily']
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ff }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    pdr.DataReader(}
+\NormalTok{        name}\OperatorTok{=}\StringTok{\textquotesingle{}F{-}F\_Research\_Data\_Factors\_daily\textquotesingle{}}\NormalTok{,}
+\NormalTok{        data\_source}\OperatorTok{=}\StringTok{\textquotesingle{}famafrench\textquotesingle{}}\NormalTok{,}
+\NormalTok{        start}\OperatorTok{=}\StringTok{\textquotesingle{}1900\textquotesingle{}}
+\NormalTok{    )}
+\NormalTok{    [}\DecValTok{0}\NormalTok{]}
+\NormalTok{    .div(}\DecValTok{100}\NormalTok{)}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+C:\Users\r.herron\AppData\Local\Temp\ipykernel_4188\2049483829.py:2: FutureWarning: The argument 'date_parser' is deprecated and will be removed in a future version. Please use 'date_format' instead, or read your data in as 'object' dtype and then call 'to_datetime'.
+  pdr.DataReader(
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ff.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule\noalign{}
+& Mkt-RF & SMB & HML & RF \\
+Date & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2023-12-22 & 0.0021 & 0.0064 & 0.0009 & 0.0002 \\
+2023-12-26 & 0.0048 & 0.0069 & 0.0046 & 0.0002 \\
+2023-12-27 & 0.0016 & 0.0014 & 0.0012 & 0.0002 \\
+2023-12-28 & -0.0001 & -0.0036 & 0.0003 & 0.0002 \\
+2023-12-29 & -0.0043 & -0.0112 & -0.0037 & 0.0002 \\
+\end{longtable}
 
 \hypertarget{add-the-daily-benchmark-return-factors-to-stocks-and-stocks_long.-2}{%
 \subsection{\texorpdfstring{Add the daily benchmark return factors to
@@ -28434,11 +30008,225 @@ library.}\label{download-the-daily-benchmark-return-factors-from-ken-frenchs-dat
 For the wide data frame \texttt{stocks}, use the outer index name
 \texttt{Factors}.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# stocks.join(ff)}
+\CommentTok{\# MergeError: Not allowed to merge between different levels. (2 levels on the left, 1 on the right)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\_ }\OperatorTok{=}\NormalTok{ pd.MultiIndex.from\_product([[}\StringTok{\textquotesingle{}Factors\textquotesingle{}}\NormalTok{], ff.columns])}
+\NormalTok{stocks[\_] }\OperatorTok{=}\NormalTok{ ff}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllllllllllllllllllll@{}}
+\toprule\noalign{}
+Variable &
+\multicolumn{6}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 10\tabcolsep}}{%
+Adj Close} &
+\multicolumn{4}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 6\tabcolsep}}{%
+Close} & ... &
+\multicolumn{6}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 10\tabcolsep}}{%
+Returns} &
+\multicolumn{4}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 6\tabcolsep}@{}}{%
+Factors} \\
+Ticker & BAC & C & GS & JPM & MS & PNC & BAC & C & GS & JPM & ... & BAC
+& C & GS & JPM & MS & PNC & Mkt-RF & SMB & HML & RF \\
+Date & & & & & & & & & & & & & & & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1973-02-21 & 1.5818 & NaN & NaN & NaN & NaN & NaN & 4.6250 & NaN & NaN &
+NaN & ... & NaN & NaN & NaN & NaN & NaN & NaN & -0.0074 & -0.0039 &
+0.0054 & 0.0002 \\
+1973-02-22 & 1.5872 & NaN & NaN & NaN & NaN & NaN & 4.6406 & NaN & NaN &
+NaN & ... & 0.0034 & NaN & NaN & NaN & NaN & NaN & -0.0030 & -0.0037 &
+0.0022 & 0.0002 \\
+1973-02-23 & 1.5818 & NaN & NaN & NaN & NaN & NaN & 4.6250 & NaN & NaN &
+NaN & ... & -0.0034 & NaN & NaN & NaN & NaN & NaN & -0.0108 & -0.0019 &
+0.0054 & 0.0002 \\
+1973-02-26 & 1.5818 & NaN & NaN & NaN & NaN & NaN & 4.6250 & NaN & NaN &
+NaN & ... & 0.0000 & NaN & NaN & NaN & NaN & NaN & -0.0088 & -0.0050 &
+0.0054 & 0.0002 \\
+1973-02-27 & 1.5818 & NaN & NaN & NaN & NaN & NaN & 4.6250 & NaN & NaN &
+NaN & ... & 0.0000 & NaN & NaN & NaN & NaN & NaN & -0.0115 & -0.0018 &
+0.0064 & 0.0002 \\
+... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... &
+... & ... & ... & ... & ... & ... & ... & ... & ... & ... \\
+2024-02-12 & 33.6200 & 53.9200 & 392.6400 & 175.7900 & 86.8700 &
+149.1400 & 33.6200 & 53.9200 & 392.6400 & 175.7900 & ... & 0.0166 &
+-0.0013 & 0.0218 & 0.0045 & 0.0114 & 0.0093 & NaN & NaN & NaN & NaN \\
+2024-02-13 & 32.7500 & 52.7600 & 378.7500 & 174.2600 & 83.9700 &
+145.2600 & 32.7500 & 52.7600 & 378.7500 & 174.2600 & ... & -0.0259 &
+-0.0215 & -0.0354 & -0.0087 & -0.0334 & -0.0260 & NaN & NaN & NaN &
+NaN \\
+2024-02-14 & 33.1300 & 53.9800 & 378.0400 & 176.0300 & 84.0000 &
+147.8700 & 33.1300 & 53.9800 & 378.0400 & 176.0300 & ... & 0.0116 &
+0.0231 & -0.0019 & 0.0102 & 0.0004 & 0.0180 & NaN & NaN & NaN & NaN \\
+2024-02-15 & 34.0700 & 55.2100 & 385.4200 & 179.8700 & 85.6700 &
+149.6300 & 34.0700 & 55.2100 & 385.4200 & 179.8700 & ... & 0.0284 &
+0.0228 & 0.0195 & 0.0218 & 0.0199 & 0.0119 & NaN & NaN & NaN & NaN \\
+2024-02-16 & 34.0900 & 54.8500 & 384.4400 & 179.0300 & 86.5000 &
+148.8500 & 34.0900 & 54.8500 & 384.4400 & 179.0300 & ... & NaN & NaN &
+NaN & NaN & NaN & NaN & NaN & NaN & NaN & NaN \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks\_long }\OperatorTok{=}\NormalTok{ stocks\_long.join(ff)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks\_long.loc[}\StringTok{\textquotesingle{}2023\textquotesingle{}}\NormalTok{].tail(}\DecValTok{12}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllllllllll@{}}
+\toprule\noalign{}
+& & Adj Close & Close & High & Low & Open & Volume & Returns & Mkt-RF &
+SMB & HML & RF \\
+Date & Ticker & & & & & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\multirow{6}{*}{2023-12-28} & BAC & 33.8800 & 33.8800 & 33.9700 &
+33.7700 & 33.8200 & 21799600.0000 & 0.0012 & -0.0001 & -0.0036 & 0.0003
+& 0.0002 \\
+& C & 51.0329 & 51.5200 & 51.8000 & 51.4000 & 51.4000 & 10218500.0000 &
+0.0012 & -0.0001 & -0.0036 & 0.0003 & 0.0002 \\
+& GS & 386.4100 & 386.4100 & 387.7600 & 383.6300 & 384.5200 &
+1024700.0000 & 0.0050 & -0.0001 & -0.0036 & 0.0003 & 0.0002 \\
+& JPM & 169.2563 & 170.3000 & 170.6600 & 169.0000 & 169.3500 &
+6320100.0000 & 0.0053 & -0.0001 & -0.0036 & 0.0003 & 0.0002 \\
+& MS & 92.7316 & 93.6400 & 93.9500 & 93.2400 & 93.3100 & 4089500.0000 &
+-0.0002 & -0.0001 & -0.0036 & 0.0003 & 0.0002 \\
+& PNC & 154.0486 & 155.6300 & 156.2100 & 154.9500 & 155.4400 &
+1153300.0000 & 0.0041 & -0.0001 & -0.0036 & 0.0003 & 0.0002 \\
+\multirow{6}{*}{2023-12-29} & BAC & 33.6700 & 33.6700 & 33.9900 &
+33.5500 & 33.9400 & 28037800.0000 & -0.0062 & -0.0043 & -0.0112 &
+-0.0037 & 0.0002 \\
+& C & 50.9537 & 51.4400 & 51.6100 & 51.2200 & 51.5600 & 13147900.0000 &
+-0.0016 & -0.0043 & -0.0112 & -0.0037 & 0.0002 \\
+& GS & 385.7700 & 385.7700 & 386.6400 & 383.5700 & 385.5700 &
+881300.0000 & -0.0017 & -0.0043 & -0.0112 & -0.0037 & 0.0002 \\
+& JPM & 169.0575 & 170.1000 & 170.6900 & 169.6300 & 170.0000 &
+6431800.0000 & -0.0012 & -0.0043 & -0.0112 & -0.0037 & 0.0002 \\
+& MS & 92.3454 & 93.2500 & 93.7700 & 93.0600 & 93.4900 & 4772100.0000 &
+-0.0042 & -0.0043 & -0.0112 & -0.0037 & 0.0002 \\
+& PNC & 153.2765 & 154.8500 & 156.1100 & 154.5200 & 155.2700 &
+1572600.0000 & -0.0050 & -0.0043 & -0.0112 & -0.0037 & 0.0002 \\
+\end{longtable}
+
 \hypertarget{write-a-function-download-that-accepts-tickers-and-returns-a-wide-data-frame-of-returns-with-the-daily-benchmark-return-factors.-2}{%
 \subsection{\texorpdfstring{Write a function \texttt{download()} that
 accepts tickers and returns a wide data frame of returns with the daily
 benchmark return
 factors.}{Write a function download() that accepts tickers and returns a wide data frame of returns with the daily benchmark return factors.}}\label{write-a-function-download-that-accepts-tickers-and-returns-a-wide-data-frame-of-returns-with-the-daily-benchmark-return-factors.-2}}
+
+We can even add a \texttt{shape} argument to return a wide or long data
+frame!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ download(tickers, shape}\OperatorTok{=}\StringTok{\textquotesingle{}wide\textquotesingle{}}\NormalTok{):}
+    \ControlFlowTok{if}\NormalTok{ shape.lower() }\KeywordTok{not} \KeywordTok{in}\NormalTok{ [}\StringTok{\textquotesingle{}wide\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}long\textquotesingle{}}\NormalTok{]:}
+        \ControlFlowTok{raise} \PreprocessorTok{ValueError}\NormalTok{(}\StringTok{\textquotesingle{}Invalid shape: must be "wide" or "long".\textquotesingle{}}\NormalTok{)}
+
+\NormalTok{    stocks }\OperatorTok{=}\NormalTok{ yf.download(tickers)}
+
+\NormalTok{    factors\_all }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{        pdr.DataReader(}
+\NormalTok{            name}\OperatorTok{=}\StringTok{\textquotesingle{}F{-}F\_Research\_Data\_Factors\_daily\textquotesingle{}}\NormalTok{,}
+\NormalTok{            data\_source}\OperatorTok{=}\StringTok{\textquotesingle{}famafrench\textquotesingle{}}\NormalTok{,}
+\NormalTok{            start}\OperatorTok{=}\StringTok{\textquotesingle{}1900\textquotesingle{}}
+\NormalTok{        )}
+\NormalTok{    )}
+    
+\NormalTok{    factors }\OperatorTok{=}\NormalTok{ factors\_all[}\DecValTok{0}\NormalTok{].div(}\DecValTok{100}\NormalTok{)}
+    
+    \CommentTok{\# if stocks has a multi index on the columns because we asked for more than one ticker}
+    \CommentTok{\# then we have more work to do}
+    \ControlFlowTok{if} \BuiltInTok{type}\NormalTok{(stocks.columns) }\KeywordTok{is}\NormalTok{ pd.MultiIndex:}
+        
+        \CommentTok{\# whether we want a wide or long data frame, it is easier to add returns to a wide data frame}
+\NormalTok{        \_ }\OperatorTok{=}\NormalTok{ pd.MultiIndex.from\_product([[}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{], stocks[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].columns])}
+\NormalTok{        stocks[\_] }\OperatorTok{=}\NormalTok{ stocks[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].pct\_change()}
+
+        \CommentTok{\# if we want a wide data frame, then we need a factors multi index}
+        \ControlFlowTok{if}\NormalTok{ shape.lower() }\OperatorTok{==} \StringTok{\textquotesingle{}wide\textquotesingle{}}\NormalTok{:}
+\NormalTok{            \_ }\OperatorTok{=}\NormalTok{ pd.MultiIndex.from\_product([[}\StringTok{\textquotesingle{}Factors\textquotesingle{}}\NormalTok{], factors.columns])}
+\NormalTok{            stocks[\_] }\OperatorTok{=}\NormalTok{ factors}
+            \ControlFlowTok{return}\NormalTok{ stocks.rename\_axis(columns}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Variable\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{])}
+
+        \CommentTok{\# if we want a long data frame, then we need to stack stocks and join factors}
+        \CommentTok{\# because we tested for wide and long above, we know that here shape must be long}
+        \ControlFlowTok{else}\NormalTok{:}
+            \ControlFlowTok{return}\NormalTok{ stocks.stack().join(factors).rename\_axis(columns}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Variable\textquotesingle{}}\NormalTok{], index}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{])}
+            
+    \CommentTok{\# if stocks does not have a multi index on the columns}
+    \CommentTok{\# then we only have join factors}
+    \ControlFlowTok{else}\NormalTok{:}
+        \ControlFlowTok{return}\NormalTok{ stocks.join(ff).rename\_axis(columns}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Variable\textquotesingle{}}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{download(tickers}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}AAPL\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}TSLA\textquotesingle{}}\NormalTok{], shape}\OperatorTok{=}\StringTok{\textquotesingle{}long\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[*********************100%%**********************]  2 of 2 completed
+C:\Users\r.herron\AppData\Local\Temp\ipykernel_4188\3667605341.py:8: FutureWarning: The argument 'date_parser' is deprecated and will be removed in a future version. Please use 'date_format' instead, or read your data in as 'object' dtype and then call 'to_datetime'.
+  pdr.DataReader(
+\end{verbatim}
+
+\begin{longtable}[]{@{}lllllllllllll@{}}
+\toprule\noalign{}
+& Variable & Adj Close & Close & High & Low & Open & Volume & Returns &
+Mkt-RF & SMB & HML & RF \\
+Date & Ticker & & & & & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1980-12-12 & AAPL & 0.0992 & 0.1283 & 0.1289 & 0.1283 & 0.1283 &
+469033600.0000 & NaN & 0.0138 & -0.0001 & -0.0105 & 0.0006 \\
+1980-12-15 & AAPL & 0.0940 & 0.1217 & 0.1222 & 0.1217 & 0.1222 &
+175884800.0000 & -0.0522 & 0.0011 & 0.0025 & -0.0046 & 0.0006 \\
+1980-12-16 & AAPL & 0.0871 & 0.1127 & 0.1133 & 0.1127 & 0.1133 &
+105728000.0000 & -0.0734 & 0.0071 & -0.0075 & -0.0047 & 0.0006 \\
+1980-12-17 & AAPL & 0.0893 & 0.1155 & 0.1161 & 0.1155 & 0.1155 &
+86441600.0000 & 0.0248 & 0.0152 & -0.0086 & -0.0034 & 0.0006 \\
+1980-12-18 & AAPL & 0.0919 & 0.1189 & 0.1194 & 0.1189 & 0.1189 &
+73449600.0000 & 0.0290 & 0.0041 & 0.0022 & 0.0126 & 0.0006 \\
+... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... &
+... \\
+2024-02-14 & TSLA & 188.7100 & 188.7100 & 188.8900 & 183.3500 & 185.3000
+& 81203000.0000 & 0.0255 & NaN & NaN & NaN & NaN \\
+\multirow{2}{*}{2024-02-15} & AAPL & 183.8600 & 183.8600 & 184.4900 &
+181.3500 & 183.5500 & 65434500.0000 & -0.0016 & NaN & NaN & NaN & NaN \\
+& TSLA & 200.4500 & 200.4500 & 200.8800 & 188.8600 & 189.1600 &
+120831800.0000 & 0.0622 & NaN & NaN & NaN & NaN \\
+\multirow{2}{*}{2024-02-16} & AAPL & 182.3100 & 182.3100 & 184.8500 &
+181.6650 & 183.4200 & 48627624.0000 & -0.0084 & NaN & NaN & NaN & NaN \\
+& TSLA & 199.9500 & 199.9500 & 203.1700 & 197.4000 & 202.0600 &
+110528448.0000 & -0.0025 & NaN & NaN & NaN & NaN \\
+\end{longtable}
 
 \hypertarget{download-earnings-per-share-for-the-stocks-in-stocks-and-combine-to-a-long-data-frame-earnings.-2}{%
 \subsection{\texorpdfstring{Download earnings per share for the stocks
@@ -28453,14 +30241,51 @@ Use the \texttt{.earnings\_dates} method described
 \texttt{Date} and swap to match the order of the row index in
 \texttt{stocks\_long}.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tickers }\OperatorTok{=}\NormalTok{ yf.Tickers(tickers}\OperatorTok{=}\StringTok{\textquotesingle{}BAC C GS JPM MS PNC\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{earnings  }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    pd.concat(}
+\NormalTok{        objs}\OperatorTok{=}\NormalTok{[tickers.tickers[t].earnings\_dates }\ControlFlowTok{for}\NormalTok{ t }\KeywordTok{in}\NormalTok{ tickers.tickers],}
+\NormalTok{        keys}\OperatorTok{=}\NormalTok{tickers.tickers,}
+\NormalTok{        names}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{]}
+\NormalTok{    )}
+\NormalTok{    .reset\_index()}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{earnings.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule\noalign{}
+& Ticker & Date & EPS Estimate & Reported EPS & Surprise(\%) \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+67 & PNC & 2024-04-16 08:00:00-04:00 & 3.0800 & NaN & NaN \\
+68 & PNC & 2024-01-16 06:00:00-05:00 & 2.9400 & 3.1600 & 0.0737 \\
+69 & PNC & 2023-10-13 06:00:00-04:00 & 3.1100 & 3.6000 & 0.1586 \\
+70 & PNC & 2023-07-18 07:00:00-04:00 & 3.2800 & 3.3600 & 0.0230 \\
+71 & PNC & 2023-04-14 06:00:00-04:00 & 3.6700 & 3.9800 & 0.0847 \\
+\end{longtable}
+
 \hypertarget{combine-earnings-with-the-returns-from-stocks_long.-2}{%
 \subsection{\texorpdfstring{Combine \texttt{earnings} with the returns
 from
 \texttt{stocks\_long}.}{Combine earnings with the returns from stocks\_long.}}\label{combine-earnings-with-the-returns-from-stocks_long.-2}}
 
-\textbf{\emph{It is easier to leave \texttt{stocks} and
-\texttt{stocks\_long} as-is and work with slices \texttt{returns} and
-\texttt{returns\_long}.}} Use the
+Use the
 \texttt{tz\_localize(\textquotesingle{}America/New\_York\textquotesingle{})}
 method add time zone information back to \texttt{returns.index} and use
 \texttt{pd.to\_timedelta(16,\ unit=\textquotesingle{}h\textquotesingle{})}
@@ -28470,6 +30295,72 @@ to match earnings announcement dates and times to appropriate return
 periods. For example, if a firm announces earnings after the close at 5
 PM on February 7, we want to match the return period from 4 PM on
 February 7 to 4 PM on February 8.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    stocks\_long}
+\NormalTok{    .reset\_index()}
+\NormalTok{    [[}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]]}
+\NormalTok{    .assign(}
+\NormalTok{        Date}\OperatorTok{=}\KeywordTok{lambda}\NormalTok{ x: x[}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{].dt.tz\_localize(}\StringTok{\textquotesingle{}America/New\_York\textquotesingle{}}\NormalTok{) }\OperatorTok{+}\NormalTok{ pd.to\_timedelta(}\DecValTok{16}\NormalTok{, unit}\OperatorTok{=}\StringTok{\textquotesingle{}H\textquotesingle{}}\NormalTok{)}
+\NormalTok{    )}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+& Date & Ticker & Returns \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+62021 & 2024-02-16 16:00:00-05:00 & C & NaN \\
+62022 & 2024-02-16 16:00:00-05:00 & GS & NaN \\
+62023 & 2024-02-16 16:00:00-05:00 & JPM & NaN \\
+62024 & 2024-02-16 16:00:00-05:00 & MS & NaN \\
+62025 & 2024-02-16 16:00:00-05:00 & PNC & NaN \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{surprises }\OperatorTok{=}\NormalTok{ pd.merge\_asof(}
+\NormalTok{    left}\OperatorTok{=}\NormalTok{earnings.sort\_values([}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{]),}
+\NormalTok{    right}\OperatorTok{=}\NormalTok{returns.sort\_values([}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{]),}
+\NormalTok{    on}\OperatorTok{=}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{,}
+\NormalTok{    by}\OperatorTok{=}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{,}
+\NormalTok{    direction}\OperatorTok{=}\StringTok{\textquotesingle{}forward\textquotesingle{}}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{surprises.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllll@{}}
+\toprule\noalign{}
+& Ticker & Date & EPS Estimate & Reported EPS & Surprise(\%) &
+Returns \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+67 & JPM & 2025-01-15 08:00:00-05:00 & NaN & NaN & NaN & NaN \\
+68 & JPM & 2025-01-15 08:00:00-05:00 & NaN & NaN & NaN & NaN \\
+69 & C & 2025-01-15 11:00:00-05:00 & NaN & NaN & NaN & NaN \\
+70 & PNC & 2025-01-16 08:00:00-05:00 & NaN & NaN & NaN & NaN \\
+71 & PNC & 2025-01-16 10:00:00-05:00 & NaN & NaN & NaN & NaN \\
+\end{longtable}
 
 \hypertarget{plot-the-relation-between-daily-returns-and-earnings-surprises-2}{%
 \subsection{Plot the relation between daily returns and earnings
@@ -28490,28 +30381,329 @@ Three options in increasing difficulty:
   \texttt{pd.qcut()} to form five groups on earnings surprises
 \end{enumerate}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}
+\NormalTok{    surprises}
+\NormalTok{    [[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]]}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .plot(kind}\OperatorTok{=}\StringTok{\textquotesingle{}scatter\textquotesingle{}}\NormalTok{, x}\OperatorTok{=}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, y}\OperatorTok{=}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{)}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Earnings Surprise (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}One{-}Day Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Earnings Surprise Analysis}\CharTok{\textbackslash{}n}\SpecialStringTok{ }\SpecialCharTok{\{}\StringTok{\textquotesingle{}, \textquotesingle{}}\SpecialCharTok{.}\NormalTok{join(tickers.tickers)}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_08_practice_04_files/figure-pdf/cell-30-output-1.png}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{import}\NormalTok{ seaborn }\ImportTok{as}\NormalTok{ sns}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sns.regplot(}
+\NormalTok{    data}\OperatorTok{=}\NormalTok{surprises[[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]].mul(}\DecValTok{100}\NormalTok{),}
+\NormalTok{    x}\OperatorTok{=}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{,}
+\NormalTok{    y}\OperatorTok{=}\StringTok{\textquotesingle{}Returns\textquotesingle{}}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Earnings Surprise (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}One{-}Day Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Earnings Surprise Analysis}\CharTok{\textbackslash{}n}\SpecialStringTok{ }\SpecialCharTok{\{}\StringTok{\textquotesingle{}, \textquotesingle{}}\SpecialCharTok{.}\NormalTok{join(tickers.tickers)}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_08_practice_04_files/figure-pdf/cell-32-output-1.png}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sns.catplot(}
+\NormalTok{    data}\OperatorTok{=}\NormalTok{(}
+\NormalTok{        surprises[[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]]}
+\NormalTok{        .dropna()}
+\NormalTok{        .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{        .assign(}
+\NormalTok{            surprise\_bin}\OperatorTok{=}\KeywordTok{lambda}\NormalTok{ x: pd.qcut(x[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{], q}\OperatorTok{=}\DecValTok{5}\NormalTok{, labels}\OperatorTok{=}\VariableTok{False}\NormalTok{)}\OperatorTok{+}\DecValTok{1}
+\NormalTok{        )}
+\NormalTok{    ),}
+\NormalTok{    x}\OperatorTok{=}\StringTok{\textquotesingle{}surprise\_bin\textquotesingle{}}\NormalTok{,}
+\NormalTok{    y}\OperatorTok{=}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{,}
+\NormalTok{    kind}\OperatorTok{=}\StringTok{\textquotesingle{}bar\textquotesingle{}}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Earnings Surprise Bin (1=Lowest, 5=Highest)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}One{-}Day Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Earnings Surprise Analysis}\CharTok{\textbackslash{}n}\SpecialStringTok{ }\SpecialCharTok{\{}\StringTok{\textquotesingle{}, \textquotesingle{}}\SpecialCharTok{.}\NormalTok{join(tickers.tickers)}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_08_practice_04_files/figure-pdf/cell-33-output-1.png}
+
+}
+
+\end{figure}
+
 \hypertarget{repeat-the-earnings-exercise-with-the-sp-100-stocks-2}{%
 \subsection{Repeat the earnings exercise with the S\&P 100
 stocks}\label{repeat-the-earnings-exercise-with-the-sp-100-stocks-2}}
 
-\hypertarget{repeat-the-earnings-exercise-with-excess-returns-of-the-sp-100-stocks-2}{%
-\subsection{\texorpdfstring{Repeat the earnings exercise with
-\emph{excess returns} of the S\&P 100
-Stocks}{Repeat the earnings exercise with excess returns of the S\&P 100 Stocks}}\label{repeat-the-earnings-exercise-with-excess-returns-of-the-sp-100-stocks-2}}
+With more data, we can more clearly see the positive relation between
+earnings surprises and returns!
 
-Excess returns are returns minus market returns. We need to add a
-timezone and the closing time to the market return from Fama and French.
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\_ }\OperatorTok{=}\NormalTok{ pd.read\_html(}\StringTok{\textquotesingle{}https://en.wikipedia.org/wiki/S\%26P\_100\textquotesingle{}}\NormalTok{)[}\DecValTok{2}\NormalTok{][}\StringTok{\textquotesingle{}Symbol\textquotesingle{}}\NormalTok{].to\_list()}
+\NormalTok{tickers\_2 }\OperatorTok{=}\NormalTok{ yf.Tickers(tickers}\OperatorTok{=}\NormalTok{[t.replace(}\StringTok{\textquotesingle{}.\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}{-}\textquotesingle{}}\NormalTok{) }\ControlFlowTok{for}\NormalTok{ t }\KeywordTok{in}\NormalTok{ \_]) }\CommentTok{\# Yahoo! Finance uses "{-}" to indicate share classes instead of "."}
+\end{Highlighting}
+\end{Shaded}
 
-\hypertarget{improve-your-download-function-from-above-1}{%
-\subsection{\texorpdfstring{Improve your \texttt{download()} function
-from
-above}{Improve your download() function from above}}\label{improve-your-download-function-from-above-1}}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{earnings\_2  }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    pd.concat(}
+\NormalTok{        objs}\OperatorTok{=}\NormalTok{[tickers\_2.tickers[t].earnings\_dates }\ControlFlowTok{for}\NormalTok{ t }\KeywordTok{in}\NormalTok{ tickers\_2.tickers],}
+\NormalTok{        keys}\OperatorTok{=}\NormalTok{tickers\_2.tickers,}
+\NormalTok{        names}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{]}
+\NormalTok{    )}
+\NormalTok{    .reset\_index()}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
 
-Modify \texttt{download()} to accept one or more than one ticker. Since
-we will not use the advanced functionality of the tickers object that
-\texttt{yf.Tickers()} creates, we will use \texttt{yf.download()}. The
-current version of \texttt{yf.download()} does not accept a
-\texttt{session=} argument.
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{earnings\_2.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule\noalign{}
+& Ticker & Date & EPS Estimate & Reported EPS & Surprise(\%) \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1207 & XOM & 2023-04-28 06:00:00-04:00 & 2.5900 & 2.8300 & 0.0943 \\
+1208 & XOM & 2023-01-31 06:00:00-05:00 & 3.2900 & 3.4000 & 0.0319 \\
+1209 & XOM & 2022-10-28 06:00:00-04:00 & 3.7900 & 4.4500 & 0.1733 \\
+1210 & XOM & 2022-07-29 06:00:00-04:00 & 3.7400 & 4.1400 & 0.1077 \\
+1211 & XOM & 2022-04-29 06:00:00-04:00 & 2.1200 & 2.0700 & -0.0247 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns\_2 }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    yf.download(tickers}\OperatorTok{=}\NormalTok{[t }\ControlFlowTok{for}\NormalTok{ t }\KeywordTok{in}\NormalTok{ tickers\_2.tickers])}
+\NormalTok{    .rename\_axis(columns}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Variable\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{])}
+\NormalTok{    [}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{]}
+\NormalTok{    .pct\_change()}
+\NormalTok{    .stack()}
+\NormalTok{    .to\_frame(}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{)}
+\NormalTok{    .reset\_index()}
+\NormalTok{    [[}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]]}
+\NormalTok{    .assign(}
+\NormalTok{        Date}\OperatorTok{=}\KeywordTok{lambda}\NormalTok{ x: x[}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{].dt.tz\_localize(}\StringTok{\textquotesingle{}America/New\_York\textquotesingle{}}\NormalTok{) }\OperatorTok{+}\NormalTok{ pd.to\_timedelta(}\DecValTok{16}\NormalTok{, unit}\OperatorTok{=}\StringTok{\textquotesingle{}H\textquotesingle{}}\NormalTok{)}
+\NormalTok{    )}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[*********************100%%**********************]  101 of 101 completed
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns\_2.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+& Date & Ticker & Returns \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1018569 & 2024-02-16 16:00:00-05:00 & V & -0.0086 \\
+1018570 & 2024-02-16 16:00:00-05:00 & VZ & -0.0025 \\
+1018571 & 2024-02-16 16:00:00-05:00 & WFC & -0.0025 \\
+1018572 & 2024-02-16 16:00:00-05:00 & WMT & 0.0063 \\
+1018573 & 2024-02-16 16:00:00-05:00 & XOM & 0.0000 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{surprises\_2 }\OperatorTok{=}\NormalTok{ pd.merge\_asof(}
+\NormalTok{    left}\OperatorTok{=}\NormalTok{earnings\_2.sort\_values([}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{]),}
+\NormalTok{    right}\OperatorTok{=}\NormalTok{returns\_2.sort\_values([}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{]),}
+\NormalTok{    on}\OperatorTok{=}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{,}
+\NormalTok{    by}\OperatorTok{=}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{,}
+\NormalTok{    direction}\OperatorTok{=}\StringTok{\textquotesingle{}forward\textquotesingle{}}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{surprises\_2.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllll@{}}
+\toprule\noalign{}
+& Ticker & Date & EPS Estimate & Reported EPS & Surprise(\%) &
+Returns \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1207 & USB & 2025-10-16 09:00:00-04:00 & NaN & NaN & NaN & NaN \\
+1208 & USB & 2025-10-16 09:00:00-04:00 & NaN & NaN & NaN & NaN \\
+1209 & RTX & 2025-10-20 06:00:00-04:00 & NaN & NaN & NaN & NaN \\
+1210 & USB & 2026-01-20 09:00:00-05:00 & NaN & NaN & NaN & NaN \\
+1211 & USB & 2026-01-20 09:00:00-05:00 & NaN & NaN & NaN & NaN \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}
+\NormalTok{    surprises\_2}
+\NormalTok{    [[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]]}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .plot(kind}\OperatorTok{=}\StringTok{\textquotesingle{}scatter\textquotesingle{}}\NormalTok{, x}\OperatorTok{=}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, y}\OperatorTok{=}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{)}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Earnings Surprise (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}One{-}Day Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\StringTok{\textquotesingle{}Earnings Surprise Analysis}\CharTok{\textbackslash{}n}\StringTok{ S\&P 100 Stocks\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_08_practice_04_files/figure-pdf/cell-41-output-1.png}
+
+}
+
+\end{figure}
+
+\textbf{\emph{There are a few large negative and positive earnings
+surprises that make our plot difficult to interpret!}} We have these
+huge outliers because surprises are defined as the percent change
+relative to the expected. If expected is a very small number, then the
+surprise can be a very large number! We would use different surprise
+definitions for a more rigorous analysis. Here we can drop observations
+less than the 0.01 quantile and greater than the 0.99 quantile.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{low\_2 }\OperatorTok{=}\NormalTok{ surprises\_2[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{].quantile(}\FloatTok{0.01}\NormalTok{)}
+\NormalTok{high\_2 }\OperatorTok{=}\NormalTok{ surprises\_2[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{].quantile(}\FloatTok{0.91}\NormalTok{)}
+
+\NormalTok{cond\_2 }\OperatorTok{=}\NormalTok{ surprises\_2[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{].between(low\_2, high\_2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}
+\NormalTok{    surprises\_2}
+\NormalTok{    .loc[cond\_2, [}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]]}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .plot(kind}\OperatorTok{=}\StringTok{\textquotesingle{}scatter\textquotesingle{}}\NormalTok{, x}\OperatorTok{=}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, y}\OperatorTok{=}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{, alpha}\OperatorTok{=}\FloatTok{0.5}\NormalTok{)}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Earnings Surprise (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}One{-}Day Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\StringTok{\textquotesingle{}Earnings Surprise Analysis}\CharTok{\textbackslash{}n}\StringTok{ S\&P 100 Stocks\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_08_practice_04_files/figure-pdf/cell-43-output-1.png}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sns.regplot(}
+\NormalTok{    data}\OperatorTok{=}\NormalTok{surprises\_2.loc[cond\_2, [}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]].mul(}\DecValTok{100}\NormalTok{),}
+\NormalTok{    x}\OperatorTok{=}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{,}
+\NormalTok{    y}\OperatorTok{=}\StringTok{\textquotesingle{}Returns\textquotesingle{}}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Earnings Surprise (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}One{-}Day Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\StringTok{\textquotesingle{}Earnings Surprise Analysis}\CharTok{\textbackslash{}n}\StringTok{ S\&P 100 Stocks\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_08_practice_04_files/figure-pdf/cell-44-output-1.png}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sns.catplot(}
+\NormalTok{    data}\OperatorTok{=}\NormalTok{(}
+\NormalTok{        surprises\_2}
+\NormalTok{        .loc[cond\_2, [}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]]}
+\NormalTok{        .dropna()}
+\NormalTok{        .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{        .assign(surprise\_bin}\OperatorTok{=}\KeywordTok{lambda}\NormalTok{ x: pd.qcut(x[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{], q}\OperatorTok{=}\DecValTok{5}\NormalTok{, labels}\OperatorTok{=}\VariableTok{False}\NormalTok{) }\OperatorTok{+} \DecValTok{1}\NormalTok{)}
+\NormalTok{    ),}
+\NormalTok{    x}\OperatorTok{=}\StringTok{\textquotesingle{}surprise\_bin\textquotesingle{}}\NormalTok{,}
+\NormalTok{    y}\OperatorTok{=}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{,}
+\NormalTok{    kind}\OperatorTok{=}\StringTok{\textquotesingle{}bar\textquotesingle{}}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Earnings Surprise Bin (1=Lowest, 5=Highest)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}One{-}Day Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\StringTok{\textquotesingle{}Earnings Surprise Analysis}\CharTok{\textbackslash{}n}\StringTok{ S\&P 100 Stocks\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_08_practice_04_files/figure-pdf/cell-45-output-1.png}
+
+}
+
+\end{figure}
 
 \hypertarget{mckinney-chapter-8---practice-for-section-05}{%
 \chapter{McKinney Chapter 8 - Practice for Section
@@ -28605,13 +30797,110 @@ Chapter 8 of McKinney covers 3 topics.
 C, GS, JPM, MS, and PNC and assign to data frame
 \texttt{stocks}.}{Download data from Yahoo! Finance for BAC, C, GS, JPM, MS, and PNC and assign to data frame stocks.}}\label{download-data-from-yahoo-finance-for-bac-c-gs-jpm-ms-and-pnc-and-assign-to-data-frame-stocks.-3}}
 
-Use \texttt{stocks.columns.names} to assign the names \texttt{Variable}
-and \texttt{Ticker} to the column multi index.
+Use
+\texttt{.rename\_axis(columns=stocks.columns.names\ =\ {[}\textquotesingle{}Variable\textquotesingle{},\ \textquotesingle{}Ticker\textquotesingle{}{]})}
+to assign the names \texttt{Variable} and \texttt{Ticker} to the column
+multi index. We could instead use
+\texttt{stocks.columns.names\ =\ {[}\textquotesingle{}Variable\textquotesingle{},\ \textquotesingle{}Ticker\textquotesingle{}{]}},
+but we can chain the \texttt{.rename\_axis()} method.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    yf.download(tickers}\OperatorTok{=}\StringTok{\textquotesingle{}BAC C GS JPM MS PNC\textquotesingle{}}\NormalTok{)}
+\NormalTok{    .rename\_axis(columns}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Variable\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{])}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[*********************100%%**********************]  6 of 6 completed
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllllllllllllllllllll@{}}
+\toprule\noalign{}
+Variable &
+\multicolumn{6}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 10\tabcolsep}}{%
+Adj Close} &
+\multicolumn{4}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 6\tabcolsep}}{%
+Close} & ... &
+\multicolumn{4}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 6\tabcolsep}}{%
+Open} &
+\multicolumn{6}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 10\tabcolsep}@{}}{%
+Volume} \\
+Ticker & BAC & C & GS & JPM & MS & PNC & BAC & C & GS & JPM & ... & GS &
+JPM & MS & PNC & BAC & C & GS & JPM & MS & PNC \\
+Date & & & & & & & & & & & & & & & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2024-02-12 & 33.6200 & 53.9200 & 392.6400 & 175.7900 & 86.8700 &
+149.1400 & 33.6200 & 53.9200 & 392.6400 & 175.7900 & ... & 385.0000 &
+174.7800 & 85.8600 & 147.7700 & 34160400 & 17162300.0000 & 2797200.0000
+& 8539300.0000 & 7888000.0000 & 1612700.0000 \\
+2024-02-13 & 32.7500 & 52.7600 & 378.7500 & 174.2600 & 83.9700 &
+145.2600 & 32.7500 & 52.7600 & 378.7500 & 174.2600 & ... & 387.5900 &
+175.3200 & 85.8600 & 146.7800 & 43801500 & 17672100.0000 & 3030800.0000
+& 8397600.0000 & 11339400.0000 & 2121400.0000 \\
+2024-02-14 & 33.1300 & 53.9800 & 378.0400 & 176.0300 & 84.0000 &
+147.8700 & 33.1300 & 53.9800 & 378.0400 & 176.0300 & ... & 380.8800 &
+175.0700 & 84.5400 & 146.6300 & 27833900 & 14891900.0000 & 2041300.0000
+& 7056700.0000 & 5973700.0000 & 1265300.0000 \\
+2024-02-15 & 34.0700 & 55.2100 & 385.4200 & 179.8700 & 85.6700 &
+149.6300 & 34.0700 & 55.2100 & 385.4200 & 179.8700 & ... & 379.4200 &
+176.1500 & 84.4500 & 148.7500 & 41683100 & 16865000.0000 & 2218900.0000
+& 8723400.0000 & 7993500.0000 & 1991800.0000 \\
+2024-02-16 & 34.0900 & 54.8500 & 384.4400 & 179.0300 & 86.5000 &
+148.8500 & 34.0900 & 54.8500 & 384.4400 & 179.0300 & ... & 383.2400 &
+179.6100 & 85.5200 & 148.4200 & 33146357 & 11419637.0000 & 2302099.0000
+& 7927785.0000 & 9628557.0000 & 1362728.0000 \\
+\end{longtable}
 
 \hypertarget{reshape-stocks-from-wide-to-long-with-dates-and-tickers-as-row-indexes-and-assign-to-data-frame-stocks_long.-3}{%
 \subsection{\texorpdfstring{Reshape \texttt{stocks} from wide to long
 with dates and tickers as row indexes and assign to data frame
 \texttt{stocks\_long}.}{Reshape stocks from wide to long with dates and tickers as row indexes and assign to data frame stocks\_long.}}\label{reshape-stocks-from-wide-to-long-with-dates-and-tickers-as-row-indexes-and-assign-to-data-frame-stocks_long.-3}}
+
+By default, \texttt{.stack()} stacks the inner column index to the inner
+row index.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks\_long }\OperatorTok{=}\NormalTok{ stocks.stack()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks\_long.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllllll@{}}
+\toprule\noalign{}
+& Variable & Adj Close & Close & High & Low & Open & Volume \\
+Date & Ticker & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\multirow{5}{*}{2024-02-16} & C & 54.8500 & 54.8500 & 55.1950 & 54.5500
+& 54.9600 & 11419637.0000 \\
+& GS & 384.4400 & 384.4400 & 387.5800 & 380.9450 & 383.2400 &
+2302099.0000 \\
+& JPM & 179.0300 & 179.0300 & 179.9800 & 178.1600 & 179.6100 &
+7927785.0000 \\
+& MS & 86.5000 & 86.5000 & 86.7900 & 85.0700 & 85.5200 & 9628557.0000 \\
+& PNC & 148.8500 & 148.8500 & 149.9100 & 147.6900 & 148.4200 &
+1362728.0000 \\
+\end{longtable}
 
 \hypertarget{add-daily-returns-for-each-stock-to-data-frames-stocks-and-stocks_long.-3}{%
 \subsection{\texorpdfstring{Add daily returns for each stock to data
@@ -28622,10 +30911,167 @@ Name the returns variable \texttt{Returns}, and maintain all multi
 indexes. \emph{Hint:} Use \texttt{pd.MultiIndex()} to create a multi
 index for the the wide data frame \texttt{stocks}.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].columns}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+Index(['BAC', 'C', 'GS', 'JPM', 'MS', 'PNC'], dtype='object', name='Ticker')
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\_ }\OperatorTok{=}\NormalTok{ pd.MultiIndex.from\_product([[}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{], stocks[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].columns])}
+\NormalTok{stocks[\_] }\OperatorTok{=}\NormalTok{ stocks[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].iloc[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{].pct\_change()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllllllllllllllllllll@{}}
+\toprule\noalign{}
+Variable &
+\multicolumn{6}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 10\tabcolsep}}{%
+Adj Close} &
+\multicolumn{4}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 6\tabcolsep}}{%
+Close} & ... &
+\multicolumn{4}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 6\tabcolsep}}{%
+Volume} &
+\multicolumn{6}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 10\tabcolsep}@{}}{%
+Returns} \\
+Ticker & BAC & C & GS & JPM & MS & PNC & BAC & C & GS & JPM & ... & GS &
+JPM & MS & PNC & BAC & C & GS & JPM & MS & PNC \\
+Date & & & & & & & & & & & & & & & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2024-02-12 & 33.6200 & 53.9200 & 392.6400 & 175.7900 & 86.8700 &
+149.1400 & 33.6200 & 53.9200 & 392.6400 & 175.7900 & ... & 2797200.0000
+& 8539300.0000 & 7888000.0000 & 1612700.0000 & 0.0166 & -0.0013 & 0.0218
+& 0.0045 & 0.0114 & 0.0093 \\
+2024-02-13 & 32.7500 & 52.7600 & 378.7500 & 174.2600 & 83.9700 &
+145.2600 & 32.7500 & 52.7600 & 378.7500 & 174.2600 & ... & 3030800.0000
+& 8397600.0000 & 11339400.0000 & 2121400.0000 & -0.0259 & -0.0215 &
+-0.0354 & -0.0087 & -0.0334 & -0.0260 \\
+2024-02-14 & 33.1300 & 53.9800 & 378.0400 & 176.0300 & 84.0000 &
+147.8700 & 33.1300 & 53.9800 & 378.0400 & 176.0300 & ... & 2041300.0000
+& 7056700.0000 & 5973700.0000 & 1265300.0000 & 0.0116 & 0.0231 & -0.0019
+& 0.0102 & 0.0004 & 0.0180 \\
+2024-02-15 & 34.0700 & 55.2100 & 385.4200 & 179.8700 & 85.6700 &
+149.6300 & 34.0700 & 55.2100 & 385.4200 & 179.8700 & ... & 2218900.0000
+& 8723400.0000 & 7993500.0000 & 1991800.0000 & 0.0284 & 0.0228 & 0.0195
+& 0.0218 & 0.0199 & 0.0119 \\
+2024-02-16 & 34.0900 & 54.8500 & 384.4400 & 179.0300 & 86.5000 &
+148.8500 & 34.0900 & 54.8500 & 384.4400 & 179.0300 & ... & 2302099.0000
+& 7927785.0000 & 9628557.0000 & 1362728.0000 & NaN & NaN & NaN & NaN &
+NaN & NaN \\
+\end{longtable}
+
+The easiest way to add returns to long data frame \texttt{stocks\_long}
+is to \texttt{.stack()} the wide data frame \texttt{stocks}! We could
+sort \texttt{stocks\_long} by ticker and date (to sort chronologically
+within each ticker), then use \texttt{.pct\_change()}. However, this
+approach miscalculates the first return for every ticker except for the
+first ticker. The easiest and safest solution is to \texttt{.stack()}
+the wide data frame \texttt{stocks}!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks\_long }\OperatorTok{=}\NormalTok{ stocks.stack()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks\_long.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllllll@{}}
+\toprule\noalign{}
+& Variable & Adj Close & Close & High & Low & Open & Volume & Returns \\
+Date & Ticker & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\multirow{5}{*}{2024-02-16} & C & 54.8500 & 54.8500 & 55.1950 & 54.5500
+& 54.9600 & 11419637.0000 & NaN \\
+& GS & 384.4400 & 384.4400 & 387.5800 & 380.9450 & 383.2400 &
+2302099.0000 & NaN \\
+& JPM & 179.0300 & 179.0300 & 179.9800 & 178.1600 & 179.6100 &
+7927785.0000 & NaN \\
+& MS & 86.5000 & 86.5000 & 86.7900 & 85.0700 & 85.5200 & 9628557.0000 &
+NaN \\
+& PNC & 148.8500 & 148.8500 & 149.9100 & 147.6900 & 148.4200 &
+1362728.0000 & NaN \\
+\end{longtable}
+
 \hypertarget{download-the-daily-benchmark-return-factors-from-ken-frenchs-data-library.-3}{%
 \subsection{Download the daily benchmark return factors from Ken
 French's data
 library.}\label{download-the-daily-benchmark-return-factors-from-ken-frenchs-data-library.-3}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pdr.famafrench.get\_available\_datasets()[:}\DecValTok{5}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+['F-F_Research_Data_Factors',
+ 'F-F_Research_Data_Factors_weekly',
+ 'F-F_Research_Data_Factors_daily',
+ 'F-F_Research_Data_5_Factors_2x3',
+ 'F-F_Research_Data_5_Factors_2x3_daily']
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ff }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    pdr.DataReader(}
+\NormalTok{        name}\OperatorTok{=}\StringTok{\textquotesingle{}F{-}F\_Research\_Data\_Factors\_daily\textquotesingle{}}\NormalTok{,}
+\NormalTok{        data\_source}\OperatorTok{=}\StringTok{\textquotesingle{}famafrench\textquotesingle{}}\NormalTok{,}
+\NormalTok{        start}\OperatorTok{=}\StringTok{\textquotesingle{}1900\textquotesingle{}}
+\NormalTok{    )}
+\NormalTok{    [}\DecValTok{0}\NormalTok{]}
+\NormalTok{    .div(}\DecValTok{100}\NormalTok{)}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+C:\Users\r.herron\AppData\Local\Temp\ipykernel_28096\2049483829.py:2: FutureWarning: The argument 'date_parser' is deprecated and will be removed in a future version. Please use 'date_format' instead, or read your data in as 'object' dtype and then call 'to_datetime'.
+  pdr.DataReader(
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ff.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule\noalign{}
+& Mkt-RF & SMB & HML & RF \\
+Date & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2023-12-22 & 0.0021 & 0.0064 & 0.0009 & 0.0002 \\
+2023-12-26 & 0.0048 & 0.0069 & 0.0046 & 0.0002 \\
+2023-12-27 & 0.0016 & 0.0014 & 0.0012 & 0.0002 \\
+2023-12-28 & -0.0001 & -0.0036 & 0.0003 & 0.0002 \\
+2023-12-29 & -0.0043 & -0.0112 & -0.0037 & 0.0002 \\
+\end{longtable}
 
 \hypertarget{add-the-daily-benchmark-return-factors-to-stocks-and-stocks_long.-3}{%
 \subsection{\texorpdfstring{Add the daily benchmark return factors to
@@ -28635,11 +31081,208 @@ library.}\label{download-the-daily-benchmark-return-factors-from-ken-frenchs-dat
 For the wide data frame \texttt{stocks}, use the outer index name
 \texttt{Factors}.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# stocks.join(ff)}
+\CommentTok{\# MergeError: Not allowed to merge between different levels. (2 levels on the left, 1 on the right)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\_ }\OperatorTok{=}\NormalTok{ pd.MultiIndex.from\_product([[}\StringTok{\textquotesingle{}Factors\textquotesingle{}}\NormalTok{], ff.columns])}
+\NormalTok{stocks[\_] }\OperatorTok{=}\NormalTok{ ff.iloc[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{].pct\_change()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllllllllllllllllllll@{}}
+\toprule\noalign{}
+Variable &
+\multicolumn{6}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 10\tabcolsep}}{%
+Adj Close} &
+\multicolumn{4}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 6\tabcolsep}}{%
+Close} & ... &
+\multicolumn{6}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 10\tabcolsep}}{%
+Returns} &
+\multicolumn{4}{>{\raggedright\arraybackslash}p{(\columnwidth - 42\tabcolsep) * \real{0.0000} + 6\tabcolsep}@{}}{%
+Factors} \\
+Ticker & BAC & C & GS & JPM & MS & PNC & BAC & C & GS & JPM & ... & BAC
+& C & GS & JPM & MS & PNC & Mkt-RF & SMB & HML & RF \\
+Date & & & & & & & & & & & & & & & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2024-02-12 & 33.6200 & 53.9200 & 392.6400 & 175.7900 & 86.8700 &
+149.1400 & 33.6200 & 53.9200 & 392.6400 & 175.7900 & ... & 0.0166 &
+-0.0013 & 0.0218 & 0.0045 & 0.0114 & 0.0093 & NaN & NaN & NaN & NaN \\
+2024-02-13 & 32.7500 & 52.7600 & 378.7500 & 174.2600 & 83.9700 &
+145.2600 & 32.7500 & 52.7600 & 378.7500 & 174.2600 & ... & -0.0259 &
+-0.0215 & -0.0354 & -0.0087 & -0.0334 & -0.0260 & NaN & NaN & NaN &
+NaN \\
+2024-02-14 & 33.1300 & 53.9800 & 378.0400 & 176.0300 & 84.0000 &
+147.8700 & 33.1300 & 53.9800 & 378.0400 & 176.0300 & ... & 0.0116 &
+0.0231 & -0.0019 & 0.0102 & 0.0004 & 0.0180 & NaN & NaN & NaN & NaN \\
+2024-02-15 & 34.0700 & 55.2100 & 385.4200 & 179.8700 & 85.6700 &
+149.6300 & 34.0700 & 55.2100 & 385.4200 & 179.8700 & ... & 0.0284 &
+0.0228 & 0.0195 & 0.0218 & 0.0199 & 0.0119 & NaN & NaN & NaN & NaN \\
+2024-02-16 & 34.0900 & 54.8500 & 384.4400 & 179.0300 & 86.5000 &
+148.8500 & 34.0900 & 54.8500 & 384.4400 & 179.0300 & ... & NaN & NaN &
+NaN & NaN & NaN & NaN & NaN & NaN & NaN & NaN \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks\_long }\OperatorTok{=}\NormalTok{ stocks\_long.join(ff)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{stocks\_long.loc[}\StringTok{\textquotesingle{}2023{-}12\textquotesingle{}}\NormalTok{].tail(}\DecValTok{12}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllllllllll@{}}
+\toprule\noalign{}
+& & Adj Close & Close & High & Low & Open & Volume & Returns & Mkt-RF &
+SMB & HML & RF \\
+Date & Ticker & & & & & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\multirow{6}{*}{2023-12-28} & BAC & 33.8800 & 33.8800 & 33.9700 &
+33.7700 & 33.8200 & 21799600.0000 & 0.0012 & -0.0001 & -0.0036 & 0.0003
+& 0.0002 \\
+& C & 51.0329 & 51.5200 & 51.8000 & 51.4000 & 51.4000 & 10218500.0000 &
+0.0012 & -0.0001 & -0.0036 & 0.0003 & 0.0002 \\
+& GS & 386.4100 & 386.4100 & 387.7600 & 383.6300 & 384.5200 &
+1024700.0000 & 0.0050 & -0.0001 & -0.0036 & 0.0003 & 0.0002 \\
+& JPM & 169.2563 & 170.3000 & 170.6600 & 169.0000 & 169.3500 &
+6320100.0000 & 0.0053 & -0.0001 & -0.0036 & 0.0003 & 0.0002 \\
+& MS & 92.7316 & 93.6400 & 93.9500 & 93.2400 & 93.3100 & 4089500.0000 &
+-0.0002 & -0.0001 & -0.0036 & 0.0003 & 0.0002 \\
+& PNC & 154.0486 & 155.6300 & 156.2100 & 154.9500 & 155.4400 &
+1153300.0000 & 0.0041 & -0.0001 & -0.0036 & 0.0003 & 0.0002 \\
+\multirow{6}{*}{2023-12-29} & BAC & 33.6700 & 33.6700 & 33.9900 &
+33.5500 & 33.9400 & 28037800.0000 & -0.0062 & -0.0043 & -0.0112 &
+-0.0037 & 0.0002 \\
+& C & 50.9537 & 51.4400 & 51.6100 & 51.2200 & 51.5600 & 13147900.0000 &
+-0.0016 & -0.0043 & -0.0112 & -0.0037 & 0.0002 \\
+& GS & 385.7700 & 385.7700 & 386.6400 & 383.5700 & 385.5700 &
+881300.0000 & -0.0017 & -0.0043 & -0.0112 & -0.0037 & 0.0002 \\
+& JPM & 169.0575 & 170.1000 & 170.6900 & 169.6300 & 170.0000 &
+6431800.0000 & -0.0012 & -0.0043 & -0.0112 & -0.0037 & 0.0002 \\
+& MS & 92.3454 & 93.2500 & 93.7700 & 93.0600 & 93.4900 & 4772100.0000 &
+-0.0042 & -0.0043 & -0.0112 & -0.0037 & 0.0002 \\
+& PNC & 153.2765 & 154.8500 & 156.1100 & 154.5200 & 155.2700 &
+1572600.0000 & -0.0050 & -0.0043 & -0.0112 & -0.0037 & 0.0002 \\
+\end{longtable}
+
 \hypertarget{write-a-function-download-that-accepts-tickers-and-returns-a-wide-data-frame-of-returns-with-the-daily-benchmark-return-factors.-3}{%
 \subsection{\texorpdfstring{Write a function \texttt{download()} that
 accepts tickers and returns a wide data frame of returns with the daily
 benchmark return
 factors.}{Write a function download() that accepts tickers and returns a wide data frame of returns with the daily benchmark return factors.}}\label{write-a-function-download-that-accepts-tickers-and-returns-a-wide-data-frame-of-returns-with-the-daily-benchmark-return-factors.-3}}
+
+We can even add a \texttt{shape} argument to return a wide or long data
+frame!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{def}\NormalTok{ download(tickers, shape}\OperatorTok{=}\StringTok{\textquotesingle{}wide\textquotesingle{}}\NormalTok{):}
+    \ControlFlowTok{if}\NormalTok{ shape.lower() }\KeywordTok{not} \KeywordTok{in}\NormalTok{ [}\StringTok{\textquotesingle{}wide\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}long\textquotesingle{}}\NormalTok{]:}
+        \ControlFlowTok{raise} \PreprocessorTok{ValueError}\NormalTok{(}\StringTok{\textquotesingle{}Invalid shape: must be "wide" or "long".\textquotesingle{}}\NormalTok{)}
+
+\NormalTok{    stocks }\OperatorTok{=}\NormalTok{ yf.download(tickers)}
+
+\NormalTok{    factors\_all }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{        pdr.DataReader(}
+\NormalTok{            name}\OperatorTok{=}\StringTok{\textquotesingle{}F{-}F\_Research\_Data\_Factors\_daily\textquotesingle{}}\NormalTok{,}
+\NormalTok{            data\_source}\OperatorTok{=}\StringTok{\textquotesingle{}famafrench\textquotesingle{}}\NormalTok{,}
+\NormalTok{            start}\OperatorTok{=}\StringTok{\textquotesingle{}1900\textquotesingle{}}
+\NormalTok{        )}
+\NormalTok{    )}
+    
+\NormalTok{    factors }\OperatorTok{=}\NormalTok{ factors\_all[}\DecValTok{0}\NormalTok{].div(}\DecValTok{100}\NormalTok{)}
+    
+    \CommentTok{\# if stocks has a multi index on the columns because we asked for more than one ticker}
+    \CommentTok{\# then we have more work to do}
+    \ControlFlowTok{if} \BuiltInTok{type}\NormalTok{(stocks.columns) }\KeywordTok{is}\NormalTok{ pd.MultiIndex:}
+        
+        \CommentTok{\# whether we want a wide or long data frame, it is easier to add returns to a wide data frame}
+\NormalTok{        \_ }\OperatorTok{=}\NormalTok{ pd.MultiIndex.from\_product([[}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{], stocks[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].columns])}
+\NormalTok{        stocks[\_] }\OperatorTok{=}\NormalTok{ stocks[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].pct\_change()}
+
+        \CommentTok{\# if we want a wide data frame, then we need a factors multi index}
+        \ControlFlowTok{if}\NormalTok{ shape.lower() }\OperatorTok{==} \StringTok{\textquotesingle{}wide\textquotesingle{}}\NormalTok{:}
+\NormalTok{            \_ }\OperatorTok{=}\NormalTok{ pd.MultiIndex.from\_product([[}\StringTok{\textquotesingle{}Factors\textquotesingle{}}\NormalTok{], factors.columns])}
+\NormalTok{            stocks[\_] }\OperatorTok{=}\NormalTok{ factors}
+            \ControlFlowTok{return}\NormalTok{ stocks.rename\_axis(columns}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Variable\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{])}
+
+        \CommentTok{\# if we want a long data frame, then we need to stack stocks and join factors}
+        \CommentTok{\# because we tested for wide and long above, we know that here shape must be long}
+        \ControlFlowTok{else}\NormalTok{:}
+            \ControlFlowTok{return}\NormalTok{ stocks.stack().join(factors).rename\_axis(columns}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Variable\textquotesingle{}}\NormalTok{], index}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{])}
+            
+    \CommentTok{\# if stocks does not have a multi index on the columns}
+    \CommentTok{\# then we only have join factors}
+    \ControlFlowTok{else}\NormalTok{:}
+        \ControlFlowTok{return}\NormalTok{ stocks.join(ff).rename\_axis(columns}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Variable\textquotesingle{}}\NormalTok{])}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{download(tickers}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}AAPL\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}TSLA\textquotesingle{}}\NormalTok{], shape}\OperatorTok{=}\StringTok{\textquotesingle{}long\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[*********************100%%**********************]  2 of 2 completed
+C:\Users\r.herron\AppData\Local\Temp\ipykernel_28096\3667605341.py:8: FutureWarning: The argument 'date_parser' is deprecated and will be removed in a future version. Please use 'date_format' instead, or read your data in as 'object' dtype and then call 'to_datetime'.
+  pdr.DataReader(
+\end{verbatim}
+
+\begin{longtable}[]{@{}lllllllllllll@{}}
+\toprule\noalign{}
+& Variable & Adj Close & Close & High & Low & Open & Volume & Returns &
+Mkt-RF & SMB & HML & RF \\
+Date & Ticker & & & & & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1980-12-12 & AAPL & 0.0992 & 0.1283 & 0.1289 & 0.1283 & 0.1283 &
+469033600.0000 & NaN & 0.0138 & -0.0001 & -0.0105 & 0.0006 \\
+1980-12-15 & AAPL & 0.0940 & 0.1217 & 0.1222 & 0.1217 & 0.1222 &
+175884800.0000 & -0.0522 & 0.0011 & 0.0025 & -0.0046 & 0.0006 \\
+1980-12-16 & AAPL & 0.0871 & 0.1127 & 0.1133 & 0.1127 & 0.1133 &
+105728000.0000 & -0.0734 & 0.0071 & -0.0075 & -0.0047 & 0.0006 \\
+1980-12-17 & AAPL & 0.0893 & 0.1155 & 0.1161 & 0.1155 & 0.1155 &
+86441600.0000 & 0.0248 & 0.0152 & -0.0086 & -0.0034 & 0.0006 \\
+1980-12-18 & AAPL & 0.0919 & 0.1189 & 0.1194 & 0.1189 & 0.1189 &
+73449600.0000 & 0.0290 & 0.0041 & 0.0022 & 0.0126 & 0.0006 \\
+... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... & ... &
+... \\
+2024-02-14 & TSLA & 188.7100 & 188.7100 & 188.8900 & 183.3500 & 185.3000
+& 81203000.0000 & 0.0255 & NaN & NaN & NaN & NaN \\
+\multirow{2}{*}{2024-02-15} & AAPL & 183.8600 & 183.8600 & 184.4900 &
+181.3500 & 183.5500 & 65434500.0000 & -0.0016 & NaN & NaN & NaN & NaN \\
+& TSLA & 200.4500 & 200.4500 & 200.8800 & 188.8600 & 189.1600 &
+120831800.0000 & 0.0622 & NaN & NaN & NaN & NaN \\
+\multirow{2}{*}{2024-02-16} & AAPL & 182.3100 & 182.3100 & 184.8500 &
+181.6650 & 183.4200 & 48627624.0000 & -0.0084 & NaN & NaN & NaN & NaN \\
+& TSLA & 199.9500 & 199.9500 & 203.1700 & 197.4000 & 202.0600 &
+110528448.0000 & -0.0025 & NaN & NaN & NaN & NaN \\
+\end{longtable}
 
 \hypertarget{download-earnings-per-share-for-the-stocks-in-stocks-and-combine-to-a-long-data-frame-earnings.-3}{%
 \subsection{\texorpdfstring{Download earnings per share for the stocks
@@ -28654,14 +31297,51 @@ Use the \texttt{.earnings\_dates} method described
 \texttt{Date} and swap to match the order of the row index in
 \texttt{stocks\_long}.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{tickers }\OperatorTok{=}\NormalTok{ yf.Tickers(tickers}\OperatorTok{=}\StringTok{\textquotesingle{}BAC C GS JPM MS PNC\textquotesingle{}}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{earnings  }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    pd.concat(}
+\NormalTok{        objs}\OperatorTok{=}\NormalTok{[tickers.tickers[t].earnings\_dates }\ControlFlowTok{for}\NormalTok{ t }\KeywordTok{in}\NormalTok{ tickers.tickers],}
+\NormalTok{        keys}\OperatorTok{=}\NormalTok{tickers.tickers,}
+\NormalTok{        names}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{]}
+\NormalTok{    )}
+\NormalTok{    .reset\_index()}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{earnings.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule\noalign{}
+& Ticker & Date & EPS Estimate & Reported EPS & Surprise(\%) \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+67 & PNC & 2024-04-16 08:00:00-04:00 & 3.0800 & NaN & NaN \\
+68 & PNC & 2024-01-16 06:00:00-05:00 & 2.9400 & 3.1600 & 0.0737 \\
+69 & PNC & 2023-10-13 06:00:00-04:00 & 3.1100 & 3.6000 & 0.1586 \\
+70 & PNC & 2023-07-18 07:00:00-04:00 & 3.2800 & 3.3600 & 0.0230 \\
+71 & PNC & 2023-04-14 06:00:00-04:00 & 3.6700 & 3.9800 & 0.0847 \\
+\end{longtable}
+
 \hypertarget{combine-earnings-with-the-returns-from-stocks_long.-3}{%
 \subsection{\texorpdfstring{Combine \texttt{earnings} with the returns
 from
 \texttt{stocks\_long}.}{Combine earnings with the returns from stocks\_long.}}\label{combine-earnings-with-the-returns-from-stocks_long.-3}}
 
-\textbf{\emph{It is easier to leave \texttt{stocks} and
-\texttt{stocks\_long} as-is and work with slices \texttt{returns} and
-\texttt{returns\_long}.}} Use the
+Use the
 \texttt{tz\_localize(\textquotesingle{}America/New\_York\textquotesingle{})}
 method add time zone information back to \texttt{returns.index} and use
 \texttt{pd.to\_timedelta(16,\ unit=\textquotesingle{}h\textquotesingle{})}
@@ -28671,6 +31351,72 @@ to match earnings announcement dates and times to appropriate return
 periods. For example, if a firm announces earnings after the close at 5
 PM on February 7, we want to match the return period from 4 PM on
 February 7 to 4 PM on February 8.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    stocks\_long}
+\NormalTok{    .reset\_index()}
+\NormalTok{    [[}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]]}
+\NormalTok{    .assign(}
+\NormalTok{        Date}\OperatorTok{=}\KeywordTok{lambda}\NormalTok{ x: x[}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{].dt.tz\_localize(}\StringTok{\textquotesingle{}America/New\_York\textquotesingle{}}\NormalTok{) }\OperatorTok{+}\NormalTok{ pd.to\_timedelta(}\DecValTok{16}\NormalTok{, unit}\OperatorTok{=}\StringTok{\textquotesingle{}H\textquotesingle{}}\NormalTok{)}
+\NormalTok{    )}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+& Date & Ticker & Returns \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+62021 & 2024-02-16 16:00:00-05:00 & C & NaN \\
+62022 & 2024-02-16 16:00:00-05:00 & GS & NaN \\
+62023 & 2024-02-16 16:00:00-05:00 & JPM & NaN \\
+62024 & 2024-02-16 16:00:00-05:00 & MS & NaN \\
+62025 & 2024-02-16 16:00:00-05:00 & PNC & NaN \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{surprises }\OperatorTok{=}\NormalTok{ pd.merge\_asof(}
+\NormalTok{    left}\OperatorTok{=}\NormalTok{earnings.sort\_values([}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{]),}
+\NormalTok{    right}\OperatorTok{=}\NormalTok{returns.sort\_values([}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{]),}
+\NormalTok{    on}\OperatorTok{=}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{,}
+\NormalTok{    by}\OperatorTok{=}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{,}
+\NormalTok{    direction}\OperatorTok{=}\StringTok{\textquotesingle{}forward\textquotesingle{}}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{surprises.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllll@{}}
+\toprule\noalign{}
+& Ticker & Date & EPS Estimate & Reported EPS & Surprise(\%) &
+Returns \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+67 & JPM & 2025-01-15 08:00:00-05:00 & NaN & NaN & NaN & NaN \\
+68 & JPM & 2025-01-15 08:00:00-05:00 & NaN & NaN & NaN & NaN \\
+69 & C & 2025-01-15 11:00:00-05:00 & NaN & NaN & NaN & NaN \\
+70 & PNC & 2025-01-16 08:00:00-05:00 & NaN & NaN & NaN & NaN \\
+71 & PNC & 2025-01-16 10:00:00-05:00 & NaN & NaN & NaN & NaN \\
+\end{longtable}
 
 \hypertarget{plot-the-relation-between-daily-returns-and-earnings-surprises-3}{%
 \subsection{Plot the relation between daily returns and earnings
@@ -28691,28 +31437,329 @@ Three options in increasing difficulty:
   \texttt{pd.qcut()} to form five groups on earnings surprises
 \end{enumerate}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}
+\NormalTok{    surprises}
+\NormalTok{    [[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]]}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .plot(kind}\OperatorTok{=}\StringTok{\textquotesingle{}scatter\textquotesingle{}}\NormalTok{, x}\OperatorTok{=}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, y}\OperatorTok{=}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{)}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Earnings Surprise (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}One{-}Day Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Earnings Surprise Analysis}\CharTok{\textbackslash{}n}\SpecialStringTok{ }\SpecialCharTok{\{}\StringTok{\textquotesingle{}, \textquotesingle{}}\SpecialCharTok{.}\NormalTok{join(tickers.tickers)}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_08_practice_05_files/figure-pdf/cell-30-output-1.png}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ImportTok{import}\NormalTok{ seaborn }\ImportTok{as}\NormalTok{ sns}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sns.regplot(}
+\NormalTok{    data}\OperatorTok{=}\NormalTok{surprises[[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]].mul(}\DecValTok{100}\NormalTok{),}
+\NormalTok{    x}\OperatorTok{=}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{,}
+\NormalTok{    y}\OperatorTok{=}\StringTok{\textquotesingle{}Returns\textquotesingle{}}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Earnings Surprise (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}One{-}Day Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Earnings Surprise Analysis}\CharTok{\textbackslash{}n}\SpecialStringTok{ }\SpecialCharTok{\{}\StringTok{\textquotesingle{}, \textquotesingle{}}\SpecialCharTok{.}\NormalTok{join(tickers.tickers)}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_08_practice_05_files/figure-pdf/cell-32-output-1.png}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sns.catplot(}
+\NormalTok{    data}\OperatorTok{=}\NormalTok{(}
+\NormalTok{        surprises[[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]]}
+\NormalTok{        .dropna()}
+\NormalTok{        .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{        .assign(}
+\NormalTok{            surprise\_bin}\OperatorTok{=}\KeywordTok{lambda}\NormalTok{ x: pd.qcut(x[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{], q}\OperatorTok{=}\DecValTok{5}\NormalTok{, labels}\OperatorTok{=}\VariableTok{False}\NormalTok{)}\OperatorTok{+}\DecValTok{1}
+\NormalTok{        )}
+\NormalTok{    ),}
+\NormalTok{    x}\OperatorTok{=}\StringTok{\textquotesingle{}surprise\_bin\textquotesingle{}}\NormalTok{,}
+\NormalTok{    y}\OperatorTok{=}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{,}
+\NormalTok{    kind}\OperatorTok{=}\StringTok{\textquotesingle{}bar\textquotesingle{}}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Earnings Surprise Bin (1=Lowest, 5=Highest)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}One{-}Day Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\SpecialStringTok{f\textquotesingle{}Earnings Surprise Analysis}\CharTok{\textbackslash{}n}\SpecialStringTok{ }\SpecialCharTok{\{}\StringTok{\textquotesingle{}, \textquotesingle{}}\SpecialCharTok{.}\NormalTok{join(tickers.tickers)}\SpecialCharTok{\}}\SpecialStringTok{\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_08_practice_05_files/figure-pdf/cell-33-output-1.png}
+
+}
+
+\end{figure}
+
 \hypertarget{repeat-the-earnings-exercise-with-the-sp-100-stocks-3}{%
 \subsection{Repeat the earnings exercise with the S\&P 100
 stocks}\label{repeat-the-earnings-exercise-with-the-sp-100-stocks-3}}
 
-\hypertarget{repeat-the-earnings-exercise-with-excess-returns-of-the-sp-100-stocks-3}{%
-\subsection{\texorpdfstring{Repeat the earnings exercise with
-\emph{excess returns} of the S\&P 100
-Stocks}{Repeat the earnings exercise with excess returns of the S\&P 100 Stocks}}\label{repeat-the-earnings-exercise-with-excess-returns-of-the-sp-100-stocks-3}}
+With more data, we can more clearly see the positive relation between
+earnings surprises and returns!
 
-Excess returns are returns minus market returns. We need to add a
-timezone and the closing time to the market return from Fama and French.
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\_ }\OperatorTok{=}\NormalTok{ pd.read\_html(}\StringTok{\textquotesingle{}https://en.wikipedia.org/wiki/S\%26P\_100\textquotesingle{}}\NormalTok{)[}\DecValTok{2}\NormalTok{][}\StringTok{\textquotesingle{}Symbol\textquotesingle{}}\NormalTok{].to\_list()}
+\NormalTok{tickers\_2 }\OperatorTok{=}\NormalTok{ yf.Tickers(tickers}\OperatorTok{=}\NormalTok{[t.replace(}\StringTok{\textquotesingle{}.\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}{-}\textquotesingle{}}\NormalTok{) }\ControlFlowTok{for}\NormalTok{ t }\KeywordTok{in}\NormalTok{ \_]) }\CommentTok{\# Yahoo! Finance uses "{-}" to indicate share classes instead of "."}
+\end{Highlighting}
+\end{Shaded}
 
-\hypertarget{improve-your-download-function-from-above-2}{%
-\subsection{\texorpdfstring{Improve your \texttt{download()} function
-from
-above}{Improve your download() function from above}}\label{improve-your-download-function-from-above-2}}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{earnings\_2  }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    pd.concat(}
+\NormalTok{        objs}\OperatorTok{=}\NormalTok{[tickers\_2.tickers[t].earnings\_dates }\ControlFlowTok{for}\NormalTok{ t }\KeywordTok{in}\NormalTok{ tickers\_2.tickers],}
+\NormalTok{        keys}\OperatorTok{=}\NormalTok{tickers\_2.tickers,}
+\NormalTok{        names}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{]}
+\NormalTok{    )}
+\NormalTok{    .reset\_index()}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
 
-Modify \texttt{download()} to accept one or more than one ticker. Since
-we will not use the advanced functionality of the tickers object that
-\texttt{yf.Tickers()} creates, we will use \texttt{yf.download()}. The
-current version of \texttt{yf.download()} does not accept a
-\texttt{session=} argument.
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{earnings\_2.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllll@{}}
+\toprule\noalign{}
+& Ticker & Date & EPS Estimate & Reported EPS & Surprise(\%) \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1207 & XOM & 2023-04-28 06:00:00-04:00 & 2.5900 & 2.8300 & 0.0943 \\
+1208 & XOM & 2023-01-31 06:00:00-05:00 & 3.2900 & 3.4000 & 0.0319 \\
+1209 & XOM & 2022-10-28 06:00:00-04:00 & 3.7900 & 4.4500 & 0.1733 \\
+1210 & XOM & 2022-07-29 06:00:00-04:00 & 3.7400 & 4.1400 & 0.1077 \\
+1211 & XOM & 2022-04-29 06:00:00-04:00 & 2.1200 & 2.0700 & -0.0247 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns\_2 }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    yf.download(tickers}\OperatorTok{=}\NormalTok{[t }\ControlFlowTok{for}\NormalTok{ t }\KeywordTok{in}\NormalTok{ tickers\_2.tickers])}
+\NormalTok{    .rename\_axis(columns}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Variable\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{])}
+\NormalTok{    [}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{]}
+\NormalTok{    .pct\_change()}
+\NormalTok{    .stack()}
+\NormalTok{    .to\_frame(}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{)}
+\NormalTok{    .reset\_index()}
+\NormalTok{    [[}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]]}
+\NormalTok{    .assign(}
+\NormalTok{        Date}\OperatorTok{=}\KeywordTok{lambda}\NormalTok{ x: x[}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{].dt.tz\_localize(}\StringTok{\textquotesingle{}America/New\_York\textquotesingle{}}\NormalTok{) }\OperatorTok{+}\NormalTok{ pd.to\_timedelta(}\DecValTok{16}\NormalTok{, unit}\OperatorTok{=}\StringTok{\textquotesingle{}H\textquotesingle{}}\NormalTok{)}
+\NormalTok{    )}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[*********************100%%**********************]  101 of 101 completed
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{returns\_2.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+& Date & Ticker & Returns \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1018569 & 2024-02-16 16:00:00-05:00 & V & -0.0086 \\
+1018570 & 2024-02-16 16:00:00-05:00 & VZ & -0.0025 \\
+1018571 & 2024-02-16 16:00:00-05:00 & WFC & -0.0025 \\
+1018572 & 2024-02-16 16:00:00-05:00 & WMT & 0.0063 \\
+1018573 & 2024-02-16 16:00:00-05:00 & XOM & 0.0000 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{surprises\_2 }\OperatorTok{=}\NormalTok{ pd.merge\_asof(}
+\NormalTok{    left}\OperatorTok{=}\NormalTok{earnings\_2.sort\_values([}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{]),}
+\NormalTok{    right}\OperatorTok{=}\NormalTok{returns\_2.sort\_values([}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{]),}
+\NormalTok{    on}\OperatorTok{=}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{,}
+\NormalTok{    by}\OperatorTok{=}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{,}
+\NormalTok{    direction}\OperatorTok{=}\StringTok{\textquotesingle{}forward\textquotesingle{}}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{surprises\_2.tail()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllll@{}}
+\toprule\noalign{}
+& Ticker & Date & EPS Estimate & Reported EPS & Surprise(\%) &
+Returns \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+1207 & USB & 2025-10-16 09:00:00-04:00 & NaN & NaN & NaN & NaN \\
+1208 & USB & 2025-10-16 09:00:00-04:00 & NaN & NaN & NaN & NaN \\
+1209 & RTX & 2025-10-20 06:00:00-04:00 & NaN & NaN & NaN & NaN \\
+1210 & USB & 2026-01-20 09:00:00-05:00 & NaN & NaN & NaN & NaN \\
+1211 & USB & 2026-01-20 09:00:00-05:00 & NaN & NaN & NaN & NaN \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}
+\NormalTok{    surprises\_2}
+\NormalTok{    [[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]]}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .plot(kind}\OperatorTok{=}\StringTok{\textquotesingle{}scatter\textquotesingle{}}\NormalTok{, x}\OperatorTok{=}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, y}\OperatorTok{=}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{)}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Earnings Surprise (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}One{-}Day Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\StringTok{\textquotesingle{}Earnings Surprise Analysis}\CharTok{\textbackslash{}n}\StringTok{ S\&P 100 Stocks\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_08_practice_05_files/figure-pdf/cell-41-output-1.png}
+
+}
+
+\end{figure}
+
+\textbf{\emph{There are a few large negative and positive earnings
+surprises that make our plot difficult to interpret!}} We have these
+huge outliers because surprises are defined as the percent change
+relative to the expected. If expected is a very small number, then the
+surprise can be a very large number! We would use different surprise
+definitions for a more rigorous analysis. Here we can drop observations
+less than the 0.01 quantile and greater than the 0.99 quantile.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{low\_2 }\OperatorTok{=}\NormalTok{ surprises\_2[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{].quantile(}\FloatTok{0.01}\NormalTok{)}
+\NormalTok{high\_2 }\OperatorTok{=}\NormalTok{ surprises\_2[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{].quantile(}\FloatTok{0.91}\NormalTok{)}
+
+\NormalTok{cond\_2 }\OperatorTok{=}\NormalTok{ surprises\_2[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{].between(low\_2, high\_2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}
+\NormalTok{    surprises\_2}
+\NormalTok{    .loc[cond\_2, [}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]]}
+\NormalTok{    .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .plot(kind}\OperatorTok{=}\StringTok{\textquotesingle{}scatter\textquotesingle{}}\NormalTok{, x}\OperatorTok{=}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, y}\OperatorTok{=}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{, alpha}\OperatorTok{=}\FloatTok{0.5}\NormalTok{)}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Earnings Surprise (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}One{-}Day Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\StringTok{\textquotesingle{}Earnings Surprise Analysis}\CharTok{\textbackslash{}n}\StringTok{ S\&P 100 Stocks\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_08_practice_05_files/figure-pdf/cell-43-output-1.png}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sns.regplot(}
+\NormalTok{    data}\OperatorTok{=}\NormalTok{surprises\_2.loc[cond\_2, [}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]].mul(}\DecValTok{100}\NormalTok{),}
+\NormalTok{    x}\OperatorTok{=}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{,}
+\NormalTok{    y}\OperatorTok{=}\StringTok{\textquotesingle{}Returns\textquotesingle{}}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Earnings Surprise (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}One{-}Day Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\StringTok{\textquotesingle{}Earnings Surprise Analysis}\CharTok{\textbackslash{}n}\StringTok{ S\&P 100 Stocks\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_08_practice_05_files/figure-pdf/cell-44-output-1.png}
+
+}
+
+\end{figure}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{sns.catplot(}
+\NormalTok{    data}\OperatorTok{=}\NormalTok{(}
+\NormalTok{        surprises\_2}
+\NormalTok{        .loc[cond\_2, [}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{]]}
+\NormalTok{        .dropna()}
+\NormalTok{        .mul(}\DecValTok{100}\NormalTok{)}
+\NormalTok{        .assign(surprise\_bin}\OperatorTok{=}\KeywordTok{lambda}\NormalTok{ x: pd.qcut(x[}\StringTok{\textquotesingle{}Surprise(\%)\textquotesingle{}}\NormalTok{], q}\OperatorTok{=}\DecValTok{5}\NormalTok{, labels}\OperatorTok{=}\VariableTok{False}\NormalTok{) }\OperatorTok{+} \DecValTok{1}\NormalTok{)}
+\NormalTok{    ),}
+\NormalTok{    x}\OperatorTok{=}\StringTok{\textquotesingle{}surprise\_bin\textquotesingle{}}\NormalTok{,}
+\NormalTok{    y}\OperatorTok{=}\StringTok{\textquotesingle{}Returns\textquotesingle{}}\NormalTok{,}
+\NormalTok{    kind}\OperatorTok{=}\StringTok{\textquotesingle{}bar\textquotesingle{}}
+\NormalTok{)}
+
+\NormalTok{plt.xlabel(}\StringTok{\textquotesingle{}Earnings Surprise Bin (1=Lowest, 5=Highest)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}One{-}Day Return (\%)\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.title(}\StringTok{\textquotesingle{}Earnings Surprise Analysis}\CharTok{\textbackslash{}n}\StringTok{ S\&P 100 Stocks\textquotesingle{}}\NormalTok{)}
+\NormalTok{plt.show()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{figure}[H]
+
+{\centering \includegraphics{mckinney_08_practice_05_files/figure-pdf/cell-45-output-1.png}
+
+}
+
+\end{figure}
 
 \part{Week 7}
 
