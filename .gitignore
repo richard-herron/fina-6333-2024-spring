@@ -4,17 +4,16 @@
 /DataCamp
 /Grades
 # /Notebooks
-/Notebooks/.quarto/
 /Notebooks/.ipynb_checkpoints/
-/Notebooks/_site/
+/Notebooks/.quarto/
 /Notebooks/_book/
+/Notebooks/_site/
 /Office\ Hours
 /OSCCR
 /Participation
 /Projects
 /Scratch
 # /Syllabus
-/Teammates
 *.csv
 *.txt
 *.zip

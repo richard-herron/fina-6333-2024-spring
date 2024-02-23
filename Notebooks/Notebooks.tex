@@ -203,7 +203,7 @@
 
 \begin{document}
 \maketitle
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[breakable, boxrule=0pt, sharp corners, borderline west={3pt}{0pt}{shadecolor}, interior hidden, enhanced, frame hidden]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[borderline west={3pt}{0pt}{shadecolor}, breakable, interior hidden, sharp corners, frame hidden, boxrule=0pt, enhanced]}{\end{tcolorbox}}\fi
 
 \renewcommand*\contentsname{Table of contents}
 {
@@ -31811,6 +31811,8 @@ because we will only discuss some topics.
 \ImportTok{import}\NormalTok{ matplotlib.pyplot }\ImportTok{as}\NormalTok{ plt}
 \ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
 \ImportTok{import}\NormalTok{ pandas }\ImportTok{as}\NormalTok{ pd}
+\ImportTok{import}\NormalTok{ pandas\_datareader }\ImportTok{as}\NormalTok{ pdr}
+\ImportTok{import}\NormalTok{ yfinance }\ImportTok{as}\NormalTok{ yf}
 \end{Highlighting}
 \end{Shaded}
 
@@ -31819,13 +31821,6 @@ because we will only discuss some topics.
 \OperatorTok{\%}\NormalTok{precision }\DecValTok{4}
 \NormalTok{pd.options.display.float\_format }\OperatorTok{=} \StringTok{\textquotesingle{}}\SpecialCharTok{\{:.4f\}}\StringTok{\textquotesingle{}}\NormalTok{.}\BuiltInTok{format}
 \OperatorTok{\%}\NormalTok{config InlineBackend.figure\_format }\OperatorTok{=} \StringTok{\textquotesingle{}retina\textquotesingle{}}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\ImportTok{import}\NormalTok{ yfinance }\ImportTok{as}\NormalTok{ yf}
-\ImportTok{import}\NormalTok{ pandas\_datareader }\ImportTok{as}\NormalTok{ pdr}
 \end{Highlighting}
 \end{Shaded}
 
@@ -31939,7 +31934,7 @@ grouped object, which can accept the \texttt{.mean()} method.
 \end{Shaded}
 
 \begin{verbatim}
-<pandas.core.groupby.generic.SeriesGroupBy object at 0x00000266A8DE9550>
+<pandas.core.groupby.generic.SeriesGroupBy object at 0x000001B3D7023290>
 \end{verbatim}
 
 \begin{Shaded}
@@ -32058,11 +32053,31 @@ more compact and easier to understand.
 4 & a & one & -0.2342 & 0.5426 \\
 \end{longtable}
 
+\textbf{\emph{However, we need to make sure that all the columns we pass
+to the aggregation method (e.g., \texttt{.mean()}) are numerical.}}
+Otherwise, pandas will give us a difficult to decipher error about
+methods and data types. For example, in the following code, pandas tries
+to calculate the mean of column \texttt{key2}, which is a string.
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{\# df.groupby(\textquotesingle{}key1\textquotesingle{}).mean() \# TypeError: agg function failed [how{-}\textgreater{}mean,dtype{-}\textgreater{}object]}
 \end{Highlighting}
 \end{Shaded}
+
+To avoid this error, we need to either:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Slice the numerical columns (e.g.,
+  \texttt{{[}\textquotesingle{}data1\textquotesingle{},\ \textquotesingle{}data2\textquotesingle{}{]}})
+\item
+  Group on all the non-numerical columns so pandas does not pass them to
+  the aggregation function (e.g.,
+  \texttt{df.groupby({[}\textquotesingle{}key1\textquotesingle{},\ \textquotesingle{}key2\textquotesingle{}{]})})
+\end{enumerate}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -32283,26 +32298,23 @@ level number or name.
 \NormalTok{                                    names}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}cty\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}tenor\textquotesingle{}}\NormalTok{])}
 \NormalTok{hier\_df }\OperatorTok{=}\NormalTok{ pd.DataFrame(np.random.randn(}\DecValTok{4}\NormalTok{, }\DecValTok{5}\NormalTok{), columns}\OperatorTok{=}\NormalTok{columns)}
 
-\NormalTok{hier\_df}
+\NormalTok{hier\_df.T}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{longtable}[]{@{}llllll@{}}
 \toprule\noalign{}
-cty &
-\multicolumn{3}{>{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.0000} + 4\tabcolsep}}{%
-US} &
-\multicolumn{2}{>{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.0000} + 2\tabcolsep}@{}}{%
-JP} \\
-tenor & 1 & 3 & 5 & 1 & 3 \\
+& & 0 & 1 & 2 & 3 \\
+cty & tenor & & & & \\
 \midrule\noalign{}
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-0 & 0.1109 & -1.1510 & 0.3757 & -0.6006 & -0.2917 \\
-1 & -0.6017 & 1.8523 & -0.0135 & -1.0577 & 0.8225 \\
-2 & -1.2208 & 0.2089 & -1.9597 & -1.3282 & 0.1969 \\
-3 & 0.7385 & 0.1714 & -0.1156 & -0.3011 & -1.4785 \\
+\multirow{3}{*}{US} & 1 & 0.1109 & -0.6017 & -1.2208 & 0.7385 \\
+& 3 & -1.1510 & 1.8523 & 0.2089 & 0.1714 \\
+& 5 & 0.3757 & -0.0135 & -1.9597 & -0.1156 \\
+\multirow{2}{*}{JP} & 1 & -0.6006 & -1.0577 & -1.3282 & -0.3011 \\
+& 3 & -0.2917 & 0.8225 & 0.1969 & -1.4785 \\
 \end{longtable}
 
 \begin{Shaded}
@@ -32370,6 +32382,26 @@ Table 10-1 provides the optimized groupby methods:
 
 These optimized methods are fast and efficient, but pandas lets us use
 other, non-optimized methods. First, any series method is available.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule\noalign{}
+& key1 & key2 & data1 & data2 \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+0 & a & one & 0.4967 & -0.2341 \\
+1 & a & two & -0.1383 & 1.5792 \\
+2 & b & one & 0.6477 & 0.7674 \\
+3 & b & two & 1.5230 & -0.4695 \\
+4 & a & one & -0.2342 & 0.5426 \\
+\end{longtable}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -32585,6 +32617,26 @@ We can combine the \texttt{.groupby()} and \texttt{.apply()} methods to:
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\NormalTok{df}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule\noalign{}
+& key1 & key2 & data1 & data2 \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+0 & a & one & 0.4967 & -0.2341 \\
+1 & a & two & -0.1383 & 1.5792 \\
+2 & b & one & 0.6477 & 0.7674 \\
+3 & b & two & 1.5230 & -0.4695 \\
+4 & a & one & -0.2342 & 0.5426 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \NormalTok{df.groupby(}\StringTok{\textquotesingle{}key1\textquotesingle{}}\NormalTok{).}\BuiltInTok{apply}\NormalTok{(top, col}\OperatorTok{=}\StringTok{\textquotesingle{}data1\textquotesingle{}}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -32686,18 +32738,18 @@ Index & & & & & & \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-\^{}DJI & 26268.7993 & 26268.7993 & 26409.2622 & 26112.8527 & 26265.2096
-& 290352366.5425 \\
-\^{}FTSE & 7035.2159 & 7035.2159 & 7076.6397 & 6992.6821 & 7034.7444 &
-802505272.4427 \\
-\^{}GSPC & 3122.5674 & 3122.5674 & 3139.2737 & 3103.6004 & 3122.0834 &
-4017528407.9796 \\
-\^{}HSI & 24483.5675 & 24483.5675 & 24647.8922 & 24313.7685 & 24500.2319
-& 2021151100.2261 \\
-\^{}IXIC & 9021.3379 & 9021.3379 & 9081.9083 & 8952.0787 & 9019.8093 &
-3235066862.1951 \\
-\^{}N225 & 23298.2397 & 23298.2397 & 23420.5926 & 23166.4854 &
-23298.8808 & 94902460.1367 \\
+\^{}DJI & 26474.0396 & 26474.0396 & 26614.0050 & 26317.6183 & 26469.7020
+& 290895360.8696 \\
+\^{}FTSE & 7045.8903 & 7045.8903 & 7087.2046 & 7003.6069 & 7045.3863 &
+804146245.6710 \\
+\^{}GSPC & 3152.9679 & 3152.9679 & 3169.6184 & 3133.9186 & 3152.3787 &
+4016121530.4348 \\
+\^{}HSI & 24334.1870 & 24334.1870 & 24498.6004 & 24164.3352 & 24350.3348
+& 2026656088.8050 \\
+\^{}IXIC & 9133.9826 & 9133.9826 & 9194.6083 & 9064.2100 & 9132.1387 &
+3273306814.4285 \\
+\^{}N225 & 23519.0408 & 23519.0408 & 23642.2996 & 23385.7755 &
+23518.4156 & 95240957.9230 \\
 \end{longtable}
 
 \begin{Shaded}
@@ -32714,18 +32766,18 @@ Index & & & & & & \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-\^{}DJI & 25979.4648 & 25979.4648 & 26113.8896 & 25817.3203 & 25992.4355
-& 296605000.0000 \\
-\^{}FTSE & 7183.5000 & 7183.5000 & 7217.0000 & 7141.5999 & 7182.8499 &
-755440000.0000 \\
-\^{}GSPC & 2887.9149 & 2887.9149 & 2898.5200 & 2876.2100 & 2890.2450 &
-3819130000.0000 \\
-\^{}HSI & 24698.4805 & 24698.4805 & 24855.4707 & 24540.6309 & 24697.9805
-& 1864023100.0000 \\
-\^{}IXIC & 7963.3198 & 7963.3198 & 8005.2749 & 7912.0701 & 7972.7300 &
-2413820000.0000 \\
-\^{}N225 & 22380.0098 & 22380.0098 & 22509.3594 & 22269.5293 &
-22374.2109 & 82200000.0000 \\
+\^{}DJI & 26065.6494 & 26065.6494 & 26199.2002 & 25921.8994 & 26083.4893
+& 297655000.0000 \\
+\^{}FTSE & 7190.5000 & 7190.5000 & 7226.2000 & 7148.0000 & 7190.0000 &
+757404150.0000 \\
+\^{}GSPC & 2902.8950 & 2902.8950 & 2912.7450 & 2891.8750 & 2906.6550 &
+3821900000.0000 \\
+\^{}HSI & 24615.1309 & 24615.1309 & 24771.5996 & 24476.1992 & 24645.1992
+& 1868937800.0000 \\
+\^{}IXIC & 8000.2300 & 8000.2300 & 8048.5801 & 7953.6699 & 8011.6802 &
+2447750000.0000 \\
+\^{}N225 & 22470.3242 & 22470.3242 & 22555.8008 & 22338.5400 &
+22460.9902 & 82750000.0000 \\
 \end{longtable}
 
 We can use \texttt{values} to select specific variables,
@@ -32787,8 +32839,11 @@ Date & & & & & & & & & & & & \\
 10213.2900 & 24717.5293 & 36799.6484 & 7672.3999 & 4796.5601 &
 24965.5508 & 15832.7998 & 29332.1602 \\
 2023-12-31 & 31819.1406 & 7256.8999 & 3808.1001 & 16201.4902 &
-10305.2402 & 25716.8594 & 37557.9219 & 8014.2998 & 4771.3398 &
-22688.9004 & 15043.0791 & 33753.3281 \\
+10305.2402 & 25716.8594 & 37710.1016 & 8014.2998 & 4783.3501 &
+22688.9004 & 15099.1797 & 33753.3281 \\
+2024-12-31 & 37266.6719 & 7446.2998 & 4688.6802 & 14961.1797 &
+14510.2998 & 33288.2891 & 39069.1094 & 7728.5000 & 5087.0298 &
+16788.5508 & 16041.6201 & 39098.6797 \\
 \end{longtable}
 
 \hypertarget{mckinney-chapter-10---practice-for-section-02}{%
@@ -32798,6 +32853,46 @@ Date & & & & & & & & & & & & \\
 \hypertarget{announcements-24}{%
 \section{Announcements}\label{announcements-24}}
 
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  I will grade your projects over spring break
+\item
+  Please complete your peer reviews on Teammates by midnight on Tuesday,
+  2/27
+\item
+  I will record the week 9 lecture video on Thursday
+\item
+  Enjoy your spring breaks!
+\end{enumerate}
+
+\hypertarget{minute-recap-23}{%
+\section{10-Minute Recap}\label{minute-recap-23}}
+
+We will focus on 3 topics from chapter 10 of McKinney:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \emph{GroupBy Mechanics:} We will use the \texttt{.groupby()} method
+  to perform ``split-apply-combine'' calculations in pandas, which let
+  us aggregate data by one of more columns or indexes.
+\item
+  \emph{Data Aggregation:} We will combine optimized methods, like
+  \texttt{.count()}, \texttt{.sum()}, \texttt{.mean()}, etc., with
+  \texttt{.groupby()} to quickly aggregate data. We will combine the
+  \texttt{.agg()} or \texttt{.aggregate()} method with
+  \texttt{.groupby()} when we want to apply more than one aggregation
+  function.
+\item
+  \emph{Pivot Tables:} We can use the \texttt{.pivot\_table()} method to
+  aggregate data with a syntax similar to Excel's pivot tables. We can
+  almost always get the same output with the \texttt{.groupby()},
+  \texttt{.agg()}, and \texttt{.unstack()} methods.
+\end{enumerate}
+
 \hypertarget{practice-24}{%
 \section{Practice}\label{practice-24}}
 
@@ -32806,6 +32901,8 @@ Date & & & & & & & & & & & & \\
 \ImportTok{import}\NormalTok{ matplotlib.pyplot }\ImportTok{as}\NormalTok{ plt}
 \ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
 \ImportTok{import}\NormalTok{ pandas }\ImportTok{as}\NormalTok{ pd}
+\ImportTok{import}\NormalTok{ pandas\_datareader }\ImportTok{as}\NormalTok{ pdr}
+\ImportTok{import}\NormalTok{ yfinance }\ImportTok{as}\NormalTok{ yf}
 \end{Highlighting}
 \end{Shaded}
 
@@ -32814,13 +32911,6 @@ Date & & & & & & & & & & & & \\
 \OperatorTok{\%}\NormalTok{precision }\DecValTok{4}
 \NormalTok{pd.options.display.float\_format }\OperatorTok{=} \StringTok{\textquotesingle{}}\SpecialCharTok{\{:.4f\}}\StringTok{\textquotesingle{}}\NormalTok{.}\BuiltInTok{format}
 \OperatorTok{\%}\NormalTok{config InlineBackend.figure\_format }\OperatorTok{=} \StringTok{\textquotesingle{}retina\textquotesingle{}}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\ImportTok{import}\NormalTok{ yfinance }\ImportTok{as}\NormalTok{ yf}
-\ImportTok{import}\NormalTok{ pandas\_datareader }\ImportTok{as}\NormalTok{ pdr}
 \end{Highlighting}
 \end{Shaded}
 
@@ -32999,6 +33089,46 @@ Is market volatility higher during wars? Consider the following dates:
 \hypertarget{announcements-25}{%
 \section{Announcements}\label{announcements-25}}
 
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  I will grade your projects over spring break
+\item
+  Please complete your peer reviews on Teammates by midnight on Tuesday,
+  2/27
+\item
+  I will record the week 9 lecture video on Thursday
+\item
+  Enjoy your spring breaks!
+\end{enumerate}
+
+\hypertarget{minute-recap-24}{%
+\section{10-Minute Recap}\label{minute-recap-24}}
+
+We will focus on 3 topics from chapter 10 of McKinney:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \emph{GroupBy Mechanics:} We will use the \texttt{.groupby()} method
+  to perform ``split-apply-combine'' calculations in pandas, which let
+  us aggregate data by one of more columns or indexes.
+\item
+  \emph{Data Aggregation:} We will combine optimized methods, like
+  \texttt{.count()}, \texttt{.sum()}, \texttt{.mean()}, etc., with
+  \texttt{.groupby()} to quickly aggregate data. We will combine the
+  \texttt{.agg()} or \texttt{.aggregate()} method with
+  \texttt{.groupby()} when we want to apply more than one aggregation
+  function.
+\item
+  \emph{Pivot Tables:} We can use the \texttt{.pivot\_table()} method to
+  aggregate data with a syntax similar to Excel's pivot tables. We can
+  almost always get the same output with the \texttt{.groupby()},
+  \texttt{.agg()}, and \texttt{.unstack()} methods.
+\end{enumerate}
+
 \hypertarget{practice-25}{%
 \section{Practice}\label{practice-25}}
 
@@ -33007,6 +33137,8 @@ Is market volatility higher during wars? Consider the following dates:
 \ImportTok{import}\NormalTok{ matplotlib.pyplot }\ImportTok{as}\NormalTok{ plt}
 \ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
 \ImportTok{import}\NormalTok{ pandas }\ImportTok{as}\NormalTok{ pd}
+\ImportTok{import}\NormalTok{ pandas\_datareader }\ImportTok{as}\NormalTok{ pdr}
+\ImportTok{import}\NormalTok{ yfinance }\ImportTok{as}\NormalTok{ yf}
 \end{Highlighting}
 \end{Shaded}
 
@@ -33015,13 +33147,6 @@ Is market volatility higher during wars? Consider the following dates:
 \OperatorTok{\%}\NormalTok{precision }\DecValTok{4}
 \NormalTok{pd.options.display.float\_format }\OperatorTok{=} \StringTok{\textquotesingle{}}\SpecialCharTok{\{:.4f\}}\StringTok{\textquotesingle{}}\NormalTok{.}\BuiltInTok{format}
 \OperatorTok{\%}\NormalTok{config InlineBackend.figure\_format }\OperatorTok{=} \StringTok{\textquotesingle{}retina\textquotesingle{}}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\ImportTok{import}\NormalTok{ yfinance }\ImportTok{as}\NormalTok{ yf}
-\ImportTok{import}\NormalTok{ pandas\_datareader }\ImportTok{as}\NormalTok{ pdr}
 \end{Highlighting}
 \end{Shaded}
 
@@ -33200,6 +33325,46 @@ Is market volatility higher during wars? Consider the following dates:
 \hypertarget{announcements-26}{%
 \section{Announcements}\label{announcements-26}}
 
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  I will grade your projects over spring break
+\item
+  Please complete your peer reviews on Teammates by midnight on Tuesday,
+  2/27
+\item
+  I will record the week 9 lecture video on Thursday
+\item
+  Enjoy your spring breaks!
+\end{enumerate}
+
+\hypertarget{minute-recap-25}{%
+\section{10-Minute Recap}\label{minute-recap-25}}
+
+We will focus on 3 topics from chapter 10 of McKinney:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \emph{GroupBy Mechanics:} We will use the \texttt{.groupby()} method
+  to perform ``split-apply-combine'' calculations in pandas, which let
+  us aggregate data by one of more columns or indexes.
+\item
+  \emph{Data Aggregation:} We will combine optimized methods, like
+  \texttt{.count()}, \texttt{.sum()}, \texttt{.mean()}, etc., with
+  \texttt{.groupby()} to quickly aggregate data. We will combine the
+  \texttt{.agg()} or \texttt{.aggregate()} method with
+  \texttt{.groupby()} when we want to apply more than one aggregation
+  function.
+\item
+  \emph{Pivot Tables:} We can use the \texttt{.pivot\_table()} method to
+  aggregate data with a syntax similar to Excel's pivot tables. We can
+  almost always get the same output with the \texttt{.groupby()},
+  \texttt{.agg()}, and \texttt{.unstack()} methods.
+\end{enumerate}
+
 \hypertarget{practice-26}{%
 \section{Practice}\label{practice-26}}
 
@@ -33208,6 +33373,8 @@ Is market volatility higher during wars? Consider the following dates:
 \ImportTok{import}\NormalTok{ matplotlib.pyplot }\ImportTok{as}\NormalTok{ plt}
 \ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
 \ImportTok{import}\NormalTok{ pandas }\ImportTok{as}\NormalTok{ pd}
+\ImportTok{import}\NormalTok{ pandas\_datareader }\ImportTok{as}\NormalTok{ pdr}
+\ImportTok{import}\NormalTok{ yfinance }\ImportTok{as}\NormalTok{ yf}
 \end{Highlighting}
 \end{Shaded}
 
@@ -33216,13 +33383,6 @@ Is market volatility higher during wars? Consider the following dates:
 \OperatorTok{\%}\NormalTok{precision }\DecValTok{4}
 \NormalTok{pd.options.display.float\_format }\OperatorTok{=} \StringTok{\textquotesingle{}}\SpecialCharTok{\{:.4f\}}\StringTok{\textquotesingle{}}\NormalTok{.}\BuiltInTok{format}
 \OperatorTok{\%}\NormalTok{config InlineBackend.figure\_format }\OperatorTok{=} \StringTok{\textquotesingle{}retina\textquotesingle{}}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\ImportTok{import}\NormalTok{ yfinance }\ImportTok{as}\NormalTok{ yf}
-\ImportTok{import}\NormalTok{ pandas\_datareader }\ImportTok{as}\NormalTok{ pdr}
 \end{Highlighting}
 \end{Shaded}
 
@@ -33401,6 +33561,46 @@ Is market volatility higher during wars? Consider the following dates:
 \hypertarget{announcements-27}{%
 \section{Announcements}\label{announcements-27}}
 
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  I will grade your projects over spring break
+\item
+  Please complete your peer reviews on Teammates by midnight on Tuesday,
+  2/27
+\item
+  I will record the week 9 lecture video on Thursday
+\item
+  Enjoy your spring breaks!
+\end{enumerate}
+
+\hypertarget{minute-recap-26}{%
+\section{10-Minute Recap}\label{minute-recap-26}}
+
+We will focus on 3 topics from chapter 10 of McKinney:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \emph{GroupBy Mechanics:} We will use the \texttt{.groupby()} method
+  to perform ``split-apply-combine'' calculations in pandas, which let
+  us aggregate data by one of more columns or indexes.
+\item
+  \emph{Data Aggregation:} We will combine optimized methods, like
+  \texttt{.count()}, \texttt{.sum()}, \texttt{.mean()}, etc., with
+  \texttt{.groupby()} to quickly aggregate data. We will combine the
+  \texttt{.agg()} or \texttt{.aggregate()} method with
+  \texttt{.groupby()} when we want to apply more than one aggregation
+  function.
+\item
+  \emph{Pivot Tables:} We can use the \texttt{.pivot\_table()} method to
+  aggregate data with a syntax similar to Excel's pivot tables. We can
+  almost always get the same output with the \texttt{.groupby()},
+  \texttt{.agg()}, and \texttt{.unstack()} methods.
+\end{enumerate}
+
 \hypertarget{practice-27}{%
 \section{Practice}\label{practice-27}}
 
@@ -33409,6 +33609,8 @@ Is market volatility higher during wars? Consider the following dates:
 \ImportTok{import}\NormalTok{ matplotlib.pyplot }\ImportTok{as}\NormalTok{ plt}
 \ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
 \ImportTok{import}\NormalTok{ pandas }\ImportTok{as}\NormalTok{ pd}
+\ImportTok{import}\NormalTok{ pandas\_datareader }\ImportTok{as}\NormalTok{ pdr}
+\ImportTok{import}\NormalTok{ yfinance }\ImportTok{as}\NormalTok{ yf}
 \end{Highlighting}
 \end{Shaded}
 
@@ -33417,13 +33619,6 @@ Is market volatility higher during wars? Consider the following dates:
 \OperatorTok{\%}\NormalTok{precision }\DecValTok{4}
 \NormalTok{pd.options.display.float\_format }\OperatorTok{=} \StringTok{\textquotesingle{}}\SpecialCharTok{\{:.4f\}}\StringTok{\textquotesingle{}}\NormalTok{.}\BuiltInTok{format}
 \OperatorTok{\%}\NormalTok{config InlineBackend.figure\_format }\OperatorTok{=} \StringTok{\textquotesingle{}retina\textquotesingle{}}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\ImportTok{import}\NormalTok{ yfinance }\ImportTok{as}\NormalTok{ yf}
-\ImportTok{import}\NormalTok{ pandas\_datareader }\ImportTok{as}\NormalTok{ pdr}
 \end{Highlighting}
 \end{Shaded}
 
