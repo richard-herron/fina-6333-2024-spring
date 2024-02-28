@@ -203,7 +203,7 @@
 
 \begin{document}
 \maketitle
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[sharp corners, boxrule=0pt, borderline west={3pt}{0pt}{shadecolor}, breakable, interior hidden, enhanced, frame hidden]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[frame hidden, enhanced, borderline west={3pt}{0pt}{shadecolor}, sharp corners, interior hidden, boxrule=0pt, breakable]}{\end{tcolorbox}}\fi
 
 \renewcommand*\contentsname{Table of contents}
 {
@@ -35312,7 +35312,7 @@ Series}\label{mckinney-chapter-11---time-series}}
 Chapter 11 of Wes McKinney's
 \href{https://wesmckinney.com/book/}{\emph{Python for Data Analysis}}
 discusses time series and panel data, which is where pandas
-\textbf{\emph{shines}}. We will use these time series and panel tools
+\textbf{\emph{shines.}} We will use these time series and panel tools
 every day for the rest of the course.
 
 We will focus on:
@@ -35339,6 +35339,8 @@ because we will only discuss some topics.
 \ImportTok{import}\NormalTok{ matplotlib.pyplot }\ImportTok{as}\NormalTok{ plt}
 \ImportTok{import}\NormalTok{ numpy }\ImportTok{as}\NormalTok{ np}
 \ImportTok{import}\NormalTok{ pandas }\ImportTok{as}\NormalTok{ pd}
+\ImportTok{import}\NormalTok{ pandas\_datareader }\ImportTok{as}\NormalTok{ pdr}
+\ImportTok{import}\NormalTok{ yfinance }\ImportTok{as}\NormalTok{ yf}
 \end{Highlighting}
 \end{Shaded}
 
@@ -35347,13 +35349,6 @@ because we will only discuss some topics.
 \OperatorTok{\%}\NormalTok{precision }\DecValTok{4}
 \NormalTok{pd.options.display.float\_format }\OperatorTok{=} \StringTok{\textquotesingle{}}\SpecialCharTok{\{:.4f\}}\StringTok{\textquotesingle{}}\NormalTok{.}\BuiltInTok{format}
 \OperatorTok{\%}\NormalTok{config InlineBackend.figure\_format }\OperatorTok{=} \StringTok{\textquotesingle{}retina\textquotesingle{}}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\ImportTok{import}\NormalTok{ yfinance }\ImportTok{as}\NormalTok{ yf}
-\ImportTok{import}\NormalTok{ pandas\_datareader }\ImportTok{as}\NormalTok{ pdr}
 \end{Highlighting}
 \end{Shaded}
 
@@ -35456,6 +35451,22 @@ align on indexes.
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\NormalTok{ts}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+2011-01-02    0.4967
+2011-01-05   -0.1383
+2011-01-07    0.6477
+2011-01-08    1.5230
+2011-01-10   -0.2342
+2011-01-12   -0.2341
+dtype: float64
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \NormalTok{ts.iloc[::}\DecValTok{2}\NormalTok{]}
 \end{Highlighting}
 \end{Shaded}
@@ -35487,30 +35498,8 @@ dtype: float64
 \subsection{Indexing, Selection,
 Subsetting}\label{indexing-selection-subsetting}}
 
-We can use date and time labels to select data.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{stamp }\OperatorTok{=}\NormalTok{ ts.index[}\DecValTok{2}\NormalTok{]}
-\NormalTok{stamp}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-Timestamp('2011-01-07 00:00:00')
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{ts[stamp]}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-0.6477
-\end{verbatim}
-
-pandas uses unambiguous date strings to select data.
+pandas uses U.S.-style date strings (e.g., ``M/D/Y'') or unambiguous
+date strings (e.g., ``YYYY-MM-DD'') to select data.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -35524,7 +35513,7 @@ pandas uses unambiguous date strings to select data.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{ts[}\StringTok{\textquotesingle{}20110110\textquotesingle{}}\NormalTok{] }\CommentTok{\# YYYYMMDD}
+\NormalTok{ts[}\StringTok{\textquotesingle{}2011{-}01{-}10\textquotesingle{}}\NormalTok{] }\CommentTok{\# YYYY{-}MM{-}DD}
 \end{Highlighting}
 \end{Shaded}
 
@@ -35534,7 +35523,7 @@ pandas uses unambiguous date strings to select data.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{ts[}\StringTok{\textquotesingle{}2011{-}01{-}10\textquotesingle{}}\NormalTok{] }\CommentTok{\# YYYY{-}MM{-}DD}
+\NormalTok{ts[}\StringTok{\textquotesingle{}20110110\textquotesingle{}}\NormalTok{] }\CommentTok{\# YYYYMMDD}
 \end{Highlighting}
 \end{Shaded}
 
@@ -35562,20 +35551,24 @@ pandas uses unambiguous date strings to select data.
 -0.2342
 \end{verbatim}
 
-But do not use U.K.-style dates.
+But pandas does not use U.K.-style dates.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# ts[\textquotesingle{}10/1/2011\textquotesingle{}] \# D/M/YYYY \# KeyError: \textquotesingle{}10/1/2011\textquotesingle{}}
+\CommentTok{\# \# KeyError: \textquotesingle{}10/1/2011\textquotesingle{}}
+\CommentTok{\# ts[\textquotesingle{}10/1/2011\textquotesingle{}] \# D/M/YYYY}
 \end{Highlighting}
 \end{Shaded}
 
-Here is a longer time series for longer slices.
+Here is a longer time series we can use to learn about longer slices.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{np.random.seed(}\DecValTok{42}\NormalTok{)}
-\NormalTok{longer\_ts }\OperatorTok{=}\NormalTok{ pd.Series(np.random.randn(}\DecValTok{1000}\NormalTok{), index}\OperatorTok{=}\NormalTok{pd.date\_range(}\StringTok{\textquotesingle{}1/1/2000\textquotesingle{}}\NormalTok{, periods}\OperatorTok{=}\DecValTok{1000}\NormalTok{))}
+\NormalTok{longer\_ts }\OperatorTok{=}\NormalTok{ pd.Series(}
+\NormalTok{    data}\OperatorTok{=}\NormalTok{np.random.randn(}\DecValTok{1000}\NormalTok{),}
+\NormalTok{    index}\OperatorTok{=}\NormalTok{pd.date\_range(}\StringTok{\textquotesingle{}1/1/2000\textquotesingle{}}\NormalTok{, periods}\OperatorTok{=}\DecValTok{1000}\NormalTok{)}
+\NormalTok{)}
 
 \NormalTok{longer\_ts}
 \end{Highlighting}
@@ -35679,9 +35672,8 @@ date strings.
 dtype: float64
 \end{verbatim}
 
-To use date slices, our data should be sorted by the date index, as
-above. The following code works as though our data were sorted, but
-raises a warning that it will not work in future versions.
+However, we cannot date slice if our data are not sorted
+chronologically.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -35701,13 +35693,18 @@ raises a warning that it will not work in future versions.
 dtype: float64
 \end{verbatim}
 
-The following is ambiguous and fails.
+For example, the following date slice fails because \texttt{ts2} is not
+sorted chronologically.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# ts2[\textquotesingle{}1/6/2011\textquotesingle{}:\textquotesingle{}1/11/2011\textquotesingle{}] \# KeyError: \textquotesingle{}Value based partial slicing on non{-}monotonic DatetimeIndexes with non{-}existing keys is not allowed.\textquotesingle{}}
+\CommentTok{\# \# KeyError: \textquotesingle{}Value based partial slicing on non{-}monotonic DatetimeIndexes with non{-}existing keys is not allowed.\textquotesingle{}}
+\CommentTok{\# ts2[\textquotesingle{}1/6/2011\textquotesingle{}:\textquotesingle{}1/11/2011\textquotesingle{}]}
 \end{Highlighting}
 \end{Shaded}
+
+We can use the \texttt{.sort\_index()} method first to allow date
+slices.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -35763,7 +35760,7 @@ three observations on February 2nd.
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{dates }\OperatorTok{=}\NormalTok{ pd.DatetimeIndex([}\StringTok{\textquotesingle{}1/1/2000\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}1/2/2000\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}1/2/2000\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}1/2/2000\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}1/3/2000\textquotesingle{}}\NormalTok{])}
-\NormalTok{dup\_ts }\OperatorTok{=}\NormalTok{ pd.Series(np.arange(}\DecValTok{5}\NormalTok{), index}\OperatorTok{=}\NormalTok{dates)}
+\NormalTok{dup\_ts }\OperatorTok{=}\NormalTok{ pd.Series(data}\OperatorTok{=}\NormalTok{np.arange(}\DecValTok{5}\NormalTok{), index}\OperatorTok{=}\NormalTok{dates)}
 
 \NormalTok{dup\_ts}
 \end{Highlighting}
@@ -35891,7 +35888,10 @@ data backward (or forward) through time.
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{np.random.seed(}\DecValTok{42}\NormalTok{)}
-\NormalTok{ts }\OperatorTok{=}\NormalTok{ pd.Series(np.random.randn(}\DecValTok{4}\NormalTok{), index}\OperatorTok{=}\NormalTok{pd.date\_range(}\StringTok{\textquotesingle{}1/1/2000\textquotesingle{}}\NormalTok{, periods}\OperatorTok{=}\DecValTok{4}\NormalTok{, freq}\OperatorTok{=}\StringTok{\textquotesingle{}M\textquotesingle{}}\NormalTok{))}
+\NormalTok{ts }\OperatorTok{=}\NormalTok{ pd.Series(}
+\NormalTok{    data}\OperatorTok{=}\NormalTok{np.random.randn(}\DecValTok{4}\NormalTok{),}
+\NormalTok{    index}\OperatorTok{=}\NormalTok{pd.date\_range(}\StringTok{\textquotesingle{}1/1/2000\textquotesingle{}}\NormalTok{, periods}\OperatorTok{=}\DecValTok{4}\NormalTok{, freq}\OperatorTok{=}\StringTok{\textquotesingle{}M\textquotesingle{}}\NormalTok{)}
+\NormalTok{)}
 
 \NormalTok{ts}
 \end{Highlighting}
@@ -35920,9 +35920,12 @@ If we pass a positive integer \(N\) to the \texttt{.shift()} method:
 the value at any timestamp the value from 2 timestamps above (earlier,
 since most time-series data are chronological).
 
+The \texttt{.shift()} method assumes \(N=1\) if we do not specify the
+\texttt{periods} argument.
+
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{ts.shift() }\CommentTok{\# if we do not specify "periods", pandas assumes 1}
+\NormalTok{ts.shift()}
 \end{Highlighting}
 \end{Shaded}
 
@@ -35966,11 +35969,11 @@ Freq: M, dtype: float64
 \end{verbatim}
 
 We will almost never shift with negative values (i.e., we will almost
-never bring forward values from the future) to prevent look-ahead bias.
-We do not want to assume that financial market participants have access
-to future data. Our most common shift will be to compute the percent
-change from one period to the next. We can calculate the percent change
-two ways.
+never bring forward values from the future) to prevent a look-ahead
+bias. We do not want to assume that financial market participants have
+access to future data. Our most common shift will be to compute the
+percent change from one period to the next. We can calculate the percent
+change two ways.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -36023,8 +36026,8 @@ Two observations on the percent change calculations above:
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  The first percent change is NaN (missing) because there is no previous
-  value to change from
+  The first percent change is \texttt{NaN} (not a number of missing)
+  because there is no previous value to change from
 \item
   The default \texttt{periods} argument for \texttt{.shift()} and
   \texttt{.pct\_change()} is 1
@@ -36117,9 +36120,12 @@ interval.
 Timestamp('2011-11-20 00:00:00')
 \end{verbatim}
 
+Below, \texttt{MonthEnd(0)} moves to the end of the month, but never
+leaves the month.
+
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{now }\OperatorTok{+}\NormalTok{ MonthEnd(}\DecValTok{0}\NormalTok{) }\CommentTok{\# 0 is for move to the end of the month, but never leave the month}
+\NormalTok{now }\OperatorTok{+}\NormalTok{ MonthEnd(}\DecValTok{0}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -36127,9 +36133,12 @@ Timestamp('2011-11-20 00:00:00')
 Timestamp('2011-11-30 00:00:00')
 \end{verbatim}
 
+Next, \texttt{MonthEnd(1)} moves to the end of the month, unless already
+at the end, then moves to the next end of the month.
+
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{now }\OperatorTok{+}\NormalTok{ MonthEnd(}\DecValTok{1}\NormalTok{) }\CommentTok{\# 1 is for move to the end of the month, if already at end, move to the next end}
+\NormalTok{now }\OperatorTok{+}\NormalTok{ MonthEnd(}\DecValTok{1}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -36137,15 +36146,8 @@ Timestamp('2011-11-30 00:00:00')
 Timestamp('2011-11-30 00:00:00')
 \end{verbatim}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{now }\OperatorTok{+}\NormalTok{ MonthEnd(}\DecValTok{1}\NormalTok{) }\OperatorTok{+}\NormalTok{ MonthEnd(}\DecValTok{1}\NormalTok{) }\CommentTok{\# 1 is for move to the end of the month, if already at end, move to the next end}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-Timestamp('2011-12-31 00:00:00')
-\end{verbatim}
+So, \texttt{MonthEnd(2)} uses 1 step to move to the end of the current
+month, then 1 step to move to the end of the next month.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -36161,6 +36163,9 @@ Date offsets can help us align data for presentation or merging.
 \textbf{\emph{But, be careful!}} The default argument is 1, but we
 typically want 0.
 
+Here, \texttt{MonthEnd(0)} moves to the end of the current month, never
+leaving it.
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{datetime(}\DecValTok{2021}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{30}\NormalTok{) }\OperatorTok{+}\NormalTok{ MonthEnd(}\DecValTok{0}\NormalTok{)}
@@ -36173,7 +36178,7 @@ Timestamp('2021-10-31 00:00:00')
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{datetime(}\DecValTok{2021}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{30}\NormalTok{) }\OperatorTok{+}\NormalTok{ MonthEnd(}\DecValTok{1}\NormalTok{)}
+\NormalTok{datetime(}\DecValTok{2021}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{31}\NormalTok{) }\OperatorTok{+}\NormalTok{ MonthEnd(}\DecValTok{0}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -36181,9 +36186,12 @@ Timestamp('2021-10-31 00:00:00')
 Timestamp('2021-10-31 00:00:00')
 \end{verbatim}
 
+Here, \texttt{MonthEnd(1)} moves to the end of the current month,
+leaving it only if already at the end of the month.
+
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{datetime(}\DecValTok{2021}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{31}\NormalTok{) }\OperatorTok{+}\NormalTok{ MonthEnd(}\DecValTok{0}\NormalTok{)}
+\NormalTok{datetime(}\DecValTok{2021}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{30}\NormalTok{) }\OperatorTok{+}\NormalTok{ MonthEnd(}\DecValTok{1}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -36247,7 +36255,7 @@ resample to downsample data:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{rng }\OperatorTok{=}\NormalTok{ pd.date\_range(}\StringTok{\textquotesingle{}2000{-}01{-}01\textquotesingle{}}\NormalTok{, periods}\OperatorTok{=}\DecValTok{12}\NormalTok{, freq}\OperatorTok{=}\StringTok{\textquotesingle{}T\textquotesingle{}}\NormalTok{)}
+\NormalTok{rng }\OperatorTok{=}\NormalTok{ pd.date\_range(start}\OperatorTok{=}\StringTok{\textquotesingle{}2000{-}01{-}01\textquotesingle{}}\NormalTok{, periods}\OperatorTok{=}\DecValTok{12}\NormalTok{, freq}\OperatorTok{=}\StringTok{\textquotesingle{}T\textquotesingle{}}\NormalTok{)}
 \NormalTok{ts }\OperatorTok{=}\NormalTok{ pd.Series(np.arange(}\DecValTok{12}\NormalTok{), index}\OperatorTok{=}\NormalTok{rng)}
 
 \NormalTok{ts}
@@ -36301,14 +36309,15 @@ Two observations about the previous resampling example:
 \end{enumerate}
 
 As a result, the first value of 10 at midnight is the sum of values at
-midnight and to the right of midnight, not including the value at 00:05
+midnight and to the right of midnight, excluding the value at 00:05
 (i.e., \(10 = 0+1+2+3+4\) at 00:00 and \(35 = 5+6+7+8+9\) at 00:05). We
 can use the \texttt{closed} and \texttt{label} arguments to change this
 behavior.
 
-In finance, we prefer
+In finance, we generally prefer
 \texttt{closed=\textquotesingle{}right\textquotesingle{}} and
-\texttt{label=\textquotesingle{}right\textquotesingle{}}.
+\texttt{label=\textquotesingle{}right\textquotesingle{}} to avoid a
+lookahead bias.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -36354,7 +36363,7 @@ arbitrary. I suggest you do the following when you use the
   Check your output
 \end{enumerate}
 
-pandas (and the \texttt{.resample()} method) are mature and widely used,
+pandas and its \texttt{.resample()} method are mature and widely used,
 so the defaults are typically reasonable.
 
 \hypertarget{upsampling-and-interpolation}{%
@@ -36362,17 +36371,19 @@ so the defaults are typically reasonable.
 Interpolation}\label{upsampling-and-interpolation}}
 
 To downsample (i.e., resample from higher frequency to lower frequency),
-we have to choose an aggregation method (e.g., \texttt{.mean()},
+we aggregate data with an aggregation method (e.g., \texttt{.mean()},
 \texttt{.sum()}, \texttt{.first()}, or \texttt{.last()}). To upsample
 (i.e., resample from lower frequency to higher frequency), we do not
-have to choose an aggregation method.
+aggregate data.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{np.random.seed(}\DecValTok{42}\NormalTok{)}
-\NormalTok{frame }\OperatorTok{=}\NormalTok{ pd.DataFrame(np.random.randn(}\DecValTok{2}\NormalTok{, }\DecValTok{4}\NormalTok{),}
-\NormalTok{                     index}\OperatorTok{=}\NormalTok{pd.date\_range(}\StringTok{\textquotesingle{}1/1/2000\textquotesingle{}}\NormalTok{, periods}\OperatorTok{=}\DecValTok{2}\NormalTok{, freq}\OperatorTok{=}\StringTok{\textquotesingle{}W{-}WED\textquotesingle{}}\NormalTok{),}
-\NormalTok{                     columns}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Colorado\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Texas\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}New York\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ohio\textquotesingle{}}\NormalTok{])}
+\NormalTok{frame }\OperatorTok{=}\NormalTok{ pd.DataFrame(}
+\NormalTok{    data}\OperatorTok{=}\NormalTok{np.random.randn(}\DecValTok{2}\NormalTok{, }\DecValTok{4}\NormalTok{),}
+\NormalTok{    index}\OperatorTok{=}\NormalTok{pd.date\_range(}\StringTok{\textquotesingle{}1/1/2000\textquotesingle{}}\NormalTok{, periods}\OperatorTok{=}\DecValTok{2}\NormalTok{, freq}\OperatorTok{=}\StringTok{\textquotesingle{}W{-}WED\textquotesingle{}}\NormalTok{),}
+\NormalTok{    columns}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Colorado\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Texas\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}New York\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ohio\textquotesingle{}}\NormalTok{]}
+\NormalTok{)}
 
 \NormalTok{frame}
 \end{Highlighting}
@@ -36390,7 +36401,7 @@ have to choose an aggregation method.
 \end{longtable}
 
 We can use the \texttt{.asfreq()} method to convert to the new frequency
-``as is''.
+and leave the new times as missing.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -36417,8 +36428,8 @@ We can use the \texttt{.asfreq()} method to convert to the new frequency
 2000-01-12 & -0.2342 & -0.2341 & 1.5792 & 0.7674 \\
 \end{longtable}
 
-We do not \emph{have} to choose an aggregation (disaggregation?) method,
-but we may want to choose a method to fill in the missing values.
+We can use the \texttt{.ffil()} method to forward fill values to replace
+missing values.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -36489,15 +36500,12 @@ but we may want to choose a method to fill in the missing values.
 \textbf{\emph{Moving window (or rolling window) functions are one of the
 neatest features of pandas, and we will frequently use moving window
 functions.}} We will use data similar, but not identical, to the book
-data. \textbf{\emph{We must remove the timezone if we want to merge with
-Fama-French data.}}
+data.
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{df }\OperatorTok{=}\NormalTok{ (}
 \NormalTok{    yf.download(tickers}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}AAPL\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}MSFT\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}SPY\textquotesingle{}}\NormalTok{])}
-\NormalTok{    .assign(Date }\OperatorTok{=} \KeywordTok{lambda}\NormalTok{ x: x.index.tz\_localize(}\VariableTok{None}\NormalTok{))}
-\NormalTok{    .set\_index(}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{)}
 \NormalTok{    .rename\_axis(columns}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Variable\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{])}
 \NormalTok{)}
 
@@ -36531,15 +36539,15 @@ Date & & & & & & & & & & & & & & & & & & \\
 \endhead
 \bottomrule\noalign{}
 \endlastfoot
-1980-12-12 & 0.0993 & NaN & NaN & 0.1283 & NaN & NaN & 0.1289 & NaN &
+1980-12-12 & 0.0992 & NaN & NaN & 0.1283 & NaN & NaN & 0.1289 & NaN &
 NaN & 0.1283 & NaN & NaN & 0.1283 & NaN & NaN & 469033600 & NaN & NaN \\
-1980-12-15 & 0.0941 & NaN & NaN & 0.1217 & NaN & NaN & 0.1222 & NaN &
+1980-12-15 & 0.0940 & NaN & NaN & 0.1217 & NaN & NaN & 0.1222 & NaN &
 NaN & 0.1217 & NaN & NaN & 0.1222 & NaN & NaN & 175884800 & NaN & NaN \\
-1980-12-16 & 0.0872 & NaN & NaN & 0.1127 & NaN & NaN & 0.1133 & NaN &
+1980-12-16 & 0.0871 & NaN & NaN & 0.1127 & NaN & NaN & 0.1133 & NaN &
 NaN & 0.1127 & NaN & NaN & 0.1133 & NaN & NaN & 105728000 & NaN & NaN \\
-1980-12-17 & 0.0894 & NaN & NaN & 0.1155 & NaN & NaN & 0.1161 & NaN &
+1980-12-17 & 0.0893 & NaN & NaN & 0.1155 & NaN & NaN & 0.1161 & NaN &
 NaN & 0.1155 & NaN & NaN & 0.1155 & NaN & NaN & 86441600 & NaN & NaN \\
-1980-12-18 & 0.0920 & NaN & NaN & 0.1189 & NaN & NaN & 0.1194 & NaN &
+1980-12-18 & 0.0919 & NaN & NaN & 0.1189 & NaN & NaN & 0.1194 & NaN &
 NaN & 0.1189 & NaN & NaN & 0.1189 & NaN & NaN & 73449600 & NaN & NaN \\
 \end{longtable}
 
@@ -36565,7 +36573,7 @@ alongside the daily price.
 
 \begin{figure}[H]
 
-{\centering \includegraphics{mckinney_11_lecture_files/figure-pdf/cell-64-output-1.png}
+{\centering \includegraphics{mckinney_11_lecture_files/figure-pdf/cell-61-output-1.png}
 
 }
 
@@ -36601,30 +36609,18 @@ example is the rolling correlation between two returns series.
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{returns }\OperatorTok{=}\NormalTok{ df[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].pct\_change()}
-
-\NormalTok{returns.head()}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{longtable}[]{@{}llll@{}}
-\toprule\noalign{}
-Ticker & AAPL & MSFT & SPY \\
-Date & & & \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-1980-12-12 & NaN & NaN & NaN \\
-1980-12-15 & -0.0522 & NaN & NaN \\
-1980-12-16 & -0.0734 & NaN & NaN \\
-1980-12-17 & 0.0248 & NaN & NaN \\
-1980-12-18 & 0.0290 & NaN & NaN \\
-\end{longtable}
-
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{returns[}\StringTok{\textquotesingle{}AAPL\textquotesingle{}}\NormalTok{].rolling(}\DecValTok{126}\NormalTok{, min\_periods}\OperatorTok{=}\DecValTok{100}\NormalTok{).corr(returns[}\StringTok{\textquotesingle{}SPY\textquotesingle{}}\NormalTok{]).plot()}
-\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}Correlation(AAPL, SPY)\textquotesingle{}}\NormalTok{)}
+\NormalTok{(}
+\NormalTok{    returns[}\StringTok{\textquotesingle{}AAPL\textquotesingle{}}\NormalTok{]}
+\NormalTok{    .rolling(}\DecValTok{126}\NormalTok{, min\_periods}\OperatorTok{=}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .corr(returns[}\StringTok{\textquotesingle{}SPY\textquotesingle{}}\NormalTok{])}
+\NormalTok{    .plot()}
+\NormalTok{)}
+\NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}Correlation between AAPL and SPY\textquotesingle{}}\NormalTok{)}
 \NormalTok{plt.title(}\StringTok{\textquotesingle{}Rolling Correlation between AAPL and SPY}\CharTok{\textbackslash{}n}\StringTok{ (126{-}Day Window w/ 100{-}Day Minimum)\textquotesingle{}}\NormalTok{)}
 \NormalTok{plt.show()}
 \end{Highlighting}
@@ -36632,7 +36628,7 @@ Date & & & \\
 
 \begin{figure}[H]
 
-{\centering \includegraphics{mckinney_11_lecture_files/figure-pdf/cell-66-output-1.png}
+{\centering \includegraphics{mckinney_11_lecture_files/figure-pdf/cell-63-output-1.png}
 
 }
 
@@ -36640,7 +36636,12 @@ Date & & & \\
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{returns[[}\StringTok{\textquotesingle{}AAPL\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}MSFT\textquotesingle{}}\NormalTok{]].rolling(}\DecValTok{126}\NormalTok{, min\_periods}\OperatorTok{=}\DecValTok{100}\NormalTok{).corr(returns[}\StringTok{\textquotesingle{}SPY\textquotesingle{}}\NormalTok{]).plot()}
+\NormalTok{(}
+\NormalTok{    returns[[}\StringTok{\textquotesingle{}AAPL\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}MSFT\textquotesingle{}}\NormalTok{]]}
+\NormalTok{    .rolling(}\DecValTok{126}\NormalTok{, min\_periods}\OperatorTok{=}\DecValTok{100}\NormalTok{)}
+\NormalTok{    .corr(returns[}\StringTok{\textquotesingle{}SPY\textquotesingle{}}\NormalTok{])}
+\NormalTok{    .plot()}
+\NormalTok{)}
 \NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}Correlation with SPY\textquotesingle{}}\NormalTok{)}
 \NormalTok{plt.title(}\StringTok{\textquotesingle{}Rolling Correlation with SPY}\CharTok{\textbackslash{}n}\StringTok{ (126{-}Day Window w/ 100{-}Day Minimum)\textquotesingle{}}\NormalTok{)}
 \NormalTok{plt.show()}
@@ -36649,7 +36650,7 @@ Date & & & \\
 
 \begin{figure}[H]
 
-{\centering \includegraphics{mckinney_11_lecture_files/figure-pdf/cell-67-output-1.png}
+{\centering \includegraphics{mckinney_11_lecture_files/figure-pdf/cell-64-output-1.png}
 
 }
 
@@ -36671,7 +36672,13 @@ chance to benchmark it against the optimized version.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{returns[}\StringTok{\textquotesingle{}AAPL\textquotesingle{}}\NormalTok{].rolling(}\DecValTok{252}\NormalTok{).}\BuiltInTok{apply}\NormalTok{(np.std).mul(np.sqrt(}\DecValTok{252}\NormalTok{) }\OperatorTok{*} \DecValTok{100}\NormalTok{).plot() }\CommentTok{\# annualize and convert to percent}
+\NormalTok{(}
+\NormalTok{    returns[}\StringTok{\textquotesingle{}AAPL\textquotesingle{}}\NormalTok{]}
+\NormalTok{    .rolling(}\DecValTok{252}\NormalTok{)}
+\NormalTok{    .}\BuiltInTok{apply}\NormalTok{(np.std)}
+\NormalTok{    .mul(np.sqrt(}\DecValTok{252}\NormalTok{) }\OperatorTok{*} \DecValTok{100}\NormalTok{)}
+\NormalTok{    .plot()}
+\NormalTok{)}
 \NormalTok{plt.ylabel(}\StringTok{\textquotesingle{}Volatility (\%)\textquotesingle{}}\NormalTok{)}
 \NormalTok{plt.title(}\StringTok{\textquotesingle{}Rolling Volatility}\CharTok{\textbackslash{}n}\StringTok{ (252{-}Day Window w/ 252{-}Day Minimum)\textquotesingle{}}\NormalTok{)}
 \NormalTok{plt.show()}
@@ -36680,7 +36687,7 @@ chance to benchmark it against the optimized version.
 
 \begin{figure}[H]
 
-{\centering \includegraphics{mckinney_11_lecture_files/figure-pdf/cell-68-output-1.png}
+{\centering \includegraphics{mckinney_11_lecture_files/figure-pdf/cell-65-output-1.png}
 
 }
 
@@ -36697,7 +36704,7 @@ method.
 \end{Shaded}
 
 \begin{verbatim}
-936 ms ± 160 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
+1.24 s ± 80.2 ms per loop (mean ± std. dev. of 7 runs, 1 loop each)
 \end{verbatim}
 
 \begin{Shaded}
@@ -36707,7 +36714,7 @@ method.
 \end{Shaded}
 
 \begin{verbatim}
-337 µs ± 58 µs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
+390 µs ± 10.2 µs per loop (mean ± std. dev. of 7 runs, 1,000 loops each)
 \end{verbatim}
 
 \hypertarget{mckinney-chapter-11---practice-for-section-02}{%
@@ -36720,26 +36727,26 @@ method.
 \hypertarget{practice-28}{%
 \section{Practice}\label{practice-28}}
 
-\hypertarget{cumulative-returns-with-all-available-data}{%
-\subsection{Cumulative returns with all available
-data}\label{cumulative-returns-with-all-available-data}}
+\hypertarget{calculate-cumulative-returns-with-all-available-data}{%
+\subsection{Calculate cumulative returns with all available
+data}\label{calculate-cumulative-returns-with-all-available-data}}
 
-\hypertarget{total-returns-for-each-calendar-year}{%
-\subsection{Total returns for each calendar
-year}\label{total-returns-for-each-calendar-year}}
+\hypertarget{calculate-total-returns-for-each-calendar-year}{%
+\subsection{Calculate total returns for each calendar
+year}\label{calculate-total-returns-for-each-calendar-year}}
 
-\hypertarget{total-returns-over-rolling-252-trading-day-windows}{%
-\subsection{Total returns over rolling 252-trading-day
-windows}\label{total-returns-over-rolling-252-trading-day-windows}}
+\hypertarget{calculate-total-returns-over-rolling-252-trading-day-windows}{%
+\subsection{Calculate total returns over rolling 252-trading-day
+windows}\label{calculate-total-returns-over-rolling-252-trading-day-windows}}
 
-\hypertarget{total-returns-over-rolling-12-months-windows-after-calculating-monthly-returns}{%
-\subsection{Total returns over rolling 12-months windows after
+\hypertarget{calculate-total-returns-over-rolling-12-months-windows-after-calculating-monthly-returns}{%
+\subsection{Calculate total returns over rolling 12-months windows after
 calculating monthly
-returns}\label{total-returns-over-rolling-12-months-windows-after-calculating-monthly-returns}}
+returns}\label{calculate-total-returns-over-rolling-12-months-windows-after-calculating-monthly-returns}}
 
-\hypertarget{sharpe-ratios-for-each-calendar-year}{%
-\subsection{Sharpe Ratios for each calendar
-year}\label{sharpe-ratios-for-each-calendar-year}}
+\hypertarget{calculate-sharpe-ratios-for-each-calendar-year}{%
+\subsection{Calculate Sharpe Ratios for each calendar
+year}\label{calculate-sharpe-ratios-for-each-calendar-year}}
 
 \hypertarget{calculate-rolling-betas}{%
 \subsection{Calculate rolling betas}\label{calculate-rolling-betas}}
@@ -36749,9 +36756,9 @@ MATANA stocks.
 
 The CAPM says the risk premium on a stock depends on the risk-free rate,
 beta, and the risk premium on the market:
-\(E(R_{stock}) = R_f + \beta_{stock} \times (E(R_{market}) - R_f)\). We
-can calculate CAPM betas as:
-\(\beta_{stock} = \frac{Cov(R_{stock} - R_f, R_{market} - R_f)}{Var(R_{market} - R_f)}\).
+\(E(r_i) = r_f + \beta_i \times (E(r_M) - r_f)\). We can calculate CAPM
+betas as:
+\(\beta_i = \frac{Cov(r_i - r_f, r_M - r_f)}{Var(r_M - r_f)}\).
 
 \hypertarget{calculate-rolling-sharpe-ratios}{%
 \subsection{Calculate rolling Sharpe
@@ -36760,10 +36767,10 @@ Ratios}\label{calculate-rolling-sharpe-ratios}}
 Calculate rolling Sharpe Ratios for the MATANA stocks.
 
 The Sharpe Ratio is often used to evaluate fund managers. The Sharpe
-Ratio is \(SR_i = \frac{\overline{R_i - R_f}}{\sigma}\), where
-\(\overline{R_i-R_f}\) is mean fund return relative to the risk-free
-rate over some period and \(\sigma\) is the standard deviation of
-\(R_i-R_f\) over the same period. While the Sharpe Ratio is typically
+Ratio is \(S_i = \frac{\overline{r_i - r_f}}{\sigma_i}\), where
+\(\overline{r_i-r_f}\) is mean fund return relative to the risk-free
+rate over some period and \(\sigma_i\) is the standard deviation of
+\(r_i-r_f\) over the same period. While the Sharpe Ratio is typically
 used for funds, we can apply it to a single stock to test our knowledge
 of the \texttt{.rolling()} method. Calculate and plot the one-year
 rolling Sharpe Ratio for the MATANA stocks using all available daily
@@ -36779,26 +36786,26 @@ data.
 \hypertarget{practice-29}{%
 \section{Practice}\label{practice-29}}
 
-\hypertarget{cumulative-returns-with-all-available-data-1}{%
-\subsection{Cumulative returns with all available
-data}\label{cumulative-returns-with-all-available-data-1}}
+\hypertarget{calculate-cumulative-returns-with-all-available-data-1}{%
+\subsection{Calculate cumulative returns with all available
+data}\label{calculate-cumulative-returns-with-all-available-data-1}}
 
-\hypertarget{total-returns-for-each-calendar-year-1}{%
-\subsection{Total returns for each calendar
-year}\label{total-returns-for-each-calendar-year-1}}
+\hypertarget{calculate-total-returns-for-each-calendar-year-1}{%
+\subsection{Calculate total returns for each calendar
+year}\label{calculate-total-returns-for-each-calendar-year-1}}
 
-\hypertarget{total-returns-over-rolling-252-trading-day-windows-1}{%
-\subsection{Total returns over rolling 252-trading-day
-windows}\label{total-returns-over-rolling-252-trading-day-windows-1}}
+\hypertarget{calculate-total-returns-over-rolling-252-trading-day-windows-1}{%
+\subsection{Calculate total returns over rolling 252-trading-day
+windows}\label{calculate-total-returns-over-rolling-252-trading-day-windows-1}}
 
-\hypertarget{total-returns-over-rolling-12-months-windows-after-calculating-monthly-returns-1}{%
-\subsection{Total returns over rolling 12-months windows after
+\hypertarget{calculate-total-returns-over-rolling-12-months-windows-after-calculating-monthly-returns-1}{%
+\subsection{Calculate total returns over rolling 12-months windows after
 calculating monthly
-returns}\label{total-returns-over-rolling-12-months-windows-after-calculating-monthly-returns-1}}
+returns}\label{calculate-total-returns-over-rolling-12-months-windows-after-calculating-monthly-returns-1}}
 
-\hypertarget{sharpe-ratios-for-each-calendar-year-1}{%
-\subsection{Sharpe Ratios for each calendar
-year}\label{sharpe-ratios-for-each-calendar-year-1}}
+\hypertarget{calculate-sharpe-ratios-for-each-calendar-year-1}{%
+\subsection{Calculate Sharpe Ratios for each calendar
+year}\label{calculate-sharpe-ratios-for-each-calendar-year-1}}
 
 \hypertarget{calculate-rolling-betas-1}{%
 \subsection{Calculate rolling betas}\label{calculate-rolling-betas-1}}
@@ -36808,9 +36815,9 @@ MATANA stocks.
 
 The CAPM says the risk premium on a stock depends on the risk-free rate,
 beta, and the risk premium on the market:
-\(E(R_{stock}) = R_f + \beta_{stock} \times (E(R_{market}) - R_f)\). We
-can calculate CAPM betas as:
-\(\beta_{stock} = \frac{Cov(R_{stock} - R_f, R_{market} - R_f)}{Var(R_{market} - R_f)}\).
+\(E(r_i) = r_f + \beta_i \times (E(r_M) - r_f)\). We can calculate CAPM
+betas as:
+\(\beta_i = \frac{Cov(r_i - r_f, r_M - r_f)}{Var(r_M - r_f)}\).
 
 \hypertarget{calculate-rolling-sharpe-ratios-1}{%
 \subsection{Calculate rolling Sharpe
@@ -36819,10 +36826,10 @@ Ratios}\label{calculate-rolling-sharpe-ratios-1}}
 Calculate rolling Sharpe Ratios for the MATANA stocks.
 
 The Sharpe Ratio is often used to evaluate fund managers. The Sharpe
-Ratio is \(SR_i = \frac{\overline{R_i - R_f}}{\sigma}\), where
-\(\overline{R_i-R_f}\) is mean fund return relative to the risk-free
-rate over some period and \(\sigma\) is the standard deviation of
-\(R_i-R_f\) over the same period. While the Sharpe Ratio is typically
+Ratio is \(S_i = \frac{\overline{r_i - r_f}}{\sigma_i}\), where
+\(\overline{r_i-r_f}\) is mean fund return relative to the risk-free
+rate over some period and \(\sigma_i\) is the standard deviation of
+\(r_i-r_f\) over the same period. While the Sharpe Ratio is typically
 used for funds, we can apply it to a single stock to test our knowledge
 of the \texttt{.rolling()} method. Calculate and plot the one-year
 rolling Sharpe Ratio for the MATANA stocks using all available daily
@@ -36838,26 +36845,26 @@ data.
 \hypertarget{practice-30}{%
 \section{Practice}\label{practice-30}}
 
-\hypertarget{cumulative-returns-with-all-available-data-2}{%
-\subsection{Cumulative returns with all available
-data}\label{cumulative-returns-with-all-available-data-2}}
+\hypertarget{calculate-cumulative-returns-with-all-available-data-2}{%
+\subsection{Calculate cumulative returns with all available
+data}\label{calculate-cumulative-returns-with-all-available-data-2}}
 
-\hypertarget{total-returns-for-each-calendar-year-2}{%
-\subsection{Total returns for each calendar
-year}\label{total-returns-for-each-calendar-year-2}}
+\hypertarget{calculate-total-returns-for-each-calendar-year-2}{%
+\subsection{Calculate total returns for each calendar
+year}\label{calculate-total-returns-for-each-calendar-year-2}}
 
-\hypertarget{total-returns-over-rolling-252-trading-day-windows-2}{%
-\subsection{Total returns over rolling 252-trading-day
-windows}\label{total-returns-over-rolling-252-trading-day-windows-2}}
+\hypertarget{calculate-total-returns-over-rolling-252-trading-day-windows-2}{%
+\subsection{Calculate total returns over rolling 252-trading-day
+windows}\label{calculate-total-returns-over-rolling-252-trading-day-windows-2}}
 
-\hypertarget{total-returns-over-rolling-12-months-windows-after-calculating-monthly-returns-2}{%
-\subsection{Total returns over rolling 12-months windows after
+\hypertarget{calculate-total-returns-over-rolling-12-months-windows-after-calculating-monthly-returns-2}{%
+\subsection{Calculate total returns over rolling 12-months windows after
 calculating monthly
-returns}\label{total-returns-over-rolling-12-months-windows-after-calculating-monthly-returns-2}}
+returns}\label{calculate-total-returns-over-rolling-12-months-windows-after-calculating-monthly-returns-2}}
 
-\hypertarget{sharpe-ratios-for-each-calendar-year-2}{%
-\subsection{Sharpe Ratios for each calendar
-year}\label{sharpe-ratios-for-each-calendar-year-2}}
+\hypertarget{calculate-sharpe-ratios-for-each-calendar-year-2}{%
+\subsection{Calculate Sharpe Ratios for each calendar
+year}\label{calculate-sharpe-ratios-for-each-calendar-year-2}}
 
 \hypertarget{calculate-rolling-betas-2}{%
 \subsection{Calculate rolling betas}\label{calculate-rolling-betas-2}}
@@ -36867,9 +36874,9 @@ MATANA stocks.
 
 The CAPM says the risk premium on a stock depends on the risk-free rate,
 beta, and the risk premium on the market:
-\(E(R_{stock}) = R_f + \beta_{stock} \times (E(R_{market}) - R_f)\). We
-can calculate CAPM betas as:
-\(\beta_{stock} = \frac{Cov(R_{stock} - R_f, R_{market} - R_f)}{Var(R_{market} - R_f)}\).
+\(E(r_i) = r_f + \beta_i \times (E(r_M) - r_f)\). We can calculate CAPM
+betas as:
+\(\beta_i = \frac{Cov(r_i - r_f, r_M - r_f)}{Var(r_M - r_f)}\).
 
 \hypertarget{calculate-rolling-sharpe-ratios-2}{%
 \subsection{Calculate rolling Sharpe
@@ -36878,10 +36885,10 @@ Ratios}\label{calculate-rolling-sharpe-ratios-2}}
 Calculate rolling Sharpe Ratios for the MATANA stocks.
 
 The Sharpe Ratio is often used to evaluate fund managers. The Sharpe
-Ratio is \(SR_i = \frac{\overline{R_i - R_f}}{\sigma}\), where
-\(\overline{R_i-R_f}\) is mean fund return relative to the risk-free
-rate over some period and \(\sigma\) is the standard deviation of
-\(R_i-R_f\) over the same period. While the Sharpe Ratio is typically
+Ratio is \(S_i = \frac{\overline{r_i - r_f}}{\sigma_i}\), where
+\(\overline{r_i-r_f}\) is mean fund return relative to the risk-free
+rate over some period and \(\sigma_i\) is the standard deviation of
+\(r_i-r_f\) over the same period. While the Sharpe Ratio is typically
 used for funds, we can apply it to a single stock to test our knowledge
 of the \texttt{.rolling()} method. Calculate and plot the one-year
 rolling Sharpe Ratio for the MATANA stocks using all available daily
@@ -36897,26 +36904,26 @@ data.
 \hypertarget{practice-31}{%
 \section{Practice}\label{practice-31}}
 
-\hypertarget{cumulative-returns-with-all-available-data-3}{%
-\subsection{Cumulative returns with all available
-data}\label{cumulative-returns-with-all-available-data-3}}
+\hypertarget{calculate-cumulative-returns-with-all-available-data-3}{%
+\subsection{Calculate cumulative returns with all available
+data}\label{calculate-cumulative-returns-with-all-available-data-3}}
 
-\hypertarget{total-returns-for-each-calendar-year-3}{%
-\subsection{Total returns for each calendar
-year}\label{total-returns-for-each-calendar-year-3}}
+\hypertarget{calculate-total-returns-for-each-calendar-year-3}{%
+\subsection{Calculate total returns for each calendar
+year}\label{calculate-total-returns-for-each-calendar-year-3}}
 
-\hypertarget{total-returns-over-rolling-252-trading-day-windows-3}{%
-\subsection{Total returns over rolling 252-trading-day
-windows}\label{total-returns-over-rolling-252-trading-day-windows-3}}
+\hypertarget{calculate-total-returns-over-rolling-252-trading-day-windows-3}{%
+\subsection{Calculate total returns over rolling 252-trading-day
+windows}\label{calculate-total-returns-over-rolling-252-trading-day-windows-3}}
 
-\hypertarget{total-returns-over-rolling-12-months-windows-after-calculating-monthly-returns-3}{%
-\subsection{Total returns over rolling 12-months windows after
+\hypertarget{calculate-total-returns-over-rolling-12-months-windows-after-calculating-monthly-returns-3}{%
+\subsection{Calculate total returns over rolling 12-months windows after
 calculating monthly
-returns}\label{total-returns-over-rolling-12-months-windows-after-calculating-monthly-returns-3}}
+returns}\label{calculate-total-returns-over-rolling-12-months-windows-after-calculating-monthly-returns-3}}
 
-\hypertarget{sharpe-ratios-for-each-calendar-year-3}{%
-\subsection{Sharpe Ratios for each calendar
-year}\label{sharpe-ratios-for-each-calendar-year-3}}
+\hypertarget{calculate-sharpe-ratios-for-each-calendar-year-3}{%
+\subsection{Calculate Sharpe Ratios for each calendar
+year}\label{calculate-sharpe-ratios-for-each-calendar-year-3}}
 
 \hypertarget{calculate-rolling-betas-3}{%
 \subsection{Calculate rolling betas}\label{calculate-rolling-betas-3}}
@@ -36926,9 +36933,9 @@ MATANA stocks.
 
 The CAPM says the risk premium on a stock depends on the risk-free rate,
 beta, and the risk premium on the market:
-\(E(R_{stock}) = R_f + \beta_{stock} \times (E(R_{market}) - R_f)\). We
-can calculate CAPM betas as:
-\(\beta_{stock} = \frac{Cov(R_{stock} - R_f, R_{market} - R_f)}{Var(R_{market} - R_f)}\).
+\(E(r_i) = r_f + \beta_i \times (E(r_M) - r_f)\). We can calculate CAPM
+betas as:
+\(\beta_i = \frac{Cov(r_i - r_f, r_M - r_f)}{Var(r_M - r_f)}\).
 
 \hypertarget{calculate-rolling-sharpe-ratios-3}{%
 \subsection{Calculate rolling Sharpe
@@ -36937,10 +36944,10 @@ Ratios}\label{calculate-rolling-sharpe-ratios-3}}
 Calculate rolling Sharpe Ratios for the MATANA stocks.
 
 The Sharpe Ratio is often used to evaluate fund managers. The Sharpe
-Ratio is \(SR_i = \frac{\overline{R_i - R_f}}{\sigma}\), where
-\(\overline{R_i-R_f}\) is mean fund return relative to the risk-free
-rate over some period and \(\sigma\) is the standard deviation of
-\(R_i-R_f\) over the same period. While the Sharpe Ratio is typically
+Ratio is \(S_i = \frac{\overline{r_i - r_f}}{\sigma_i}\), where
+\(\overline{r_i-r_f}\) is mean fund return relative to the risk-free
+rate over some period and \(\sigma_i\) is the standard deviation of
+\(r_i-r_f\) over the same period. While the Sharpe Ratio is typically
 used for funds, we can apply it to a single stock to test our knowledge
 of the \texttt{.rolling()} method. Calculate and plot the one-year
 rolling Sharpe Ratio for the MATANA stocks using all available daily
