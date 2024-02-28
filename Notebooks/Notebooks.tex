@@ -203,7 +203,7 @@
 
 \begin{document}
 \maketitle
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[borderline west={3pt}{0pt}{shadecolor}, breakable, interior hidden, sharp corners, frame hidden, boxrule=0pt, enhanced]}{\end{tcolorbox}}\fi
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[sharp corners, boxrule=0pt, borderline west={3pt}{0pt}{shadecolor}, breakable, interior hidden, enhanced, frame hidden]}{\end{tcolorbox}}\fi
 
 \renewcommand*\contentsname{Table of contents}
 {
@@ -32935,7 +32935,20 @@ We will focus on 3 topics from chapter 10 of McKinney:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{(}
+\NormalTok{np.allclose(}
+\NormalTok{    ind[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{],}
+\NormalTok{    ind[}\StringTok{\textquotesingle{}Close\textquotesingle{}}\NormalTok{]}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a }\OperatorTok{=}\NormalTok{ (}
 \NormalTok{    ind}
 \NormalTok{    .loc[}\StringTok{\textquotesingle{}2015\textquotesingle{}}\NormalTok{:]}
 \NormalTok{    .reset\_index()}
@@ -32946,6 +32959,8 @@ We will focus on 3 topics from chapter 10 of McKinney:
 \NormalTok{        aggfunc}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}min\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}max\textquotesingle{}}\NormalTok{]}
 \NormalTok{    )}
 \NormalTok{)}
+
+\NormalTok{a}
 \end{Highlighting}
 \end{Shaded}
 
@@ -32988,9 +33003,84 @@ Date & & & & & & & & & & & & \\
 10213.2900 & 24717.5293 & 36799.6484 & 7672.3999 & 4796.5601 &
 24965.5508 & 15832.7998 & 29332.1602 \\
 2023-12-31 & 31819.1406 & 7256.8999 & 3808.1001 & 16201.4902 &
-10305.2402 & 25716.8594 & 37557.9219 & 8014.2998 & 4768.3701 &
-22688.9004 & 15044.7031 & 33753.3281 \\
+10305.2402 & 25716.8594 & 37710.1016 & 8014.2998 & 4783.3501 &
+22688.9004 & 15099.1797 & 33753.3281 \\
+2024-12-31 & 37266.6719 & 7446.2998 & 4688.6802 & 14961.1797 &
+14510.2998 & 33288.2891 & 39131.5312 & 7728.5000 & 5088.7998 &
+16790.8008 & 16041.6201 & 39233.7109 \\
 \end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{b }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    ind}
+\NormalTok{    .loc[}\StringTok{\textquotesingle{}2015\textquotesingle{}}\NormalTok{:]}
+\NormalTok{    .reset\_index()}
+\NormalTok{    .groupby([pd.Grouper(key}\OperatorTok{=}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, freq}\OperatorTok{=}\StringTok{\textquotesingle{}A\textquotesingle{}}\NormalTok{), }\StringTok{\textquotesingle{}Index\textquotesingle{}}\NormalTok{])}
+\NormalTok{    [}\StringTok{\textquotesingle{}Close\textquotesingle{}}\NormalTok{]}
+\NormalTok{    .agg([}\StringTok{\textquotesingle{}min\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}max\textquotesingle{}}\NormalTok{])}
+\NormalTok{    .unstack()}
+\NormalTok{)}
+
+\NormalTok{b}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllllllllll@{}}
+\toprule\noalign{}
+&
+\multicolumn{6}{>{\raggedright\arraybackslash}p{(\columnwidth - 24\tabcolsep) * \real{0.0000} + 10\tabcolsep}}{%
+min} &
+\multicolumn{6}{>{\raggedright\arraybackslash}p{(\columnwidth - 24\tabcolsep) * \real{0.0000} + 10\tabcolsep}@{}}{%
+max} \\
+Index & \^{}DJI & \^{}FTSE & \^{}GSPC & \^{}HSI & \^{}IXIC & \^{}N225 &
+\^{}DJI & \^{}FTSE & \^{}GSPC & \^{}HSI & \^{}IXIC & \^{}N225 \\
+Date & & & & & & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2015-12-31 & 15666.4404 & 5874.1001 & 1867.6100 & 20556.5996 & 4506.4902
+& 16795.9609 & 18312.3906 & 7104.0000 & 2130.8201 & 28442.7500 &
+5218.8599 & 20868.0293 \\
+2016-12-31 & 15660.1797 & 5537.0000 & 1829.0800 & 18319.5801 & 4266.8398
+& 14952.0195 & 19974.6191 & 7142.7998 & 2271.7200 & 24099.6992 &
+5487.4399 & 19494.5293 \\
+2017-12-31 & 19732.4004 & 7099.2002 & 2257.8301 & 22134.4707 & 5429.0801
+& 18335.6309 & 24837.5098 & 7687.7998 & 2690.1599 & 30003.4902 &
+6994.7598 & 22939.1797 \\
+2018-12-31 & 21792.1992 & 6584.7002 & 2351.1001 & 24585.5293 & 6192.9199
+& 19155.7402 & 26828.3906 & 7877.5000 & 2930.7500 & 33154.1211 &
+8109.6899 & 24270.6191 \\
+2019-12-31 & 22686.2207 & 6692.7002 & 2447.8899 & 25064.3594 & 6463.5000
+& 19561.9609 & 28645.2598 & 7686.6001 & 3240.0200 & 30157.4902 &
+9022.3896 & 24066.1191 \\
+2020-12-31 & 18591.9297 & 4993.8999 & 2237.3999 & 21696.1309 & 6860.6699
+& 16552.8301 & 30606.4805 & 7674.6001 & 3756.0701 & 29056.4199 &
+12899.4199 & 27568.1504 \\
+2021-12-31 & 29982.6191 & 6407.5000 & 3700.6499 & 22744.8594 &
+12609.1602 & 27013.2500 & 36488.6289 & 7420.7002 & 4793.0601 &
+31084.9395 & 16057.4404 & 30670.0996 \\
+2022-12-31 & 28725.5098 & 6826.2002 & 3577.0300 & 14687.0195 &
+10213.2900 & 24717.5293 & 36799.6484 & 7672.3999 & 4796.5601 &
+24965.5508 & 15832.7998 & 29332.1602 \\
+2023-12-31 & 31819.1406 & 7256.8999 & 3808.1001 & 16201.4902 &
+10305.2402 & 25716.8594 & 37710.1016 & 8014.2998 & 4783.3501 &
+22688.9004 & 15099.1797 & 33753.3281 \\
+2024-12-31 & 37266.6719 & 7446.2998 & 4688.6802 & 14961.1797 &
+14510.2998 & 33288.2891 & 39131.5312 & 7728.5000 & 5088.7998 &
+16790.8008 & 16041.6201 & 39233.7109 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.allclose(a, b)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
 
 \hypertarget{calulate-the-mean-and-standard-deviation-of-returns-by-ticker-for-the-matana-msft-aapl-tsla-amzn-nvda-and-goog-stocks}{%
 \subsection{Calulate the mean and standard deviation of returns by
@@ -33000,6 +33090,138 @@ stocks}\label{calulate-the-mean-and-standard-deviation-of-returns-by-ticker-for-
 Consider only dates with complete returns data. Try this calculation
 with wide and long data frames, and confirm your results are the same.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{matana }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    yf.download(tickers}\OperatorTok{=}\StringTok{\textquotesingle{}MSFT AAPL TSLA AMZN NVDA GOOG\textquotesingle{}}\NormalTok{)}
+\NormalTok{    .rename\_axis(columns}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Variable\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{])}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[*********************100%%**********************]  6 of 6 completed
+\end{verbatim}
+
+We can add the returns columns first, using the \texttt{pd.MultiIndex}
+trick from a few weeks ago.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\_ }\OperatorTok{=}\NormalTok{ pd.MultiIndex.from\_product([[}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{], matana[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].columns])}
+\NormalTok{matana[\_] }\OperatorTok{=}\NormalTok{ matana[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].iloc[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{].pct\_change()}
+\end{Highlighting}
+\end{Shaded}
+
+We can use \texttt{.agg()} without \texttt{.pivot\_table()} or
+\texttt{.groupby()}! We have wide data, so the tickers will be in the
+columns.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    matana[}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{]}
+\NormalTok{    .dropna()}
+\NormalTok{    .aggregate([}\StringTok{\textquotesingle{}mean\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}std\textquotesingle{}}\NormalTok{])}
+\NormalTok{)}
+
+\NormalTok{a}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllll@{}}
+\toprule\noalign{}
+Ticker & AAPL & AMZN & GOOG & MSFT & NVDA & TSLA \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+mean & 0.0011 & 0.0012 & 0.0009 & 0.0010 & 0.0021 & 0.0020 \\
+std & 0.0176 & 0.0207 & 0.0172 & 0.0163 & 0.0283 & 0.0358 \\
+\end{longtable}
+
+We need a long data frame to use \texttt{.pivot\_table()} and
+\texttt{.groupby()} methods. Here is the \texttt{.pivot\_table()}
+solution.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{b }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    matana[}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{]}
+\NormalTok{    .dropna()}
+\NormalTok{    .stack()}
+\NormalTok{    .to\_frame(}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{)}
+\NormalTok{    .pivot\_table(}
+\NormalTok{        values}\OperatorTok{=}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{,}
+\NormalTok{        index}\OperatorTok{=}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{,}
+\NormalTok{        aggfunc}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}mean\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}std\textquotesingle{}}\NormalTok{]}
+\NormalTok{    )}
+\NormalTok{    .transpose()}
+\NormalTok{)}
+
+\NormalTok{b}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllllll@{}}
+\toprule\noalign{}
+& Ticker & AAPL & AMZN & GOOG & MSFT & NVDA & TSLA \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+mean & Return & 0.0011 & 0.0012 & 0.0009 & 0.0010 & 0.0021 & 0.0020 \\
+std & Return & 0.0176 & 0.0207 & 0.0172 & 0.0163 & 0.0283 & 0.0358 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.allclose(a, b)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
+
+Here is the \texttt{.groupby()} solution.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{c }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    matana[}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{]}
+\NormalTok{    .dropna()}
+\NormalTok{    .stack()}
+\NormalTok{    .groupby(}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{)}
+\NormalTok{    .agg([}\StringTok{\textquotesingle{}mean\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}std\textquotesingle{}}\NormalTok{])}
+\NormalTok{    .transpose()}
+\NormalTok{)}
+
+\NormalTok{c}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllll@{}}
+\toprule\noalign{}
+Ticker & AAPL & AMZN & GOOG & MSFT & NVDA & TSLA \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+mean & 0.0011 & 0.0012 & 0.0009 & 0.0010 & 0.0021 & 0.0020 \\
+std & 0.0176 & 0.0207 & 0.0172 & 0.0163 & 0.0283 & 0.0358 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.allclose(a, c)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
+
 \hypertarget{calculate-the-mean-and-standard-deviation-of-returns-and-the-maximum-of-closing-prices-by-ticker-for-the-matana-stocks}{%
 \subsection{Calculate the mean and standard deviation of returns and the
 maximum of closing prices by ticker for the MATANA
@@ -33008,6 +33230,148 @@ stocks}\label{calculate-the-mean-and-standard-deviation-of-returns-and-the-maxim
 Again, consider only dates with complete returns data. Try this
 calculation with wide and long data frames, and confirm your results are
 the same.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    matana}
+\NormalTok{    .dropna()}
+\NormalTok{    .stack()}
+\NormalTok{    .pivot\_table(}
+\NormalTok{        index}\OperatorTok{=}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{,}
+\NormalTok{        aggfunc}\OperatorTok{=}\NormalTok{\{}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{: [}\StringTok{\textquotesingle{}mean\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}std\textquotesingle{}}\NormalTok{], }\StringTok{\textquotesingle{}Close\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}max\textquotesingle{}}\NormalTok{\}}
+\NormalTok{    )}
+\NormalTok{)}
+
+\NormalTok{a}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+Variable & Close &
+\multicolumn{2}{>{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.0000} + 2\tabcolsep}@{}}{%
+Return} \\
+& max & mean & std \\
+Ticker & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+AAPL & 198.1100 & 0.0011 & 0.0176 \\
+AMZN & 186.5705 & 0.0012 & 0.0207 \\
+GOOG & 154.8400 & 0.0009 & 0.0172 \\
+MSFT & 420.5500 & 0.0010 & 0.0163 \\
+NVDA & 790.9200 & 0.0021 & 0.0283 \\
+TSLA & 409.9700 & 0.0020 & 0.0358 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{b }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    matana}
+\NormalTok{    .dropna()}
+\NormalTok{    .stack()}
+\NormalTok{    .groupby(}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{)}
+\NormalTok{    .agg(\{}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{: [}\StringTok{\textquotesingle{}mean\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}std\textquotesingle{}}\NormalTok{], }\StringTok{\textquotesingle{}Close\textquotesingle{}}\NormalTok{:}\StringTok{\textquotesingle{}max\textquotesingle{}}\NormalTok{\})}
+\NormalTok{)}
+
+\NormalTok{b}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+Variable &
+\multicolumn{2}{>{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.0000} + 2\tabcolsep}}{%
+Return} & Close \\
+& mean & std & max \\
+Ticker & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+AAPL & 0.0011 & 0.0176 & 198.1100 \\
+AMZN & 0.0012 & 0.0207 & 186.5705 \\
+GOOG & 0.0009 & 0.0172 & 154.8400 \\
+MSFT & 0.0010 & 0.0163 & 420.5500 \\
+NVDA & 0.0021 & 0.0283 & 790.9200 \\
+TSLA & 0.0020 & 0.0358 & 409.9700 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.allclose(a, b)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+False
+\end{verbatim}
+
+The \texttt{.pivot\_table()} method sorts it columns, but
+\texttt{groupby()} method does not! We need to sort columns with
+\texttt{.sort\_index(axis=1)} to make sure our output is the same!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.allclose(}
+\NormalTok{    a.sort\_index(axis}\OperatorTok{=}\DecValTok{1}\NormalTok{),}
+\NormalTok{    b.sort\_index(axis}\OperatorTok{=}\DecValTok{1}\NormalTok{)}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+We can use the following code to display all index levels for all rows
+and columns.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{with}\NormalTok{ pd.option\_context(}\StringTok{\textquotesingle{}display.multi\_sparse\textquotesingle{}}\NormalTok{, }\VariableTok{False}\NormalTok{):}
+\NormalTok{    display(b)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+Variable & Return & Return & Close \\
+& mean & std & max \\
+Ticker & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+AAPL & 0.0011 & 0.0176 & 198.1100 \\
+AMZN & 0.0012 & 0.0207 & 186.5705 \\
+GOOG & 0.0009 & 0.0172 & 154.8400 \\
+MSFT & 0.0010 & 0.0163 & 420.5500 \\
+NVDA & 0.0021 & 0.0283 & 790.9200 \\
+TSLA & 0.0020 & 0.0358 & 409.9700 \\
+\end{longtable}
+
+If we prefer to see all index levels all the time, we can set the
+following setting at the top of our notebook:
+
+\begin{verbatim}
+pd.options.display.multi_sparse = False
+\end{verbatim}
+
+We can also copy our output to our clipboaerd then paste it into Excel
+if we want to convince ourelves of the column multi index arrangement.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{b.to\_clipboard()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
 \hypertarget{calculate-monthly-means-and-volatilities-for-spy-and-goog-returns}{%
 \subsection{Calculate monthly means and volatilities for SPY and GOOG
@@ -33171,7 +33535,20 @@ We will focus on 3 topics from chapter 10 of McKinney:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{(}
+\NormalTok{np.allclose(}
+\NormalTok{    ind[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{],}
+\NormalTok{    ind[}\StringTok{\textquotesingle{}Close\textquotesingle{}}\NormalTok{]}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a }\OperatorTok{=}\NormalTok{ (}
 \NormalTok{    ind}
 \NormalTok{    .loc[}\StringTok{\textquotesingle{}2015\textquotesingle{}}\NormalTok{:]}
 \NormalTok{    .reset\_index()}
@@ -33182,6 +33559,8 @@ We will focus on 3 topics from chapter 10 of McKinney:
 \NormalTok{        aggfunc}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}min\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}max\textquotesingle{}}\NormalTok{]}
 \NormalTok{    )}
 \NormalTok{)}
+
+\NormalTok{a}
 \end{Highlighting}
 \end{Shaded}
 
@@ -33224,9 +33603,188 @@ Date & & & & & & & & & & & & \\
 10213.2900 & 24717.5293 & 36799.6484 & 7672.3999 & 4796.5601 &
 24965.5508 & 15832.7998 & 29332.1602 \\
 2023-12-31 & 31819.1406 & 7256.8999 & 3808.1001 & 16201.4902 &
-10305.2402 & 25716.8594 & 37557.9219 & 8014.2998 & 4768.3701 &
-22688.9004 & 15044.7031 & 33753.3281 \\
+10305.2402 & 25716.8594 & 37710.1016 & 8014.2998 & 4783.3501 &
+22688.9004 & 15099.1797 & 33753.3281 \\
+2024-12-31 & 37266.6719 & 7446.2998 & 4688.6802 & 14961.1797 &
+14510.2998 & 33288.2891 & 39131.5312 & 7728.5000 & 5088.7998 &
+16790.8008 & 16041.6201 & 39233.7109 \\
 \end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{b }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    ind}
+\NormalTok{    .loc[}\StringTok{\textquotesingle{}2015\textquotesingle{}}\NormalTok{:]}
+\NormalTok{    .reset\_index()}
+\NormalTok{    .groupby([pd.Grouper(key}\OperatorTok{=}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, freq}\OperatorTok{=}\StringTok{\textquotesingle{}A\textquotesingle{}}\NormalTok{), }\StringTok{\textquotesingle{}Index\textquotesingle{}}\NormalTok{])}
+\NormalTok{    [}\StringTok{\textquotesingle{}Close\textquotesingle{}}\NormalTok{]}
+\NormalTok{    .agg([}\StringTok{\textquotesingle{}min\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}max\textquotesingle{}}\NormalTok{])}
+\NormalTok{    .unstack()}
+\NormalTok{)}
+
+\NormalTok{b}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllllllllll@{}}
+\toprule\noalign{}
+&
+\multicolumn{6}{>{\raggedright\arraybackslash}p{(\columnwidth - 24\tabcolsep) * \real{0.0000} + 10\tabcolsep}}{%
+min} &
+\multicolumn{6}{>{\raggedright\arraybackslash}p{(\columnwidth - 24\tabcolsep) * \real{0.0000} + 10\tabcolsep}@{}}{%
+max} \\
+Index & \^{}DJI & \^{}FTSE & \^{}GSPC & \^{}HSI & \^{}IXIC & \^{}N225 &
+\^{}DJI & \^{}FTSE & \^{}GSPC & \^{}HSI & \^{}IXIC & \^{}N225 \\
+Date & & & & & & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2015-12-31 & 15666.4404 & 5874.1001 & 1867.6100 & 20556.5996 & 4506.4902
+& 16795.9609 & 18312.3906 & 7104.0000 & 2130.8201 & 28442.7500 &
+5218.8599 & 20868.0293 \\
+2016-12-31 & 15660.1797 & 5537.0000 & 1829.0800 & 18319.5801 & 4266.8398
+& 14952.0195 & 19974.6191 & 7142.7998 & 2271.7200 & 24099.6992 &
+5487.4399 & 19494.5293 \\
+2017-12-31 & 19732.4004 & 7099.2002 & 2257.8301 & 22134.4707 & 5429.0801
+& 18335.6309 & 24837.5098 & 7687.7998 & 2690.1599 & 30003.4902 &
+6994.7598 & 22939.1797 \\
+2018-12-31 & 21792.1992 & 6584.7002 & 2351.1001 & 24585.5293 & 6192.9199
+& 19155.7402 & 26828.3906 & 7877.5000 & 2930.7500 & 33154.1211 &
+8109.6899 & 24270.6191 \\
+2019-12-31 & 22686.2207 & 6692.7002 & 2447.8899 & 25064.3594 & 6463.5000
+& 19561.9609 & 28645.2598 & 7686.6001 & 3240.0200 & 30157.4902 &
+9022.3896 & 24066.1191 \\
+2020-12-31 & 18591.9297 & 4993.8999 & 2237.3999 & 21696.1309 & 6860.6699
+& 16552.8301 & 30606.4805 & 7674.6001 & 3756.0701 & 29056.4199 &
+12899.4199 & 27568.1504 \\
+2021-12-31 & 29982.6191 & 6407.5000 & 3700.6499 & 22744.8594 &
+12609.1602 & 27013.2500 & 36488.6289 & 7420.7002 & 4793.0601 &
+31084.9395 & 16057.4404 & 30670.0996 \\
+2022-12-31 & 28725.5098 & 6826.2002 & 3577.0300 & 14687.0195 &
+10213.2900 & 24717.5293 & 36799.6484 & 7672.3999 & 4796.5601 &
+24965.5508 & 15832.7998 & 29332.1602 \\
+2023-12-31 & 31819.1406 & 7256.8999 & 3808.1001 & 16201.4902 &
+10305.2402 & 25716.8594 & 37710.1016 & 8014.2998 & 4783.3501 &
+22688.9004 & 15099.1797 & 33753.3281 \\
+2024-12-31 & 37266.6719 & 7446.2998 & 4688.6802 & 14961.1797 &
+14510.2998 & 33288.2891 & 39131.5312 & 7728.5000 & 5088.7998 &
+16790.8008 & 16041.6201 & 39233.7109 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.allclose(a, b)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\textbf{\emph{Detour!}} How do we grab the largest 3 values for each
+ticker, each year?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}
+\NormalTok{    ind}
+\NormalTok{    .loc[}\StringTok{\textquotesingle{}2015\textquotesingle{}}\NormalTok{:]}
+\NormalTok{    .reset\_index()}
+\NormalTok{    .groupby([pd.Grouper(key}\OperatorTok{=}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, freq}\OperatorTok{=}\StringTok{\textquotesingle{}A\textquotesingle{}}\NormalTok{), }\StringTok{\textquotesingle{}Index\textquotesingle{}}\NormalTok{])}
+\NormalTok{    [}\StringTok{\textquotesingle{}Close\textquotesingle{}}\NormalTok{]}
+\NormalTok{    .}\BuiltInTok{apply}\NormalTok{(}\KeywordTok{lambda}\NormalTok{ x: x.nlargest(n}\OperatorTok{=}\DecValTok{3}\NormalTok{))}
+\NormalTok{    .reset\_index(level}\OperatorTok{={-}}\DecValTok{1}\NormalTok{, drop}\OperatorTok{=}\VariableTok{True}\NormalTok{)}
+\NormalTok{    .to\_frame(}\StringTok{\textquotesingle{}Close\textquotesingle{}}\NormalTok{)}
+\NormalTok{    .assign(Rank}\OperatorTok{=}\KeywordTok{lambda}\NormalTok{ x: x.groupby([}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Index\textquotesingle{}}\NormalTok{]).cumcount())}
+\NormalTok{    .set\_index(}\StringTok{\textquotesingle{}Rank\textquotesingle{}}\NormalTok{, append}\OperatorTok{=}\VariableTok{True}\NormalTok{)}
+\NormalTok{    .unstack(}\StringTok{\textquotesingle{}Index\textquotesingle{}}\NormalTok{)}
+\NormalTok{    .rename\_axis(columns}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Variable\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Index\textquotesingle{}}\NormalTok{])}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllllll@{}}
+\toprule\noalign{}
+& Variable &
+\multicolumn{6}{>{\raggedright\arraybackslash}p{(\columnwidth - 14\tabcolsep) * \real{0.0000} + 10\tabcolsep}@{}}{%
+Close} \\
+& Index & \^{}DJI & \^{}FTSE & \^{}GSPC & \^{}HSI & \^{}IXIC &
+\^{}N225 \\
+Date & Rank & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+\multirow{3}{*}{2015-12-31} & 0 & 18312.3906 & 7104.0000 & 2130.8201 &
+28442.7500 & 5218.8599 & 20868.0293 \\
+& 1 & 18298.8809 & 7096.7998 & 2129.2000 & 28433.5898 & 5210.1401 &
+20841.9707 \\
+& 2 & 18288.6309 & 7089.7998 & 2128.2800 & 28400.3398 & 5208.1201 &
+20809.4199 \\
+\multirow{3}{*}{2016-12-31} & 0 & 19974.6191 & 7142.7998 & 2271.7200 &
+24099.6992 & 5487.4399 & 19494.5293 \\
+& 1 & 19945.0391 & 7120.2998 & 2270.7600 & 23952.5000 & 5483.9399 &
+19444.4902 \\
+& 2 & 19941.9609 & 7106.1001 & 2268.8799 & 23919.3398 & 5471.4302 &
+19427.6699 \\
+\multirow{3}{*}{2017-12-31} & 0 & 24837.5098 & 7687.7998 & 2690.1599 &
+30003.4902 & 6994.7598 & 22939.1797 \\
+& 1 & 24792.1992 & 7622.8999 & 2687.5400 & 29919.1504 & 6965.3599 &
+22938.7305 \\
+& 2 & 24782.2891 & 7620.7002 & 2684.5701 & 29866.3203 & 6963.8501 &
+22937.5996 \\
+\multirow{3}{*}{2018-12-31} & 0 & 26828.3906 & 7877.5000 & 2930.7500 &
+33154.1211 & 8109.6899 & 24270.6191 \\
+& 1 & 26773.9395 & 7859.2002 & 2929.6699 & 32966.8906 & 8109.5400 &
+24245.7598 \\
+& 2 & 26743.5000 & 7788.3999 & 2925.5100 & 32958.6914 & 8091.2500 &
+24124.1504 \\
+\multirow{3}{*}{2019-12-31} & 0 & 28645.2598 & 7686.6001 & 3240.0200 &
+30157.4902 & 9022.3896 & 24066.1191 \\
+& 1 & 28621.3906 & 7646.7998 & 3239.9099 & 30129.8691 & 9006.6201 &
+24023.0996 \\
+& 2 & 28551.5293 & 7644.8999 & 3230.7800 & 30124.6797 & 8972.5996 &
+23952.3496 \\
+\multirow{3}{*}{2020-12-31} & 0 & 30606.4805 & 7674.6001 & 3756.0701 &
+29056.4199 & 12899.4199 & 27568.1504 \\
+& 1 & 30409.5605 & 7651.3999 & 3735.3601 & 28954.9395 & 12888.2803 &
+27444.1699 \\
+& 2 & 30403.9707 & 7642.7998 & 3732.0400 & 28885.1406 & 12870.0000 &
+26854.0293 \\
+\multirow{3}{*}{2021-12-31} & 0 & 36488.6289 & 7420.7002 & 4793.0601 &
+31084.9395 & 16057.4404 & 30670.0996 \\
+& 1 & 36432.2188 & 7403.0000 & 4791.1899 & 30746.6602 & 15993.7100 &
+30511.7109 \\
+& 2 & 36398.2109 & 7384.5000 & 4786.3501 & 30644.7305 & 15982.3604 &
+30500.0508 \\
+\multirow{3}{*}{2022-12-31} & 0 & 36799.6484 & 7672.3999 & 4796.5601 &
+24965.5508 & 15832.7998 & 29332.1602 \\
+& 1 & 36585.0586 & 7669.6001 & 4793.5400 & 24952.3496 & 15622.7197 &
+29301.7891 \\
+& 2 & 36407.1094 & 7661.0000 & 4726.3501 & 24924.3496 & 15188.3896 &
+29222.7695 \\
+\multirow{3}{*}{2023-12-31} & 0 & 37710.1016 & 8014.2998 & 4783.3501 &
+22688.9004 & 15099.1797 & 33753.3281 \\
+& 1 & 37689.5391 & 8012.5000 & 4781.5801 & 22566.7793 & 15095.1396 &
+33706.0781 \\
+& 2 & 37656.5195 & 8004.3999 & 4774.7500 & 22072.1797 & 15074.5703 &
+33681.2383 \\
+\multirow{3}{*}{2024-12-31} & 0 & 39131.5312 & 7728.5000 & 5088.7998 &
+16790.8008 & 16041.6201 & 39233.7109 \\
+& 1 & 39069.2305 & 7723.1001 & 5087.0298 & 16788.5508 & 16035.3008 &
+39192.2891 \\
+& 2 & 39069.1094 & 7721.5000 & 5078.1802 & 16742.9492 & 15996.8203 &
+39098.6797 \\
+\end{longtable}
+
+Adding the \texttt{Rank} that we need to get this data frame back to
+wide without the duplicate index error took some after-class tinkering!
+Please let me know if you have any questions!
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
 \hypertarget{calulate-the-mean-and-standard-deviation-of-returns-by-ticker-for-the-matana-msft-aapl-tsla-amzn-nvda-and-goog-stocks-1}{%
 \subsection{Calulate the mean and standard deviation of returns by
@@ -33236,6 +33794,138 @@ stocks}\label{calulate-the-mean-and-standard-deviation-of-returns-by-ticker-for-
 Consider only dates with complete returns data. Try this calculation
 with wide and long data frames, and confirm your results are the same.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{matana }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    yf.download(tickers}\OperatorTok{=}\StringTok{\textquotesingle{}MSFT AAPL TSLA AMZN NVDA GOOG\textquotesingle{}}\NormalTok{)}
+\NormalTok{    .rename\_axis(columns}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Variable\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{])}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[*********************100%%**********************]  6 of 6 completed
+\end{verbatim}
+
+We can add the returns columns first, using the \texttt{pd.MultiIndex}
+trick from a few weeks ago.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\_ }\OperatorTok{=}\NormalTok{ pd.MultiIndex.from\_product([[}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{], matana[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].columns])}
+\NormalTok{matana[\_] }\OperatorTok{=}\NormalTok{ matana[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].iloc[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{].pct\_change()}
+\end{Highlighting}
+\end{Shaded}
+
+We can use \texttt{.agg()} without \texttt{.pivot\_table()} or
+\texttt{.groupby()}! We have wide data, so the tickers will be in the
+columns.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    matana[}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{]}
+\NormalTok{    .dropna()}
+\NormalTok{    .agg([}\StringTok{\textquotesingle{}mean\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}std\textquotesingle{}}\NormalTok{])}
+\NormalTok{)}
+
+\NormalTok{a}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllll@{}}
+\toprule\noalign{}
+Ticker & AAPL & AMZN & GOOG & MSFT & NVDA & TSLA \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+mean & 0.0011 & 0.0012 & 0.0009 & 0.0010 & 0.0021 & 0.0020 \\
+std & 0.0176 & 0.0207 & 0.0172 & 0.0163 & 0.0283 & 0.0358 \\
+\end{longtable}
+
+We need a long data frame to use \texttt{.pivot\_table()} and
+\texttt{.groupby()} methods. Here is the \texttt{.pivot\_table()}
+solution.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{b }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    matana[}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{]}
+\NormalTok{    .dropna()}
+\NormalTok{    .stack()}
+\NormalTok{    .to\_frame(}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{)}
+\NormalTok{    .pivot\_table(}
+\NormalTok{        values}\OperatorTok{=}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{,}
+\NormalTok{        index}\OperatorTok{=}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{,}
+\NormalTok{        aggfunc}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}mean\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}std\textquotesingle{}}\NormalTok{]}
+\NormalTok{    )}
+\NormalTok{    .transpose()}
+\NormalTok{)}
+
+\NormalTok{b}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllllll@{}}
+\toprule\noalign{}
+& Ticker & AAPL & AMZN & GOOG & MSFT & NVDA & TSLA \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+mean & Return & 0.0011 & 0.0012 & 0.0009 & 0.0010 & 0.0021 & 0.0020 \\
+std & Return & 0.0176 & 0.0207 & 0.0172 & 0.0163 & 0.0283 & 0.0358 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.allclose(a, b)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
+
+Here is the \texttt{.groupby()} solution.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{c }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    matana[}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{]}
+\NormalTok{    .dropna()}
+\NormalTok{    .stack()}
+\NormalTok{    .groupby(}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{)}
+\NormalTok{    .agg([}\StringTok{\textquotesingle{}mean\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}std\textquotesingle{}}\NormalTok{])}
+\NormalTok{    .transpose()}
+\NormalTok{)}
+
+\NormalTok{c}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllll@{}}
+\toprule\noalign{}
+Ticker & AAPL & AMZN & GOOG & MSFT & NVDA & TSLA \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+mean & 0.0011 & 0.0012 & 0.0009 & 0.0010 & 0.0021 & 0.0020 \\
+std & 0.0176 & 0.0207 & 0.0172 & 0.0163 & 0.0283 & 0.0358 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.allclose(a, c)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
+
 \hypertarget{calculate-the-mean-and-standard-deviation-of-returns-and-the-maximum-of-closing-prices-by-ticker-for-the-matana-stocks-1}{%
 \subsection{Calculate the mean and standard deviation of returns and the
 maximum of closing prices by ticker for the MATANA
@@ -33244,6 +33934,148 @@ stocks}\label{calculate-the-mean-and-standard-deviation-of-returns-and-the-maxim
 Again, consider only dates with complete returns data. Try this
 calculation with wide and long data frames, and confirm your results are
 the same.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    matana}
+\NormalTok{    .dropna()}
+\NormalTok{    .stack()}
+\NormalTok{    .pivot\_table(}
+\NormalTok{        index}\OperatorTok{=}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{,}
+\NormalTok{        aggfunc}\OperatorTok{=}\NormalTok{\{}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{: [}\StringTok{\textquotesingle{}mean\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}std\textquotesingle{}}\NormalTok{], }\StringTok{\textquotesingle{}Close\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}max\textquotesingle{}}\NormalTok{\}}
+\NormalTok{    )}
+\NormalTok{)}
+
+\NormalTok{a}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+Variable & Close &
+\multicolumn{2}{>{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.0000} + 2\tabcolsep}@{}}{%
+Return} \\
+& max & mean & std \\
+Ticker & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+AAPL & 198.1100 & 0.0011 & 0.0176 \\
+AMZN & 186.5705 & 0.0012 & 0.0207 \\
+GOOG & 154.8400 & 0.0009 & 0.0172 \\
+MSFT & 420.5500 & 0.0010 & 0.0163 \\
+NVDA & 790.9200 & 0.0021 & 0.0283 \\
+TSLA & 409.9700 & 0.0020 & 0.0358 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{b }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    matana}
+\NormalTok{    .dropna()}
+\NormalTok{    .stack()}
+\NormalTok{    .groupby(}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{)}
+\NormalTok{    .agg(\{}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{: [}\StringTok{\textquotesingle{}mean\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}std\textquotesingle{}}\NormalTok{], }\StringTok{\textquotesingle{}Close\textquotesingle{}}\NormalTok{:}\StringTok{\textquotesingle{}max\textquotesingle{}}\NormalTok{\})}
+\NormalTok{)}
+
+\NormalTok{b}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+Variable &
+\multicolumn{2}{>{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.0000} + 2\tabcolsep}}{%
+Return} & Close \\
+& mean & std & max \\
+Ticker & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+AAPL & 0.0011 & 0.0176 & 198.1100 \\
+AMZN & 0.0012 & 0.0207 & 186.5705 \\
+GOOG & 0.0009 & 0.0172 & 154.8400 \\
+MSFT & 0.0010 & 0.0163 & 420.5500 \\
+NVDA & 0.0021 & 0.0283 & 790.9200 \\
+TSLA & 0.0020 & 0.0358 & 409.9700 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.allclose(a, b)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+False
+\end{verbatim}
+
+The \texttt{.pivot\_table()} method sorts it columns, but
+\texttt{groupby()} method does not! We need to sort columns with
+\texttt{.sort\_index(axis=1)} to make sure our output is the same!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.allclose(}
+\NormalTok{    a.sort\_index(axis}\OperatorTok{=}\DecValTok{1}\NormalTok{),}
+\NormalTok{    b.sort\_index(axis}\OperatorTok{=}\DecValTok{1}\NormalTok{)}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+We can use the following code to display all index levels for all rows
+and columns.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{with}\NormalTok{ pd.option\_context(}\StringTok{\textquotesingle{}display.multi\_sparse\textquotesingle{}}\NormalTok{, }\VariableTok{False}\NormalTok{):}
+\NormalTok{    display(b)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+Variable & Return & Return & Close \\
+& mean & std & max \\
+Ticker & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+AAPL & 0.0011 & 0.0176 & 198.1100 \\
+AMZN & 0.0012 & 0.0207 & 186.5705 \\
+GOOG & 0.0009 & 0.0172 & 154.8400 \\
+MSFT & 0.0010 & 0.0163 & 420.5500 \\
+NVDA & 0.0021 & 0.0283 & 790.9200 \\
+TSLA & 0.0020 & 0.0358 & 409.9700 \\
+\end{longtable}
+
+If we prefer to see all index levels all the time, we can set the
+following setting at the top of our notebook:
+
+\begin{verbatim}
+pd.options.display.multi_sparse = False
+\end{verbatim}
+
+We can also copy our output to our clipboaerd then paste it into Excel
+if we want to convince ourelves of the column multi index arrangement.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{b.to\_clipboard()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
 \hypertarget{calculate-monthly-means-and-volatilities-for-spy-and-goog-returns-1}{%
 \subsection{Calculate monthly means and volatilities for SPY and GOOG
@@ -33407,7 +34239,20 @@ We will focus on 3 topics from chapter 10 of McKinney:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{(}
+\NormalTok{np.allclose(}
+\NormalTok{    ind[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{],}
+\NormalTok{    ind[}\StringTok{\textquotesingle{}Close\textquotesingle{}}\NormalTok{]}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a }\OperatorTok{=}\NormalTok{ (}
 \NormalTok{    ind}
 \NormalTok{    .loc[}\StringTok{\textquotesingle{}2015\textquotesingle{}}\NormalTok{:]}
 \NormalTok{    .reset\_index()}
@@ -33418,6 +34263,8 @@ We will focus on 3 topics from chapter 10 of McKinney:
 \NormalTok{        aggfunc}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}min\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}max\textquotesingle{}}\NormalTok{]}
 \NormalTok{    )}
 \NormalTok{)}
+
+\NormalTok{a}
 \end{Highlighting}
 \end{Shaded}
 
@@ -33460,9 +34307,84 @@ Date & & & & & & & & & & & & \\
 10213.2900 & 24717.5293 & 36799.6484 & 7672.3999 & 4796.5601 &
 24965.5508 & 15832.7998 & 29332.1602 \\
 2023-12-31 & 31819.1406 & 7256.8999 & 3808.1001 & 16201.4902 &
-10305.2402 & 25716.8594 & 37557.9219 & 8014.2998 & 4768.3701 &
-22688.9004 & 15044.7031 & 33753.3281 \\
+10305.2402 & 25716.8594 & 37710.1016 & 8014.2998 & 4783.3501 &
+22688.9004 & 15099.1797 & 33753.3281 \\
+2024-12-31 & 37266.6719 & 7446.2998 & 4688.6802 & 14961.1797 &
+14510.2998 & 33288.2891 & 39131.5312 & 7728.5000 & 5088.7998 &
+16790.8008 & 16041.6201 & 39233.7109 \\
 \end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{b }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    ind}
+\NormalTok{    .loc[}\StringTok{\textquotesingle{}2015\textquotesingle{}}\NormalTok{:]}
+\NormalTok{    .reset\_index()}
+\NormalTok{    .groupby([pd.Grouper(key}\OperatorTok{=}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, freq}\OperatorTok{=}\StringTok{\textquotesingle{}A\textquotesingle{}}\NormalTok{), }\StringTok{\textquotesingle{}Index\textquotesingle{}}\NormalTok{])}
+\NormalTok{    [}\StringTok{\textquotesingle{}Close\textquotesingle{}}\NormalTok{]}
+\NormalTok{    .agg([}\StringTok{\textquotesingle{}min\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}max\textquotesingle{}}\NormalTok{])}
+\NormalTok{    .unstack()}
+\NormalTok{)}
+
+\NormalTok{b}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllllllllll@{}}
+\toprule\noalign{}
+&
+\multicolumn{6}{>{\raggedright\arraybackslash}p{(\columnwidth - 24\tabcolsep) * \real{0.0000} + 10\tabcolsep}}{%
+min} &
+\multicolumn{6}{>{\raggedright\arraybackslash}p{(\columnwidth - 24\tabcolsep) * \real{0.0000} + 10\tabcolsep}@{}}{%
+max} \\
+Index & \^{}DJI & \^{}FTSE & \^{}GSPC & \^{}HSI & \^{}IXIC & \^{}N225 &
+\^{}DJI & \^{}FTSE & \^{}GSPC & \^{}HSI & \^{}IXIC & \^{}N225 \\
+Date & & & & & & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2015-12-31 & 15666.4404 & 5874.1001 & 1867.6100 & 20556.5996 & 4506.4902
+& 16795.9609 & 18312.3906 & 7104.0000 & 2130.8201 & 28442.7500 &
+5218.8599 & 20868.0293 \\
+2016-12-31 & 15660.1797 & 5537.0000 & 1829.0800 & 18319.5801 & 4266.8398
+& 14952.0195 & 19974.6191 & 7142.7998 & 2271.7200 & 24099.6992 &
+5487.4399 & 19494.5293 \\
+2017-12-31 & 19732.4004 & 7099.2002 & 2257.8301 & 22134.4707 & 5429.0801
+& 18335.6309 & 24837.5098 & 7687.7998 & 2690.1599 & 30003.4902 &
+6994.7598 & 22939.1797 \\
+2018-12-31 & 21792.1992 & 6584.7002 & 2351.1001 & 24585.5293 & 6192.9199
+& 19155.7402 & 26828.3906 & 7877.5000 & 2930.7500 & 33154.1211 &
+8109.6899 & 24270.6191 \\
+2019-12-31 & 22686.2207 & 6692.7002 & 2447.8899 & 25064.3594 & 6463.5000
+& 19561.9609 & 28645.2598 & 7686.6001 & 3240.0200 & 30157.4902 &
+9022.3896 & 24066.1191 \\
+2020-12-31 & 18591.9297 & 4993.8999 & 2237.3999 & 21696.1309 & 6860.6699
+& 16552.8301 & 30606.4805 & 7674.6001 & 3756.0701 & 29056.4199 &
+12899.4199 & 27568.1504 \\
+2021-12-31 & 29982.6191 & 6407.5000 & 3700.6499 & 22744.8594 &
+12609.1602 & 27013.2500 & 36488.6289 & 7420.7002 & 4793.0601 &
+31084.9395 & 16057.4404 & 30670.0996 \\
+2022-12-31 & 28725.5098 & 6826.2002 & 3577.0300 & 14687.0195 &
+10213.2900 & 24717.5293 & 36799.6484 & 7672.3999 & 4796.5601 &
+24965.5508 & 15832.7998 & 29332.1602 \\
+2023-12-31 & 31819.1406 & 7256.8999 & 3808.1001 & 16201.4902 &
+10305.2402 & 25716.8594 & 37710.1016 & 8014.2998 & 4783.3501 &
+22688.9004 & 15099.1797 & 33753.3281 \\
+2024-12-31 & 37266.6719 & 7446.2998 & 4688.6802 & 14961.1797 &
+14510.2998 & 33288.2891 & 39131.5312 & 7728.5000 & 5088.7998 &
+16790.8008 & 16041.6201 & 39233.7109 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.allclose(a, b)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
 
 \hypertarget{calulate-the-mean-and-standard-deviation-of-returns-by-ticker-for-the-matana-msft-aapl-tsla-amzn-nvda-and-goog-stocks-2}{%
 \subsection{Calulate the mean and standard deviation of returns by
@@ -33472,6 +34394,151 @@ stocks}\label{calulate-the-mean-and-standard-deviation-of-returns-by-ticker-for-
 Consider only dates with complete returns data. Try this calculation
 with wide and long data frames, and confirm your results are the same.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{matana }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    yf.download(tickers}\OperatorTok{=}\StringTok{\textquotesingle{}MSFT AAPL TSLA AMZN NVDA GOOG\textquotesingle{}}\NormalTok{)}
+\NormalTok{    .rename\_axis(columns}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Variable\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{])}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[*********************100%%**********************]  6 of 6 completed
+\end{verbatim}
+
+We can add the returns columns first, using the \texttt{pd.MultiIndex}
+trick from a few weeks ago.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\_ }\OperatorTok{=}\NormalTok{ pd.MultiIndex.from\_product([[}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{], matana[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].columns])}
+\NormalTok{matana[\_] }\OperatorTok{=}\NormalTok{ matana[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].iloc[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{].pct\_change()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}
+\NormalTok{    matana[}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{]}
+\NormalTok{    .dropna()}
+\NormalTok{    .describe()}
+\NormalTok{    .loc[[}\StringTok{\textquotesingle{}mean\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}std\textquotesingle{}}\NormalTok{]]}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllll@{}}
+\toprule\noalign{}
+Ticker & AAPL & AMZN & GOOG & MSFT & NVDA & TSLA \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+mean & 0.0011 & 0.0012 & 0.0009 & 0.0010 & 0.0021 & 0.0020 \\
+std & 0.0176 & 0.0207 & 0.0172 & 0.0163 & 0.0283 & 0.0358 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    matana[}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{]}
+\NormalTok{    .dropna()}
+\NormalTok{    .agg([}\StringTok{\textquotesingle{}mean\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}std\textquotesingle{}}\NormalTok{])}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Here is the \texttt{.pivot\_table()} solution!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{b }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    matana}
+\NormalTok{    .dropna()}
+\NormalTok{    .stack()}
+\NormalTok{    .pivot\_table(}
+\NormalTok{        values}\OperatorTok{=}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{,}
+\NormalTok{        index}\OperatorTok{=}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{,}
+\NormalTok{        aggfunc}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}mean\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}std\textquotesingle{}}\NormalTok{]}
+\NormalTok{    )}
+\NormalTok{)}
+
+\NormalTok{b}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule\noalign{}
+& mean & std \\
+Variable & Return & Return \\
+Ticker & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+AAPL & 0.0011 & 0.0176 \\
+AMZN & 0.0012 & 0.0207 \\
+GOOG & 0.0009 & 0.0172 \\
+MSFT & 0.0010 & 0.0163 \\
+NVDA & 0.0021 & 0.0283 \\
+TSLA & 0.0020 & 0.0358 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.allclose(a, b)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+ValueError: operands could not be broadcast together with shapes (2,6) (6,2) 
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+What if we want to add skewness and kurtosis? There a skewness method
+built-in, but we have to write a lambda function for kurtosis.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}
+\NormalTok{    matana}
+\NormalTok{    .dropna()}
+\NormalTok{    .stack()}
+\NormalTok{    .pivot\_table(}
+\NormalTok{        values}\OperatorTok{=}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{,}
+\NormalTok{        index}\OperatorTok{=}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{,}
+\NormalTok{        aggfunc}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}mean\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}std\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}skew\textquotesingle{}}\NormalTok{, }\KeywordTok{lambda}\NormalTok{ x: x.kurt()]}
+\NormalTok{    )}
+\NormalTok{    .rename(columns}\OperatorTok{=}\NormalTok{\{}\StringTok{\textquotesingle{}\textless{}lambda\textgreater{}\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}kurt\textquotesingle{}}\NormalTok{\})}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Here is the \texttt{.groupby()} solution!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{c }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    matana}
+\NormalTok{    .dropna()}
+\NormalTok{    .stack()}
+\NormalTok{    .groupby(}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{)}
+\NormalTok{    [}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{]}
+\NormalTok{    .agg([}\StringTok{\textquotesingle{}mean\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}std\textquotesingle{}}\NormalTok{])}
+\NormalTok{)}
+
+\NormalTok{c}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.allclose(a, c)}
+\end{Highlighting}
+\end{Shaded}
+
 \hypertarget{calculate-the-mean-and-standard-deviation-of-returns-and-the-maximum-of-closing-prices-by-ticker-for-the-matana-stocks-2}{%
 \subsection{Calculate the mean and standard deviation of returns and the
 maximum of closing prices by ticker for the MATANA
@@ -33480,6 +34547,85 @@ stocks}\label{calculate-the-mean-and-standard-deviation-of-returns-and-the-maxim
 Again, consider only dates with complete returns data. Try this
 calculation with wide and long data frames, and confirm your results are
 the same.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    matana}
+\NormalTok{    .dropna()}
+\NormalTok{    .stack()}
+\NormalTok{    .pivot\_table(}
+\NormalTok{        index}\OperatorTok{=}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{,}
+\NormalTok{        aggfunc}\OperatorTok{=}\NormalTok{\{}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{: [}\StringTok{\textquotesingle{}mean\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}std\textquotesingle{}}\NormalTok{], }\StringTok{\textquotesingle{}Close\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}max\textquotesingle{}}\NormalTok{\}}
+\NormalTok{    )}
+\NormalTok{)}
+
+\NormalTok{a}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{b }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    matana}
+\NormalTok{    .dropna()}
+\NormalTok{    .stack()}
+\NormalTok{    .groupby(}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{)}
+\NormalTok{    .agg(\{}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{: [}\StringTok{\textquotesingle{}mean\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}std\textquotesingle{}}\NormalTok{], }\StringTok{\textquotesingle{}Close\textquotesingle{}}\NormalTok{:}\StringTok{\textquotesingle{}max\textquotesingle{}}\NormalTok{\})}
+\NormalTok{)}
+
+\NormalTok{b}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.allclose(a, b)}
+\end{Highlighting}
+\end{Shaded}
+
+The \texttt{.pivot\_table()} method sorts it columns, but
+\texttt{groupby()} method does not! We need to sort columns with
+\texttt{.sort\_index(axis=1)} to make sure our output is the same!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.allclose(}
+\NormalTok{    a.sort\_index(axis}\OperatorTok{=}\DecValTok{1}\NormalTok{),}
+\NormalTok{    b.sort\_index(axis}\OperatorTok{=}\DecValTok{1}\NormalTok{)}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+We can use the following code to display all index levels for all rows
+and columns.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{with}\NormalTok{ pd.option\_context(}\StringTok{\textquotesingle{}display.multi\_sparse\textquotesingle{}}\NormalTok{, }\VariableTok{False}\NormalTok{):}
+\NormalTok{    display(b)}
+\end{Highlighting}
+\end{Shaded}
+
+If we prefer to see all index levels all the time, we can set the
+following setting at the top of our notebook:
+
+\begin{verbatim}
+pd.options.display.multi_sparse = False
+\end{verbatim}
+
+We can also copy our output to our clipboaerd then paste it into Excel
+if we want to convince ourelves of the column multi index arrangement.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{b.to\_clipboard()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
 \hypertarget{calculate-monthly-means-and-volatilities-for-spy-and-goog-returns-2}{%
 \subsection{Calculate monthly means and volatilities for SPY and GOOG
@@ -33643,7 +34789,25 @@ We will focus on 3 topics from chapter 10 of McKinney:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{(}
+\NormalTok{np.allclose(}
+\NormalTok{    ind[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{],}
+\NormalTok{    ind[}\StringTok{\textquotesingle{}Close\textquotesingle{}}\NormalTok{]}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
+
+Here is the \texttt{.pivot\_table()} solution. In most cases, the
+\texttt{.pivot\_table()} is easier to interpret because it explicitly
+selects rows and columns (i.e., the \texttt{index} and \texttt{columns}
+arguments).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a }\OperatorTok{=}\NormalTok{ (}
 \NormalTok{    ind}
 \NormalTok{    .loc[}\StringTok{\textquotesingle{}2015\textquotesingle{}}\NormalTok{:]}
 \NormalTok{    .reset\_index()}
@@ -33654,6 +34818,8 @@ We will focus on 3 topics from chapter 10 of McKinney:
 \NormalTok{        aggfunc}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}min\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}max\textquotesingle{}}\NormalTok{]}
 \NormalTok{    )}
 \NormalTok{)}
+
+\NormalTok{a}
 \end{Highlighting}
 \end{Shaded}
 
@@ -33696,9 +34862,89 @@ Date & & & & & & & & & & & & \\
 10213.2900 & 24717.5293 & 36799.6484 & 7672.3999 & 4796.5601 &
 24965.5508 & 15832.7998 & 29332.1602 \\
 2023-12-31 & 31819.1406 & 7256.8999 & 3808.1001 & 16201.4902 &
-10305.2402 & 25716.8594 & 37557.9219 & 8014.2998 & 4768.3701 &
-22688.9004 & 15044.7031 & 33753.3281 \\
+10305.2402 & 25716.8594 & 37710.1016 & 8014.2998 & 4783.3501 &
+22688.9004 & 15099.1797 & 33753.3281 \\
+2024-12-31 & 37266.6719 & 7446.2998 & 4688.6802 & 14961.1797 &
+14510.2998 & 33288.2891 & 39131.5312 & 7728.5000 & 5088.7998 &
+16790.8008 & 16041.6201 & 39233.7109 \\
 \end{longtable}
+
+Here is the \texttt{.groupby()} equivalent!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{b }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    ind}
+\NormalTok{    .loc[}\StringTok{\textquotesingle{}2015\textquotesingle{}}\NormalTok{:]}
+\NormalTok{    .reset\_index()}
+\NormalTok{    .groupby([pd.Grouper(key}\OperatorTok{=}\StringTok{\textquotesingle{}Date\textquotesingle{}}\NormalTok{, freq}\OperatorTok{=}\StringTok{\textquotesingle{}A\textquotesingle{}}\NormalTok{), }\StringTok{\textquotesingle{}Index\textquotesingle{}}\NormalTok{])}
+\NormalTok{    [}\StringTok{\textquotesingle{}Close\textquotesingle{}}\NormalTok{]}
+\NormalTok{    .agg([}\StringTok{\textquotesingle{}min\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}max\textquotesingle{}}\NormalTok{])}
+\NormalTok{    .unstack()}
+\NormalTok{)}
+
+\NormalTok{b}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllllllllll@{}}
+\toprule\noalign{}
+&
+\multicolumn{6}{>{\raggedright\arraybackslash}p{(\columnwidth - 24\tabcolsep) * \real{0.0000} + 10\tabcolsep}}{%
+min} &
+\multicolumn{6}{>{\raggedright\arraybackslash}p{(\columnwidth - 24\tabcolsep) * \real{0.0000} + 10\tabcolsep}@{}}{%
+max} \\
+Index & \^{}DJI & \^{}FTSE & \^{}GSPC & \^{}HSI & \^{}IXIC & \^{}N225 &
+\^{}DJI & \^{}FTSE & \^{}GSPC & \^{}HSI & \^{}IXIC & \^{}N225 \\
+Date & & & & & & & & & & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+2015-12-31 & 15666.4404 & 5874.1001 & 1867.6100 & 20556.5996 & 4506.4902
+& 16795.9609 & 18312.3906 & 7104.0000 & 2130.8201 & 28442.7500 &
+5218.8599 & 20868.0293 \\
+2016-12-31 & 15660.1797 & 5537.0000 & 1829.0800 & 18319.5801 & 4266.8398
+& 14952.0195 & 19974.6191 & 7142.7998 & 2271.7200 & 24099.6992 &
+5487.4399 & 19494.5293 \\
+2017-12-31 & 19732.4004 & 7099.2002 & 2257.8301 & 22134.4707 & 5429.0801
+& 18335.6309 & 24837.5098 & 7687.7998 & 2690.1599 & 30003.4902 &
+6994.7598 & 22939.1797 \\
+2018-12-31 & 21792.1992 & 6584.7002 & 2351.1001 & 24585.5293 & 6192.9199
+& 19155.7402 & 26828.3906 & 7877.5000 & 2930.7500 & 33154.1211 &
+8109.6899 & 24270.6191 \\
+2019-12-31 & 22686.2207 & 6692.7002 & 2447.8899 & 25064.3594 & 6463.5000
+& 19561.9609 & 28645.2598 & 7686.6001 & 3240.0200 & 30157.4902 &
+9022.3896 & 24066.1191 \\
+2020-12-31 & 18591.9297 & 4993.8999 & 2237.3999 & 21696.1309 & 6860.6699
+& 16552.8301 & 30606.4805 & 7674.6001 & 3756.0701 & 29056.4199 &
+12899.4199 & 27568.1504 \\
+2021-12-31 & 29982.6191 & 6407.5000 & 3700.6499 & 22744.8594 &
+12609.1602 & 27013.2500 & 36488.6289 & 7420.7002 & 4793.0601 &
+31084.9395 & 16057.4404 & 30670.0996 \\
+2022-12-31 & 28725.5098 & 6826.2002 & 3577.0300 & 14687.0195 &
+10213.2900 & 24717.5293 & 36799.6484 & 7672.3999 & 4796.5601 &
+24965.5508 & 15832.7998 & 29332.1602 \\
+2023-12-31 & 31819.1406 & 7256.8999 & 3808.1001 & 16201.4902 &
+10305.2402 & 25716.8594 & 37710.1016 & 8014.2998 & 4783.3501 &
+22688.9004 & 15099.1797 & 33753.3281 \\
+2024-12-31 & 37266.6719 & 7446.2998 & 4688.6802 & 14961.1797 &
+14510.2998 & 33288.2891 & 39131.5312 & 7728.5000 & 5088.7998 &
+16790.8008 & 16041.6201 & 39233.7109 \\
+\end{longtable}
+
+The \texttt{.pivot\_table()} and \texttt{.groupby()} results have the
+same values!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.allclose(a, b)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
 
 \hypertarget{calulate-the-mean-and-standard-deviation-of-returns-by-ticker-for-the-matana-msft-aapl-tsla-amzn-nvda-and-goog-stocks-3}{%
 \subsection{Calulate the mean and standard deviation of returns by
@@ -33708,6 +34954,145 @@ stocks}\label{calulate-the-mean-and-standard-deviation-of-returns-by-ticker-for-
 Consider only dates with complete returns data. Try this calculation
 with wide and long data frames, and confirm your results are the same.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{matana }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    yf.download(tickers}\OperatorTok{=}\StringTok{\textquotesingle{}MSFT AAPL TSLA AMZN NVDA GOOG\textquotesingle{}}\NormalTok{)}
+\NormalTok{    .rename\_axis(columns}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}Variable\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{])}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+[*********************100%%**********************]  6 of 6 completed
+\end{verbatim}
+
+We can add the returns columns first, using the \texttt{pd.MultiIndex}
+trick from a few weeks ago.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\_ }\OperatorTok{=}\NormalTok{ pd.MultiIndex.from\_product([[}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{], matana[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{].columns])}
+\NormalTok{matana[\_] }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    matana[}\StringTok{\textquotesingle{}Adj Close\textquotesingle{}}\NormalTok{] }\CommentTok{\# select adjusted close prices}
+\NormalTok{    .iloc[:}\OperatorTok{{-}}\DecValTok{1}\NormalTok{] }\CommentTok{\# drop the last price to avoid using intraday prices}
+\NormalTok{    .pct\_change() }\CommentTok{\# calculate returns}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+We can use \texttt{.agg()} without \texttt{.pivot\_table()} or
+\texttt{.groupby()}! We have wide data, so the tickers will be in the
+columns.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    matana}
+\NormalTok{    .dropna()}
+\NormalTok{    [}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{]}
+\NormalTok{    .agg([}\StringTok{\textquotesingle{}mean\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}std\textquotesingle{}}\NormalTok{])}
+\NormalTok{)}
+
+\NormalTok{a}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllllll@{}}
+\toprule\noalign{}
+Ticker & AAPL & AMZN & GOOG & MSFT & NVDA & TSLA \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+mean & 0.0011 & 0.0012 & 0.0009 & 0.0010 & 0.0021 & 0.0020 \\
+std & 0.0176 & 0.0207 & 0.0172 & 0.0163 & 0.0283 & 0.0358 \\
+\end{longtable}
+
+We need a long data frame to use \texttt{.pivot\_table()} and
+\texttt{.groupby()} methods. Here is the \texttt{.pivot\_table()}
+solution.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{b }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    matana}
+\NormalTok{    .dropna()}
+\NormalTok{    [}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{]}
+\NormalTok{    .stack() }\CommentTok{\# create long data}
+\NormalTok{    .to\_frame(}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{) }\CommentTok{\# .pivot\_table() requires a data frame}
+\NormalTok{    .pivot\_table(}
+\NormalTok{        values}\OperatorTok{=}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{,}
+\NormalTok{        index}\OperatorTok{=}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{,}
+\NormalTok{        aggfunc}\OperatorTok{=}\NormalTok{[}\StringTok{\textquotesingle{}mean\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}std\textquotesingle{}}\NormalTok{]}
+\NormalTok{    )}
+\NormalTok{    .transpose() }\CommentTok{\# transpose to put tickers in columns}
+\NormalTok{)}
+
+\NormalTok{b}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllllll@{}}
+\toprule\noalign{}
+& Ticker & AAPL & AMZN & GOOG & MSFT & NVDA & TSLA \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+mean & Return & 0.0011 & 0.0012 & 0.0009 & 0.0010 & 0.0021 & 0.0020 \\
+std & Return & 0.0176 & 0.0207 & 0.0172 & 0.0163 & 0.0283 & 0.0358 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.allclose(a, b)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
+
+Here is the \texttt{.groupby()} solution.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{c }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    matana}
+\NormalTok{    .dropna()}
+\NormalTok{    [}\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{]}
+\NormalTok{    .stack() }\CommentTok{\# create long data}
+\NormalTok{    .groupby(}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{)}
+\NormalTok{    .agg([}\StringTok{\textquotesingle{}mean\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}std\textquotesingle{}}\NormalTok{])}
+\NormalTok{    .transpose() }\CommentTok{\# transpose to put tickers in columns}
+\NormalTok{)}
+
+\NormalTok{b}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llllllll@{}}
+\toprule\noalign{}
+& Ticker & AAPL & AMZN & GOOG & MSFT & NVDA & TSLA \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+mean & Return & 0.0011 & 0.0012 & 0.0009 & 0.0010 & 0.0021 & 0.0020 \\
+std & Return & 0.0176 & 0.0207 & 0.0172 & 0.0163 & 0.0283 & 0.0358 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.allclose(a, c)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
+
 \hypertarget{calculate-the-mean-and-standard-deviation-of-returns-and-the-maximum-of-closing-prices-by-ticker-for-the-matana-stocks-3}{%
 \subsection{Calculate the mean and standard deviation of returns and the
 maximum of closing prices by ticker for the MATANA
@@ -33716,6 +35101,131 @@ stocks}\label{calculate-the-mean-and-standard-deviation-of-returns-and-the-maxim
 Again, consider only dates with complete returns data. Try this
 calculation with wide and long data frames, and confirm your results are
 the same.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    matana}
+\NormalTok{    .dropna()}
+\NormalTok{    .stack()}
+\NormalTok{    .pivot\_table(}
+\NormalTok{        index}\OperatorTok{=}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{,}
+\NormalTok{        aggfunc}\OperatorTok{=}\NormalTok{\{}\StringTok{\textquotesingle{}Close\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}max\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{: [}\StringTok{\textquotesingle{}mean\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}std\textquotesingle{}}\NormalTok{]\}}
+\NormalTok{    )}
+\NormalTok{)}
+
+\NormalTok{a}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+Variable & Close &
+\multicolumn{2}{>{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.0000} + 2\tabcolsep}@{}}{%
+Return} \\
+& max & mean & std \\
+Ticker & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+AAPL & 198.1100 & 0.0011 & 0.0176 \\
+AMZN & 186.5705 & 0.0012 & 0.0207 \\
+GOOG & 154.8400 & 0.0009 & 0.0172 \\
+MSFT & 420.5500 & 0.0010 & 0.0163 \\
+NVDA & 790.9200 & 0.0021 & 0.0283 \\
+TSLA & 409.9700 & 0.0020 & 0.0358 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{b }\OperatorTok{=}\NormalTok{ (}
+\NormalTok{    matana}
+\NormalTok{    .dropna()}
+\NormalTok{    .stack()}
+\NormalTok{    .groupby(}\StringTok{\textquotesingle{}Ticker\textquotesingle{}}\NormalTok{)}
+\NormalTok{    .agg(\{}\StringTok{\textquotesingle{}Close\textquotesingle{}}\NormalTok{: }\StringTok{\textquotesingle{}max\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}Return\textquotesingle{}}\NormalTok{: [}\StringTok{\textquotesingle{}mean\textquotesingle{}}\NormalTok{, }\StringTok{\textquotesingle{}std\textquotesingle{}}\NormalTok{]\})}
+\NormalTok{)}
+
+\NormalTok{b}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+Variable & Close &
+\multicolumn{2}{>{\raggedright\arraybackslash}p{(\columnwidth - 6\tabcolsep) * \real{0.0000} + 2\tabcolsep}@{}}{%
+Return} \\
+& max & mean & std \\
+Ticker & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+AAPL & 198.1100 & 0.0011 & 0.0176 \\
+AMZN & 186.5705 & 0.0012 & 0.0207 \\
+GOOG & 154.8400 & 0.0009 & 0.0172 \\
+MSFT & 420.5500 & 0.0010 & 0.0163 \\
+NVDA & 790.9200 & 0.0021 & 0.0283 \\
+TSLA & 409.9700 & 0.0020 & 0.0358 \\
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{np.allclose(a, b)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+True
+\end{verbatim}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+We can use the following code to display all index levels for all rows
+and columns.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ControlFlowTok{with}\NormalTok{ pd.option\_context(}\StringTok{\textquotesingle{}display.multi\_sparse\textquotesingle{}}\NormalTok{, }\VariableTok{False}\NormalTok{):}
+\NormalTok{    display(b)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule\noalign{}
+Variable & Close & Return & Return \\
+& max & mean & std \\
+Ticker & & & \\
+\midrule\noalign{}
+\endhead
+\bottomrule\noalign{}
+\endlastfoot
+AAPL & 198.1100 & 0.0011 & 0.0176 \\
+AMZN & 186.5705 & 0.0012 & 0.0207 \\
+GOOG & 154.8400 & 0.0009 & 0.0172 \\
+MSFT & 420.5500 & 0.0010 & 0.0163 \\
+NVDA & 790.9200 & 0.0021 & 0.0283 \\
+TSLA & 409.9700 & 0.0020 & 0.0358 \\
+\end{longtable}
+
+If we prefer to see all index levels all the time, we can set the
+following setting at the top of our notebook:
+
+\begin{verbatim}
+pd.options.display.multi_sparse = False
+\end{verbatim}
+
+We can also copy our output to our clipboaerd then paste it into Excel
+if we want to convince ourelves of the column multi index arrangement.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{b.to\_clipboard()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
 \hypertarget{calculate-monthly-means-and-volatilities-for-spy-and-goog-returns-3}{%
 \subsection{Calculate monthly means and volatilities for SPY and GOOG
